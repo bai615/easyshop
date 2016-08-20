@@ -15,6 +15,9 @@ return [
             'identityClass' => 'backend\models\Admin',
             'enableAutoLogin' => true,
         ],
+        'goods'=>[
+            'class'=>'backend\components\goodsComponent',//加载类库
+        ],
         'view' => [
             'theme' => [
                 'basePath' => '@backend/themes/quirk',

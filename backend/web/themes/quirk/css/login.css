@@ -1,6 +1,4 @@
-html{
-	font-family: "微软雅黑","Helvetica Neue",Helvetica,Arial,"Hiragino Sans GB","Microsoft Yahei",sans-serif;
-}
+html,
 body {
     height: 100%;
 }
@@ -74,8 +72,13 @@ a.desc:after {
     content: "\e156";
 }
 
-.grid-view th {
+.grid-view td {
     white-space: nowrap;
+}
+
+.grid-view .filters input,
+.grid-view .filters select {
+    min-width: 50px;
 }
 
 .hint-block {
@@ -92,79 +95,47 @@ a.desc:after {
     margin: 0 0 15px 0;
 }
 
-.list-op {
-	margin:0 0 10px 0;
+/* align the logout "link" (button in form) of the navbar */
+.nav > li > form {
+    padding: 8px;
 }
 
-.border-white > li + li > a, .border-white > li + li > span {
-    border-color: #eee;
+@media(max-width:768px) {
+	.nav li > form {
+	    padding: 3px;
+	}
 }
 
-.border-white > li:first-child > a, .border-white > li:first-child > span {
-    border-color: #eee;
+.nav > li > form > button:hover {
+    text-decoration: none;
 }
 
-.modal-del {
-	padding:40px;
-}
 
-.clear{overflow:hidden;}
-.list-op .search-input{margin:0 5px;}
-.list-op .search-input input{height:38px;}
-.list-op .search-list{margin:0;}=======
-.list-op .search-input{
-	margin:0 5px;
+.site-login {
+    margin: 0px auto 0;
+    width: 360px;
 }
-.list-op .search-input input{
-	height:38px;
-}
-.list-op .search-list{
-	margin:0;
-}
-
-.note-editor .panel-heading{
-	padding: 0 0 5px 5px;
-}
-
-.post-update {
-	font-size:14px;
-}
-
-.post-update label {
-	color:#5cb85c;
-	font-weight:bold;
-}
-
-.border-bottom {
-	border-bottom:1px solid #ccc;
-}
-
-.table-bordered {
-    border: 1px solid #fff;
-}
-
-.center {
-	margin-right: auto;
-    margin-left: auto;
-    border-bottom: double;
-    border-color: #000;
-    margin-top: 10%;
-    border: 2px;
-    height: 100%;
-    vertical-align: middle;
-}
-
-.center p {
-	text-align: center;
-}
-
-.btn-success{
-    background-color: #5cb85c;
-    border-color: #4cae4c;
+.site-login h1 {
+    background: #259dab none repeat scroll 0 0;/*#3d9970*/
+    border-radius: 4px 4px 0 0;
+    box-shadow: 0 -3px 0 rgba(0, 0, 0, 0.2) inset;
     color: #fff;
+    font-size: 26px;
+    font-weight: bold;
+    margin-bottom: 0;
+    padding: 20px 10px;
+    text-align: center;
 }
-.btn-success:hover{
-    color:#fff;
-    background-color:#449d44;
-    border-color:#398439
+.site-login .body, .site-login .footer {
+    background: #fff none repeat scroll 0 0;
+    color: #444;
+    padding: 10px 20px;
+}
+.bg-gray {
+    background-color: #eaeaec !important;
+}
+.bg-olive {
+    background-color: #259dab !important;/*#2583AB*/
+    color: #fff;
+    font-weight: bold;
 }

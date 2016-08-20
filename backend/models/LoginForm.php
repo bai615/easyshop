@@ -25,7 +25,7 @@ class LoginForm extends Model {
     public function rules() {
         return [
             // adminname and password are both required
-            [['adminname', 'password'], 'required'],
+            [['adminname', 'password'], 'required', 'message' => '不能为空'],
             // rememberMe must be a boolean value
             ['rememberMe', 'boolean'],
             // password is validated by validatePassword()

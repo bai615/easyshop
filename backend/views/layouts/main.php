@@ -2,13 +2,10 @@
 
 /* @var $this \yii\web\View */
 /* @var $content string */
-
+use yii\helpers\Url;
 use backend\assets\AppAsset;
 use yii\helpers\Html;
-use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
-use yii\widgets\Breadcrumbs;
-use common\widgets\Alert;
 
 AppAsset::register($this);
 ?>
@@ -25,7 +22,6 @@ AppAsset::register($this);
 <body>
 <?php $this->beginBody() ?>
 <!--
-<div class="wrap">
     <?php
     NavBar::begin([
         'brandLabel' => 'My Company',
@@ -34,33 +30,10 @@ AppAsset::register($this);
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
     ]);
-    $menuItems = [
-        ['label' => 'Home', 'url' => ['/site/index']],
-    ];
-    if (Yii::$app->user->isGuest) {
-        $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
-    } else {
-        $menuItems[] = '<li>'
-            . Html::beginForm(['/site/logout'], 'post')
-            . Html::submitButton(
-                'Logout (' . Yii::$app->user->identity->adminname . ')',
-                ['class' => 'btn btn-link']
-            )
-            . Html::endForm()
-            . '</li>';
-    }
-    echo Nav::widget([
-        'options' => ['class' => 'navbar-nav navbar-right'],
-        'items' => $menuItems,
-    ]);
+    
     NavBar::end();
     ?>
 
-    <div class="container">
-        <?= Breadcrumbs::widget([
-            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-        ]) ?>
-        <?= Alert::widget() ?>
 -->
 <header>
     <div class="headerpanel">
@@ -70,8 +43,8 @@ AppAsset::register($this);
 
         <div class="headerbar">
             <a id="menuToggle" class="menutoggle"><i class="fa fa-bars"></i></a>
-
-            <div class="searchpanel">
+            
+            <div class="searchpanel" style="display: none;">
                 <div class="input-group">
                     <input type="text" class="form-control" placeholder="Search for...">
                     <span class="input-group-btn">
@@ -82,6 +55,7 @@ AppAsset::register($this);
 
             <div class="header-right">
                 <ul class="headermenu">
+                    <? /**
                     <li>
                         <div id="noticePanel" class="btn-group">
                             <button class="btn btn-notice alert-notice" data-toggle="dropdown" aria-expanded="false">
@@ -140,7 +114,7 @@ AppAsset::register($this);
                             </div>
                         </div>
                     </li>
-
+**/ ?>
                     <li>
                         <div class="btn-group">
                             <button type="button" class="btn btn-logged" data-toggle="dropdown">
@@ -149,7 +123,7 @@ AppAsset::register($this);
                             </button>
                             <ul class="dropdown-menu pull-right">
                                 <li><a href="/admin/user/change-password"><i class="fa fa-cog"></i> 修改密码</a></li>
-                                <li><a href="/site/logout" data-method="post" ><i class="fa fa-sign-out"></i> 退出</a></li>
+                                <li><a href="<?php echo Url::to(['/site/logout']) ?>" data-method="post" ><i class="fa fa-sign-out"></i> 退出</a></li>
                             </ul>
                         </div>
                     </li>
@@ -195,14 +169,6 @@ AppAsset::register($this);
                         <label class="pull-left">手机</label>
                         <span class="pull-right">+63012 3456 789</span>
                     </li>
-                    <li class="list-group-item">
-                        <label class="pull-left">第三方</label>
-                        <div class="social-icons pull-right">
-                            <a href="#"><i class="fa fa-facebook-official"></i></a>
-                            <a href="#"><i class="fa fa-twitter"></i></a>
-                            <a href="#"><i class="fa fa-pinterest"></i></a>
-                        </div>
-                    </li>
                 </ul>
             </div><!-- leftpanel-userinfo -->
             <div class="tab-content">
@@ -210,7 +176,39 @@ AppAsset::register($this);
                 <div class="tab-pane active" id="mainmenu">
                     <h5 class="sidebar-title">菜单</h5>
                     <!-- sidebar组件 -->
-                    <ul class="nav nav-pills nav-stacked nav-quirk"><li class="active"><a href="/site/index"><i class="fa fa-dashboard"></i><span>仪表盘</span></a></li>
+                    <ul class="nav nav-pills nav-stacked nav-quirk">
+                        <li class="active"><a href="/site/index"><i class="fa fa-home"></i><span>后台首页</span></a></li>
+                        <li class="nav-parent"><a href="/site/index"><i class="fa fa-shopping-cart"></i><span>商品管理</span></a>
+                            <ul class="children">
+                                <li><a href="<?php echo Url::to(['/goods/list']) ?>"><i class=""></i><span>商品列表</span></a></li>
+                                <li><a href="<?php echo Url::to(['/goods/list']) ?>"><i class=""></i><span>添加商品</span></a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-parent"><a href="/site/index"><i class="fa fa-calendar-minus-o"></i><span>扩展组件</span></a>
+                            <ul class="children">
+                                <li><a href="/plugin/index"><i class=""></i><span>组件管理</span></a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-parent"><a href="/site/index"><i class="fa fa-calendar-minus-o"></i><span>扩展组件</span></a>
+                            <ul class="children">
+                                <li><a href="/plugin/index"><i class=""></i><span>组件管理</span></a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-parent"><a href="/site/index"><i class="fa fa-calendar-minus-o"></i><span>扩展组件</span></a>
+                            <ul class="children">
+                                <li><a href="/plugin/index"><i class=""></i><span>组件管理</span></a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-parent"><a href="/site/index"><i class="fa fa-user"></i><span>扩展组件</span></a>
+                            <ul class="children">
+                                <li><a href="/plugin/index"><i class=""></i><span>组件管理</span></a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-parent"><a href="/site/index"><i class="fa fa-calendar-minus-o"></i><span>扩展组件</span></a>
+                            <ul class="children">
+                                <li><a href="/plugin/index"><i class=""></i><span>组件管理</span></a></li>
+                            </ul>
+                        </li>
                         <li class="nav-parent"><a href="/site/index"><i class="fa fa-cogs"></i><span>系统管理</span></a>
                             <ul class="children">
                                 <li><a href="/admin/role/index"><i class=""></i><span>角色管理</span></a></li>
@@ -239,32 +237,26 @@ AppAsset::register($this);
 
     <div class="mainpanel">
         <div class="contentpanel">
-            <ol class="breadcrumb breadcrumb-quirk"><li><a href="/"><i class="fa fa-home mr5"></i> 首页</a></li>
-                <li class="active">仪表盘</li>
-            </ol>                
-            <hr class="darken"> 
-            <?= Breadcrumbs::widget([
-                'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-                'options'=>['class' => 'breadcrumb breadcrumb-quirk']
-            ]) ?>
-            <?= Alert::widget() ?>
+            <ol class="breadcrumb breadcrumb-quirk">
+                <li><a href="/"><i class="fa fa-home mr5"></i> 首页</a></li>
         <?= $content ?>
-<!--
-    </div>
-</div>
-
-<footer class="footer">
-    <div class="container">
-        <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
-
-        <p class="pull-right"><?= Yii::powered() ?></p>
-    </div>
-</footer>
--->
+            
 <?php $this->endBody() ?>
 <script type="text/javascript">jQuery(document).ready(function () {
         jQuery('#page-modal').modal({"show": false});
     });</script>
+<script type="text/javascript">
+    $(function(){
+        //全选
+        $('#all_search').on('click', function(){
+            if(this.checked){
+                $("input[name='ids']").prop("checked",true);
+            }else{
+                $("input[name='ids']").removeAttr("checked");
+            }
+        });
+    });
+</script>
 </body>
 </html>
 <?php $this->endPage() ?>

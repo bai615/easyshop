@@ -64,11 +64,12 @@ class SiteController extends Controller
     {
         //http://demo.hyii2.com/
 //        echo $this->theme->baseUrl;
-        return $this->render('test');
+        return $this->render('index');
     }
 
     public function actionLogin()
     {
+        $this->layout = 'login';
         var_dump(Yii::$app->user->isGuest);
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
