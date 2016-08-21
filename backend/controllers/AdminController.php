@@ -3,7 +3,6 @@
 namespace backend\controllers;
 
 use Yii;
-use yii\web\Controller;
 use backend\models\CreateAdminForm;
 
 /**
@@ -11,7 +10,7 @@ use backend\models\CreateAdminForm;
  *
  * @author baihua <baihua_2011@163.com>
  */
-class AdminController extends Controller {
+class AdminController extends BaseController {
 
     public function actionCreate() {
         $this->getBaseData();

@@ -66,15 +66,15 @@ class Menu {
             'url' => '/brand/index',
             'children' => [
                 '1' => [
+                    'name' => '品牌分类',
+                    'action'=>'brand-category',
+                    'url' => '/brand/category',
+                ],
+                '2' => [
                     'name' => '品牌列表',
                     'action'=>'brand-list',
                     'url' => '/brand/list',
                 ],
-                '2' => [
-                    'name' => '添加品牌',
-                    'action'=>'brand-create',
-                    'url' => '/brand/create',
-                ]
             ]
         ],
         '5' => [

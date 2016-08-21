@@ -8,7 +8,6 @@
 
 namespace backend\controllers;
 
-use yii\web\Controller;
 use yii\data\Pagination;
 use common\models\Goods;
 
@@ -17,7 +16,7 @@ use common\models\Goods;
  *
  * @author baihua <baihua_2011@163.com>
  */
-class GoodsController extends Controller {
+class GoodsController extends BaseController {
 
     /**
      * 商品列表
