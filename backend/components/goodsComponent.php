@@ -9,6 +9,7 @@
 namespace backend\components;
 
 use yii\base\Component;
+use common\models\BrandCategory;
 
 /**
  * Description of goodsComponent
@@ -39,6 +40,26 @@ class goodsComponent extends Component {
             }
         }
         return $resultStr;
+    }
+    
+    /**
+     * 获取品牌分类名称
+     * @param type $categoryIds
+     * @return string
+     */
+    public function getBrandCategoryName($categoryIds){
+        $model = new BrandCategory();
+        $list = $model->find()
+            ->select('name')
+            ->where('id in ('.$categoryIds.')')
+            ->all();
+        $brandCategoryName = '';
+        if($list){
+            foreach ($list as $info){
+                $brandCategoryName .= $info['name'] . ' ';
+            }
+        }
+        return $brandCategoryName;
     }
 
 }

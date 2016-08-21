@@ -10,25 +10,25 @@ namespace backend\controllers;
 
 use yii\web\Controller;
 use yii\data\Pagination;
-use common\models\Goods;
+use common\models\Brand;
 
 /**
- * Description of GoodsController
+ * Description of BrandController
  *
  * @author baihua <baihua_2011@163.com>
  */
-class GoodsController extends Controller {
+class BrandController extends Controller {
 
     /**
-     * 商品列表
+     * 品牌列表
      * @return type
      */
     public function actionList() {
         $this->getBaseData();
-        $data = Goods::find();
+        $data = Brand::find();
         $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => '10']);
-        $model = $data->select(['id', 'name', 'sell_price', 'market_price', 'store_nums', 'img', 'is_del'])
-            ->orderBy('id desc')
+        $model = $data->select(['id', 'name', 'url', 'category_ids', 'sort'])
+            ->orderBy('sort asc')
             ->offset($pages->offset)
             ->limit($pages->limit)
             ->all();
@@ -36,12 +36,6 @@ class GoodsController extends Controller {
         return $this->render('list', [
                 'model' => $model,
                 'pages' => $pages,
-        ]);
-    }
-    
-    public function actionCreate(){
-        $this->getBaseData();
-        return $this->render('create', [
         ]);
     }
 

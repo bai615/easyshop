@@ -1,4 +1,5 @@
 <?php
+
 namespace backend\controllers;
 
 use Yii;
@@ -10,13 +11,12 @@ use backend\models\LoginForm;
 /**
  * Site controller
  */
-class SiteController extends Controller
-{
+class SiteController extends Controller {
+
     /**
      * @inheritdoc
      */
-    public function behaviors()
-    {
+    public function behaviors() {
         return [
             'access' => [
                 'class' => AccessControl::className(),
@@ -44,10 +44,9 @@ class SiteController extends Controller
     /**
      * @inheritdoc
      */
-    public function actions()
-    {
+    public function actions() {
         return [
-            'captcha' =>  [
+            'captcha' => [
                 'class' => 'yii\captcha\CaptchaAction',
                 'height' => 50,
                 'width' => 80,
@@ -60,15 +59,14 @@ class SiteController extends Controller
         ];
     }
 
-    public function actionIndex()
-    {
+    public function actionIndex() {
+        $this->getBaseData();
         //http://demo.hyii2.com/
 //        echo $this->theme->baseUrl;
         return $this->render('index');
     }
 
-    public function actionLogin()
-    {
+    public function actionLogin() {
         $this->layout = 'login';
         var_dump(Yii::$app->user->isGuest);
         if (!Yii::$app->user->isGuest) {
@@ -80,15 +78,15 @@ class SiteController extends Controller
             return $this->goBack();
         } else {
             return $this->render('login', [
-                'model' => $model,
+                    'model' => $model,
             ]);
         }
     }
 
-    public function actionLogout()
-    {
+    public function actionLogout() {
         Yii::$app->user->logout();
 
         return $this->goHome();
     }
+
 }

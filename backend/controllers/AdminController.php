@@ -14,6 +14,7 @@ use backend\models\CreateAdminForm;
 class AdminController extends Controller {
 
     public function actionCreate() {
+        $this->getBaseData();
         $model = new CreateAdminForm();
         
         if ($model->load(Yii::$app->request->post())) {
