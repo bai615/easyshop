@@ -1,13 +1,17 @@
 <?php
+
 namespace frontend\controllers;
 
 use Yii;
 use yii\base\InvalidParamException;
 use yii\web\BadRequestHttpException;
-use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use common\models\LoginForm;
+use common\models\Goods;
+use common\models\CategoryExtend;
+use common\models\GoodsPhotoRelation;
+use common\models\Products;
 use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
@@ -16,13 +20,12 @@ use frontend\models\ContactForm;
 /**
  * Site controller
  */
-class SiteController extends Controller
-{
+class SiteController extends BaseController {
+
     /**
      * @inheritdoc
      */
-    public function behaviors()
-    {
+    public function behaviors() {
         return [
             'access' => [
                 'class' => AccessControl::className(),
@@ -52,8 +55,7 @@ class SiteController extends Controller
     /**
      * @inheritdoc
      */
-    public function actions()
-    {
+    public function actions() {
         return [
             'error' => [
                 'class' => 'yii\web\ErrorAction',
@@ -66,13 +68,77 @@ class SiteController extends Controller
     }
 
     /**
-     * Displays homepage.
-     *
-     * @return mixed
+     * 前台首页
      */
-    public function actionIndex()
-    {
+    public function actionIndex() {
         return $this->render('index');
+    }
+
+    /**
+     * 商品详情
+     */
+    public function actionProducts() {
+        $goodsId = Yii::$app->request->get('id');
+
+        //使用商品id获得商品信息
+        $goodsModel = new Goods();
+        $goodsInfo = $goodsModel->find()
+//            ->select(['id','name'])
+            ->where('id=:goodsId and is_del=0', [':goodsId' => $goodsId])
+            ->one();
+
+        //品牌名称
+        if ($goodsInfo['brand_id']) {
+            dprint($goodsInfo['brand_id']);
+//            $brandModel = new IModel('brand');
+//            $brandInfo = $brandModel->find(array(
+//                'select' => 'name',
+//                'condition' => 'id=:brindId',
+//                'params' => array('brandId' => $goodsInfo['brand_id'])
+//            ));
+//            if ($brandInfo) {
+//                $goodsInfo['brand_name'] = $brandInfo['name'];
+//            }
+        }
+
+        //获取商品分类
+        $categoryInfo = CategoryExtend::getCategoryId($goodsId);
+        $goodsInfo['category_id'] = empty($categoryInfo) ? 0 : $categoryInfo['id'];
+
+        //商品图片
+        $goodsPhotoList = GoodsPhotoRelation::getGoodsPhotoList($goodsId);
+
+        if ($goodsPhotoList) {
+            $goodsPhotoArr = array();
+            foreach ($goodsPhotoList as $key => $value) {
+                $goodsPhotoArr[$key]['img'] = $value['img'];
+                $goodsPhotoArr[$key]['photo_id'] = $value['photo_id'];
+                //对默认第一张图片位置进行前置
+                if ($value['img'] == $goodsInfo['img']) {
+                    $temp = $goodsPhotoArr[0];
+                    $goodsPhotoArr[0]['img'] = $value['img'];
+                    $goodsPhotoArr[0]['photo_id'] = $value['photo_id'];
+                    $goodsPhotoArr[$key] = $temp;
+                }
+            }
+            $goodsInfo['photo'] = $goodsPhotoArr;
+        }
+
+        //获得商品的价格区间
+        $productModel = new Products();
+        $productList = $productModel->find()
+            ->select(['max(sell_price) as maxSellPrice', 'min(sell_price) as minSellPrice', 'max(market_price) as maxMarketPrice', 'min(market_price) as minMarketPrice'])
+            ->where('goods_id=:goodsId', [':goodsId' => $goodsId])
+            ->one();
+        if ($productList) {
+            $priceArea['maxSellPrice'] = $productList['maxSellPrice'];
+            $priceArea['minSellPrice'] = $productList['minSellPrice'];
+            $priceArea['minMarketPrice'] = $productList['minMarketPrice'];
+            $priceArea['maxMarketPrice'] = $productList['maxMarketPrice'];
+            $goodsInfo['price_area'] = $priceArea;
+        }
+
+        return $this->render('products', ['goodsInfo' => $goodsInfo]);
     }
 
     /**
@@ -80,8 +146,7 @@ class SiteController extends Controller
      *
      * @return mixed
      */
-    public function actionLogin()
-    {
+    public function actionLogin() {
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
@@ -91,7 +156,7 @@ class SiteController extends Controller
             return $this->goBack();
         } else {
             return $this->render('login', [
-                'model' => $model,
+                    'model' => $model,
             ]);
         }
     }
@@ -101,8 +166,7 @@ class SiteController extends Controller
      *
      * @return mixed
      */
-    public function actionLogout()
-    {
+    public function actionLogout() {
         Yii::$app->user->logout();
 
         return $this->goHome();
@@ -113,8 +177,7 @@ class SiteController extends Controller
      *
      * @return mixed
      */
-    public function actionContact()
-    {
+    public function actionContact() {
         $model = new ContactForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             if ($model->sendEmail(Yii::$app->params['adminEmail'])) {
@@ -126,7 +189,7 @@ class SiteController extends Controller
             return $this->refresh();
         } else {
             return $this->render('contact', [
-                'model' => $model,
+                    'model' => $model,
             ]);
         }
     }
@@ -136,8 +199,7 @@ class SiteController extends Controller
      *
      * @return mixed
      */
-    public function actionAbout()
-    {
+    public function actionAbout() {
         return $this->render('about');
     }
 
@@ -146,8 +208,7 @@ class SiteController extends Controller
      *
      * @return mixed
      */
-    public function actionSignup()
-    {
+    public function actionSignup() {
         $model = new SignupForm();
         if ($model->load(Yii::$app->request->post())) {
             if ($user = $model->signup()) {
@@ -158,7 +219,7 @@ class SiteController extends Controller
         }
 
         return $this->render('signup', [
-            'model' => $model,
+                'model' => $model,
         ]);
     }
 
@@ -167,8 +228,7 @@ class SiteController extends Controller
      *
      * @return mixed
      */
-    public function actionRequestPasswordReset()
-    {
+    public function actionRequestPasswordReset() {
         $model = new PasswordResetRequestForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             if ($model->sendEmail()) {
@@ -181,7 +241,7 @@ class SiteController extends Controller
         }
 
         return $this->render('requestPasswordResetToken', [
-            'model' => $model,
+                'model' => $model,
         ]);
     }
 
@@ -192,8 +252,7 @@ class SiteController extends Controller
      * @return mixed
      * @throws BadRequestHttpException
      */
-    public function actionResetPassword($token)
-    {
+    public function actionResetPassword($token) {
         try {
             $model = new ResetPasswordForm($token);
         } catch (InvalidParamException $e) {
@@ -207,7 +266,8 @@ class SiteController extends Controller
         }
 
         return $this->render('resetPassword', [
-            'model' => $model,
+                'model' => $model,
         ]);
     }
+
 }

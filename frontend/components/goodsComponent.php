@@ -10,7 +10,6 @@ namespace frontend\components;
 
 use yii\base\Component;
 use common\models\Category;
-use common\models\Goods;
 
 /**
  * Description of goods
@@ -58,28 +57,31 @@ class goodsComponent extends Component {
      */
     public function getCategoryExtendList($categroyId, $limit = 20) {
         $query = new \yii\db\Query;
-        $query->select(array('go.id', 'go.name', 'go.img', 'go.sell_price', 'go.market_price'))
+        $query->select(['go.id', 'go.name', 'go.img', 'go.sell_price', 'go.market_price'])
             ->distinct()
             ->from('{{%goods}} as go')
-            ->leftJoin('{{%category_extend}} as ca','ca.goods_id = go.id')
+            ->leftJoin('{{%category_extend}} as ca', 'ca.goods_id = go.id')
             ->where('ca.category_id in (' . $categroyId . ') and go.is_del = 0')
             ->orderBy('sale desc')
             ->limit($limit);
         $command = $query->createCommand();
-        return $command ->queryAll();
-        
-        
-//        $goodsModel = new Goods();
-//        $goodsInfo = $goodsModel->findAll(array(
-//            'select' => array('go.id', 'go.name', 'go.img', 'go.sell_price', 'go.market_price'),
-//            'condition' => 'ca.category_id in (' . $categroyId . ') and go.is_del = 0',
-//            'alias' => 'go',
-//            'join' => 'left join {{category_extend}} as ca on ca.goods_id = go.id',
-//            'order' => 'sale desc',
-//            'limit' => $limit,
-//            'distinct' => true
-//        ));
-//        return $goodsInfo;
+        return $command->queryAll();
+    }
+
+    /**
+     * 热卖商品列表
+     */
+    public function getCommendHot($limit = 10) {
+        $query = new \yii\db\Query;
+        $query->select(['go.img', 'go.sell_price', 'go.name', 'co.goods_id', 'go.market_price'])
+            ->distinct()
+            ->from('{{%commend_goods}} as co')
+            ->leftJoin('{{%goods}} as go', 'co.goods_id = go.id')
+            ->where('co.commend_id = 3 and go.is_del = 0 AND go.id is not null')
+            ->orderBy('sort asc')
+            ->limit($limit);
+        $command = $query->createCommand();
+        return $command->queryAll();
     }
 
 }
