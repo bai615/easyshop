@@ -7,6 +7,12 @@ a.orange, .orange {color: #fe6c00;}
 .red{color:#ba0505;}
 .clear{clear: both;}
 .error{border-color: #ba0505;color: #ba0505;}
+.show {
+    display: block;
+}
+.hide {
+    display: none;
+}
 
 .container{width: 1024px;}
 .container .breadcrumb{margin-bottom: 10px;}

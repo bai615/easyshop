@@ -78,6 +78,7 @@ class SiteController extends BaseController {
      * 商品详情
      */
     public function actionProducts() {
+        echo \common\utils\CommonTools::randCode(16, 1);
         $goodsId = Yii::$app->request->get('id');
 
         //使用商品id获得商品信息

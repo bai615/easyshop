@@ -38,14 +38,14 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        'assetManager' => [
-            'bundles' => [
-                'yii\web\JqueryAsset' => [
-                    'sourcePath' => null,
-                    'js' => []
-                ],
-            ],
-        ],
+//        'assetManager' => [
+//            'bundles' => [
+//                'yii\web\JqueryAsset' => [//禁用默认引入的jquery
+//                    'sourcePath' => null,
+//                    'js' => []
+//                ],
+//            ],
+//        ],
         'urlManager' => [
             'enablePrettyUrl' => true, //对url进行美化
             'showScriptName' => false, //隐藏index.php
@@ -54,11 +54,11 @@ return [
                 //首页
                 'index' => 'site/index',
                 //登录页
-                'login' => 'user/login',
+                'login' => 'users/login',
                 //退出页
-                'logout' => 'user/logout',
+                'logout' => 'users/logout',
                 //注册页
-                'reg' => 'user/signup',
+                'reg' => 'users/signup',
                 //详情页
                 'item_<id:\d+>' => 'site/products',
                 //成功信息页

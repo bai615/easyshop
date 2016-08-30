@@ -7,6 +7,11 @@ namespace frontend\controllers;
  *
  * @author baihua <baihua_2011@163.com>
  */
-class ShoppingController {
-    //put your code here
+class ShoppingController extends BaseController {
+
+    public function actionConfirm() {
+        echo \common\utils\CommonTools::randCode(16, 1);
+        return;
+    }
+
 }
