@@ -38,14 +38,14 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-//        'assetManager' => [
-//            'bundles' => [
-//                'yii\web\JqueryAsset' => [//禁用默认引入的jquery
-//                    'sourcePath' => null,
-//                    'js' => []
-//                ],
-//            ],
-//        ],
+        'assetManager' => [
+            'bundles' => [
+                'yii\web\JqueryAsset' => [//禁用默认引入的jquery
+                    'sourcePath' => null,
+                    'js' => []
+                ],
+            ],
+        ],
         'urlManager' => [
             'enablePrettyUrl' => true, //对url进行美化
             'showScriptName' => false, //隐藏index.php

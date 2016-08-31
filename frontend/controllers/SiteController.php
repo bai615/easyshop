@@ -78,7 +78,6 @@ class SiteController extends BaseController {
      * 商品详情
      */
     public function actionProducts() {
-        echo \common\utils\CommonTools::randCode(16, 1);
         $goodsId = Yii::$app->request->get('id');
 
         //使用商品id获得商品信息
@@ -106,37 +105,18 @@ class SiteController extends BaseController {
         $categoryInfo = CategoryExtend::getCategoryId($goodsId);
         $goodsInfo['category_id'] = empty($categoryInfo) ? 0 : $categoryInfo['id'];
 
-        //商品图片
+        //获取商品图片
         $goodsPhotoList = GoodsPhotoRelation::getGoodsPhotoList($goodsId);
-
         if ($goodsPhotoList) {
-            $goodsPhotoArr = array();
-            foreach ($goodsPhotoList as $key => $value) {
-                $goodsPhotoArr[$key]['img'] = $value['img'];
-                $goodsPhotoArr[$key]['photo_id'] = $value['photo_id'];
-                //对默认第一张图片位置进行前置
-                if ($value['img'] == $goodsInfo['img']) {
-                    $temp = $goodsPhotoArr[0];
-                    $goodsPhotoArr[0]['img'] = $value['img'];
-                    $goodsPhotoArr[0]['photo_id'] = $value['photo_id'];
-                    $goodsPhotoArr[$key] = $temp;
-                }
-            }
-            $goodsInfo['photo'] = $goodsPhotoArr;
+            //格式化商品图片数据
+            $goodsInfo['photo'] = GoodsPhotoRelation::formatGoodsPhotoList($goodsPhotoList, $goodsInfo['img']);
         }
 
         //获得商品的价格区间
         $productModel = new Products();
-        $productList = $productModel->find()
-            ->select(['max(sell_price) as maxSellPrice', 'min(sell_price) as minSellPrice', 'max(market_price) as maxMarketPrice', 'min(market_price) as minMarketPrice'])
-            ->where('goods_id=:goodsId', [':goodsId' => $goodsId])
-            ->one();
+        $productList = $productModel->getProductList($goodsId);
         if ($productList) {
-            $priceArea['maxSellPrice'] = $productList['maxSellPrice'];
-            $priceArea['minSellPrice'] = $productList['minSellPrice'];
-            $priceArea['minMarketPrice'] = $productList['minMarketPrice'];
-            $priceArea['maxMarketPrice'] = $productList['maxMarketPrice'];
-            $goodsInfo['price_area'] = $priceArea;
+            $goodsInfo['price_area'] = $productList;
         }
 
         return $this->render('products', ['goodsInfo' => $goodsInfo]);
