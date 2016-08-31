@@ -233,8 +233,8 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
 
 <script type="text/javascript">
     var goods_id = '<?php echo $goodsInfo['id']; ?>';
-    var get_product_url = "<?php echo Url::to('home/getProduct'); ?>";
-    var favorite_url = "<?php echo Url::to('home/favoriteAdd'); ?>";
+    var get_product_url = "<?php echo Yii::$app->urlManager->createUrl('/site/get-product'); ?>";
+    var favorite_url = "<?php echo Yii::$app->urlManager->createUrl('/site/favorite-add'); ?>";
 </script>
 <script src="<?php echo $themeUrl; ?>/js/jquery.min.js" type="text/javascript"></script>
 <script src="<?php echo $themeUrl; ?>/js/jqueryzoom.js" type="text/javascript"></script>

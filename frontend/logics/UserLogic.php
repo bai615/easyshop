@@ -158,6 +158,10 @@ class UserLogic {
             //保存自动登录信息
             self::saveAutoLogin($userInfo['username']);
         }
+        //更新最后登录时间和IP
+        $userInfo->last_login_time=  date('Y-m-d H:i:s');
+        $userInfo->last_login_ip = CommonTools::real_ip();
+        $userInfo->update();
         return true;
     }
 

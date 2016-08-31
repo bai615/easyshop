@@ -1,15 +1,11 @@
 <?php
 
-/*
- * 品牌模型
- */
-
 namespace common\models;
 
 use yii\db\ActiveRecord;
 
 /**
- * Description of Brand
+ * 品牌模型
  *
  * @author baihua <baihua_2011@163.com>
  */

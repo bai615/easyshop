@@ -10,6 +10,7 @@ use common\models\Goods;
 use common\models\CategoryExtend;
 use common\models\GoodsPhotoRelation;
 use common\models\Products;
+use common\models\Favorite;
 use frontend\models\ContactForm;
 
 /**
@@ -118,34 +119,69 @@ class SiteController extends BaseController {
     }
 
     /**
-     * Logs in a user.
-     *
-     * @return mixed
+     * 获取货品数据
      */
-    public function actionLogin() {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
+    public function actionGetProduct() {
+        $specJSON = Yii::$app->request->post('specJSON');
+        $jsonData = json_decode($specJSON, true);
+        if (empty($jsonData)) {
+            die(json_encode(array('flag' => 'fail', 'message' => '规格值不符合标准')));
         }
-
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
+        $goodsId = intval(Yii::$app->request->post('goods_id'));
+        //获取货品数据
+        $productsObj = new Products();
+        $procductsInfo = $productsObj->find()
+            ->where('goods_id=:goodsId and spec_array=:specJSON', [':goodsId' => $goodsId, ':specJSON' => $specJSON])
+            ->one();
+        //匹配到货品数据
+        if (empty($procductsInfo)) {
+            die(json_encode(array('flag' => 'fail', 'message' => '没有找到相关货品')));
         } else {
-            return $this->render('login', [
-                    'model' => $model,
-            ]);
+            $data = array(
+                'id' => $procductsInfo['id'],
+                'goods_id' => $procductsInfo['goods_id'],
+                'products_no' => $procductsInfo['products_no'],
+                'spec_array' => $procductsInfo['spec_array'],
+                'store_nums' => $procductsInfo['store_nums'],
+                'market_price' => $procductsInfo['market_price'],
+                'sell_price' => $procductsInfo['sell_price'],
+                'cost_price' => $procductsInfo['cost_price'],
+                'weight' => $procductsInfo['weight']
+            );
+            die(json_encode(array('flag' => 'success', 'info' => $data)));
         }
     }
 
     /**
-     * Logs out the current user.
-     *
-     * @return mixed
+     * 添加到收藏
      */
-    public function actionLogout() {
-        Yii::$app->user->logout();
-
-        return $this->goHome();
+    public function actionFavoriteAdd() {
+        $userId = $this->data['shopUserInfo']['userId'];
+        $goodsId = Yii::$app->request->get('goods_id');
+        if (empty($goodsId)) {
+            $errCode = 1;
+            $message = '商品id值不能为空';
+        } else if (empty($userId)) {
+            $errCode = 2;
+            $message = '请先登录';
+        } else {
+            $favoriteModel = new Favorite();
+            $favoriteInfo = $favoriteModel->find()
+                ->where('user_id=:userId and rid=:goodsId',[':userId' => $userId, ':goodsId' => $goodsId])
+                ->one();
+            if ($favoriteInfo) {
+                $errCode = 3;
+                $message = '您已经收藏过此件商品';
+            } else {
+                $favoriteModel->user_id = $userId;
+                $favoriteModel->rid = $goodsId;
+                $favoriteModel->time = date('Y-m-d H:i:s');
+                $favoriteModel->save();
+                $errCode = 0;
+                $message = '收藏成功';
+            }
+        }
+        echo (json_encode(array('errCode' => $errCode, 'errMsg' => $message)));
     }
 
     /**
