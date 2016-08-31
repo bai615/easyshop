@@ -71,7 +71,7 @@ endif;
 ?>
     $("input[name=mobile]").blur(function(){
         var mobile = $("input[name=mobile]").val();
-        $.post('<?php echo Url::to('/users/checkName');?>',{mobile:mobile},function(data){
+        $.post('<?php echo Yii::$app->urlManager->createUrl('/users/check-name');?>',{mobile:mobile},function(data){
             if(1===data.errcode){
                 layer.msg(data.errmsg, {icon: 2, time: 2000});
             }
