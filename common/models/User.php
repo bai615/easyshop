@@ -11,6 +11,7 @@ use yii\web\IdentityInterface;
  * @author baihua <baihua_2011@163.com>
  */
 class User extends ActiveRecord implements IdentityInterface {
+
     public function getAuthKey() {
         
     }
@@ -30,7 +31,7 @@ class User extends ActiveRecord implements IdentityInterface {
     public static function findIdentityByAccessToken($token, $type = null) {
         
     }
-    
+
     /**
      * Finds user by userName
      *
@@ -41,5 +42,15 @@ class User extends ActiveRecord implements IdentityInterface {
         return static::findOne(['username' => $userName, 'is_del' => 0]);
     }
 
+    /**
+     * Validates password
+     *
+     * @param string $password password to validate
+     * @return boolean if password provided is valid for current user
+     */
+    public function validatePassword($user, $password) {
+        $newPassword = Common::getPwd($password, $user['salt']);
+        return ($user['password'] == $newPassword) ? true : false;
+    }
 
 }
