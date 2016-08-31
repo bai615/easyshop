@@ -147,14 +147,14 @@ a.orange, .orange {color: #fe6c00;}
 .user_login_box .login_ad{border: 1px solid #ccc;width: 672px;float: left;}
 .user_login_box .login_ad img{height: 420px;width: 670px;}
 .user_login_box .login_form{float: right;height: 400px;width: 300px;}
-.user_login_box .login_form table{width: 260px;margin: 0px 20px;}
+.user_login_box .login_form table{width: 280px;margin: 0px 10px;}
 .user_login_box .login_form td{height: 50px;}
 .user_login_box .login_form .username,.user_login_box .login_form .password{position: relative;}
-.user_login_box .login_form .username i,.user_login_box .login_form .password i{width: 30px;margin-right: 10px;height: 36px;float: left;background: url("../images/icon.png")  no-repeat;position: absolute;z-index: 10; }
+.user_login_box .login_form .username i,.user_login_box .login_form .password i{width: 30px;margin-left: 3px;margin-right: 10px;height: 36px;float: left;background: url("../images/icon.png")  no-repeat;position: absolute;z-index: 10; }
 .user_login_box .login_form .username i{background-position:10px -110px;}
 .user_login_box .login_form .password i{background-position:10px -150px;}
-.user_login_box .login_form .username input,.user_login_box .login_form .password input{padding: 6px 12px 6px 35px;}
-.user_login_box .login_form .find_pwd{float: right;}
+.user_login_box .login_form .username input,.user_login_box .login_form .password input{height: 36px;line-height: 36px;padding: 6px 12px 6px 35px;border: 1px solid #ccc;border-radius: 4px;width: 98%;}
+.user_login_box .login_form .find_pwd{float: right;height: 40px;line-height: 40px;margin-bottom: 10px;}
 .user_login_box .login_form .btn{width: 150px;}
 .user_login_box .login_form .other_login{padding: 15px 0px;}
 .user_login_box .login_form .other_login p{margin: 0 0 5px;}

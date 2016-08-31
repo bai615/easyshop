@@ -6,7 +6,7 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
 ?>
 <link href="<?php echo $themeUrl; ?>/libs/autovalidate/style.css" rel="stylesheet">
 <div class="container block_box">
-    <div class="text-right" style="float: right;"><a href="/"><i class="glyphicon glyphicon-home"></i> 网站首页</a> &nbsp;&nbsp; 已有账号，<a href="<?php echo Url::to('user/login'); ?>">请登录</a></div>
+    <div class="text-right" style="float: right;"><a href="/"><i class="glyphicon glyphicon-home"></i> 网站首页</a> &nbsp;&nbsp; 已有账号，<a href="<?php echo Url::to(['/users/login']); ?>">请登录</a></div>
     <ul class="nav nav-tabs" role="tablist">
         <li role="presentation" class="active"><a href="javascript:void(0)">新用户注册</a></li>
     </ul>
@@ -30,7 +30,6 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                     <tr>
                         <th class="text-right"></th>
                         <td>
-                            <?php // $this->widget("CCaptcha", array('showRefreshButton' => true, 'clickableImage' => true, 'buttonType' => 'link', 'buttonLabel' => '换一张', 'imageOptions' => array('alt' => '点击换图', 'title' => '点击换图', 'align' => 'absmiddle'))); ?>
                             <div id="embed-captcha"></div>
                             <p id="wait" class="show">正在加载验证码......</p>
                             <p id="notice" class="hide">请先拖动验证码到相应位置</p>

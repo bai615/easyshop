@@ -2,6 +2,7 @@
 
 namespace common\utils;
 
+use Yii;
 /**
  * 公共方法集合
  *
@@ -26,7 +27,7 @@ class CommonTools {
      * @param type $prefix
      * @return type
      */
-    public static function getPwd($password, $salt = '', $prefix = 'yiishop_') {
+    public static function getPwd($password, $salt = '', $prefix = 'easyshop_') {
         return md5(sha1($prefix . trim($password) . $salt));
     }
 
@@ -35,7 +36,7 @@ class CommonTools {
      * @return type
      */
     public static function getAutoCookieName() {
-        return md5(Yii::app()->params['auto_login_cookie_name']);
+        return md5(Yii::$app->params['auto_login_cookie_name']);
     }
 
     /**

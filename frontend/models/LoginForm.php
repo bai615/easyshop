@@ -4,6 +4,8 @@ namespace frontend\models;
 
 use Yii;
 use yii\base\Model;
+use common\models\User;
+use frontend\logics\UserLogic;
 
 /**
  * User Login Form
@@ -14,7 +16,7 @@ class LoginForm extends Model {
 
     public $username;
     public $password;
-    public $rememberMe = true;
+    public $online = true;
     private $_user;
 
     /**
@@ -25,9 +27,9 @@ class LoginForm extends Model {
             // username and password are required
             ['username', 'required', 'message' => '手机号必填'],
             ['password', 'required', 'message' => '密码必填'],
-            ['username', 'mobile', 'allowEmpty' => false, 'message' => '格式不正确'],
-            // rememberMe must be a boolean value
-            ['rememberMe', 'boolean'],
+//            ['username', 'checkUserName'],
+            // online must be a boolean value
+            ['online', 'boolean'],
             // password is validated by validatePassword()
             ['password', 'validatePassword'],
 //            ['verifyCode', 'captcha'],
@@ -36,12 +38,16 @@ class LoginForm extends Model {
 
     public function attributeLabels() {
         return [
-            'username' => '用户名',
-            'password' => '密码',
-            'rememberMe' => '自动登录',
+            'username' => '',
+            'password' => '',
+            'online' => '自动登录',
 //            'captcha' => '验证码',
 //            'verifyCode' => '', //验证码的名称，根据个人喜好设定 
         ];
+    }
+
+    public function ckeckUserName($attribute, $params) {
+        
     }
 
     /**
@@ -54,8 +60,8 @@ class LoginForm extends Model {
     public function validatePassword($attribute, $params) {
         if (!$this->hasErrors()) {
             $user = $this->getUser();
-            if (!$user || !$user->validatePassword($this->password)) {
-                $this->addError($attribute, 'Incorrect adminname or password.');
+            if (!$user || !$user->validatePassword($user, $this->password)) {
+                $this->addError($attribute, '用户名或者密码错误.');
             }
         }
     }
@@ -67,7 +73,8 @@ class LoginForm extends Model {
      */
     public function login() {
         if ($this->validate()) {
-            return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
+            return UserLogic::login($this->getUser(), $this->online);
+//            return Yii::$app->user->login($this->getUser(), $this->online ? 3600 * 24 * 30 : 0);
         } else {
             return false;
         }

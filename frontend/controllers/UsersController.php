@@ -73,18 +73,46 @@ class UsersController extends BaseController {
      * 登录
      */
     public function actionLogin() {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
+        $callback = Yii::$app->request->get('callback');
+        //跳转URL
+        $callbackUrl = empty($callback) ? Url::to(['/site/index']) : $callback;
+        $session = Yii::$app->session;
+        $shopUserInfo = $session->get('shopUserInfo');
+        if ($shopUserInfo) {
+            //已经登录，进行跳转
+            $this->redirect($callbackUrl);
         }
-
+        $data = array();
         $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
-        } else {
-            return $this->render('login', [
-                    'model' => $model,
-            ]);
+        if (Yii::$app->request->post()) {
+            $data['type'] = Yii::$app->request->post('type');
+            $data['geetest_challenge'] = Yii::$app->request->post('geetest_challenge');
+            $data['geetest_validate'] = Yii::$app->request->post('geetest_validate');
+            $data['geetest_seccode'] = Yii::$app->request->post('geetest_seccode');
+            $userLogic = new UserLogic();
+            //校验验证码
+            $result = $userLogic->checkVerify($data);
+            if (0 == $result['errcode'] && $model->load(Yii::$app->request->post()) && $model->login()) {
+                //登录成功进行跳转
+                $this->redirect($callbackUrl);
+            } else if (1 == $result['errcode']) {
+                $data['errmsg'] = $result['errmsg'];
+            }
         }
+        $data['model'] = $model;
+        return $this->render('login', $data);
+    }
+
+    /**
+     * 退出登录
+     */
+    public function actionLogout() {
+        $callback = Yii::$app->request->get('callback');
+        //跳转URL
+        $callbackUrl = empty($callback) ? Url::to(['/site/index']) : $callback;
+        UserLogic::logout();
+        //已经退出登录，进行跳转
+        $this->redirect($callbackUrl);
     }
 
 }

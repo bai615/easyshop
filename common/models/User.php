@@ -4,6 +4,7 @@ namespace common\models;
 
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
+use common\utils\CommonTools;
 
 /**
  * Description of User
@@ -49,7 +50,7 @@ class User extends ActiveRecord implements IdentityInterface {
      * @return boolean if password provided is valid for current user
      */
     public function validatePassword($user, $password) {
-        $newPassword = Common::getPwd($password, $user['salt']);
+        $newPassword = CommonTools::getPwd($password, $user['salt']);
         return ($user['password'] == $newPassword) ? true : false;
     }
 

@@ -5,7 +5,7 @@ namespace frontend\logics;
 use Yii;
 use common\utils\GeetestLib;
 use common\models\User;
-use common\models\Common;
+use common\utils\CommonTools;
 
 /**
  * 用户逻辑
@@ -115,7 +115,7 @@ class UserLogic {
             } else {
                 //进行信息注册
                 $userModel->username = $data['username'];
-                $userModel->password = Common::getPwd($data['password'], $salt);
+                $userModel->password = CommonTools::getPwd($data['password'], $salt);
                 $userModel->salt = $salt;
                 $userModel->created_time = date('Y-m-d H:i:s');
                 $userModel->save();
@@ -137,12 +137,63 @@ class UserLogic {
             ->select(['id'])
             ->where('username=:username and is_del=0', [':username' => $username])
             ->one();
-        if ($userInfo) {
-            //用户已存在
-            return true;
-        } else {
-            return false;
+        //判断用户是否存在
+        return empty($userInfo) ? false : true;
+    }
+
+    /**
+     * 登录
+     * @param type $userInfo
+     * @param type $online
+     * @return boolean
+     */
+    public static function login($userInfo, $online) {
+        //保存session信息
+        Yii::$app->session['shopUserInfo'] = array(
+            'userId' => $userInfo['id'],
+            'userName' => $userInfo['username'],
+            'head_ico' => $userInfo['head_ico'],
+        );
+        if ($online) {
+            //保存自动登录信息
+            self::saveAutoLogin($userInfo['username']);
         }
+        return true;
+    }
+
+    /**
+     * 保存自动登录信息
+     * @param type $username
+     */
+    private static function saveAutoLogin($username) {
+        $ip = CommonTools::real_ip();
+        //自动登录设置
+        $value = $username . '|' . $ip;
+        $value = CommonTools::encrypt($value, 'E');
+        $cookieName = CommonTools::getAutoCookieName();
+        // 从 "request"组件中获取cookie集合(yii\web\CookieCollection)
+        $cookies = Yii::$app->response->cookies;
+
+        // 添加一个新的cookie
+        $cookies->add(new \yii\web\Cookie([
+            'name' => $cookieName,
+            'value' => $value,
+            'expire' => Yii::$app->params['auto_login_time'], //有限期
+        ]));
+    }
+
+    /**
+     * 退出登录
+     */
+    public static function logout() {
+        // 从"response"组件中获取cookie 集合(yii\web\CookieCollection)
+        $cookies = Yii::$app->response->cookies;
+        $cookieName = CommonTools::getAutoCookieName();
+        // 删除一个cookie
+        $cookies->remove($cookieName);
+        $session = Yii::$app->session;
+        // 删除一个session变量
+        $session->remove('shopUserInfo');
     }
 
 }
