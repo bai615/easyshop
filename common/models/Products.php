@@ -38,5 +38,16 @@ class Products extends ActiveRecord {
         }
         return $priceArea;
     }
+    
+    /**
+     * 获取产品所属商品
+     * @return type
+     */
+    public function getGoods()
+    {
+        //同样第一个参数指定关联的子表模型类名
+        //
+        return $this->hasOne(Goods::className(), ['id' => 'goods_id']);
+    }
 
 }

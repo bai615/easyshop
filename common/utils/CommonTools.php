@@ -3,6 +3,7 @@
 namespace common\utils;
 
 use Yii;
+
 /**
  * 公共方法集合
  *
@@ -140,7 +141,7 @@ class CommonTools {
 
     //[公共方法]通过解析products表中的spec_array转化为格式：key:规格名称;value:规格值
     public static function show_spec($specJson) {
-        $specArray = CJSON::decode($specJson);
+        $specArray = json_decode($specJson, true);
         $spec = array();
 
         if ($specArray) {
@@ -172,17 +173,17 @@ class CommonTools {
 //        $dataStr = http_build_query($data);
         return md5($strSign . $skey);
     }
-    
+
     /**
      * 显示警告信息
      * @param type $message
      */
     public static function showWarning($message = '') {
-		$data['message'] = $message;
-		$result = Yii::app()->getController()->render('/common/warning', $data, 1);
-		die($result);
-	}
-    
+        $data['message'] = $message;
+        $result = Yii::$app->controller->render('/common/warning', $data, 1);
+        die($result);
+    }
+
     //生成随机验证码
     public static function randCode($length = 5, $type = 0) {
         $arr = array(1 => "0123456789", 2 => "abcdefghijklmnopqrstuvwxyz", 3 => "ABCDEFGHIJKLMNOPQRSTUVWXYZ", 4 => "~@#$%^&*(){}[]|");

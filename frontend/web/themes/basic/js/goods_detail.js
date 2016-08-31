@@ -122,9 +122,8 @@ function favorite_add(obj) {
         if (0 === content.errCode) {
             $(".favorite span").html('已收藏');
             $(".favorite i").removeClass('glyphicon-star-empty').addClass('glyphicon-star');
-            alert(content.errMsg);
-            
         }
+        alert(content.errMsg);
         
     });
 }

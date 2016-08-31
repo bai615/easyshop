@@ -1,0 +1,6 @@
+.add_form{padding: 10px;}
+.add_form .form-group{overflow: hidden;}
+.add_form .form-group label{height: 29px; line-height: 29px;}
+.add_form .form-group input{height: 33px;width: 100%;border:1px solid #ccc;border-radius: 4px;}
+.add_form .form-group .form_content{margin: 0px;padding: 0px;}
+.add_form .province,.add_form .city{margin-bottom: 0px;}
