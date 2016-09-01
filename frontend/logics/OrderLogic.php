@@ -4,7 +4,11 @@ namespace frontend\logics;
 
 use common\models\Order;
 use common\models\OrderGoods;
+use common\models\CollectionDoc;
+use common\models\Goods;
+use common\models\Products;
 use common\utils\CommonTools;
+
 /**
  * 订单逻辑
  *
@@ -119,10 +123,9 @@ class OrderLogic {
     public static function updateOrderStatus($orderNo, $adminId = '', $note = '') {
         //获取订单信息
         $orderObj = new Order();
-        $orderInfo = $orderObj->find(array(
-            'condition' => 'order_no=:orderNo',
-            'params' => array('orderNo' => $orderNo)
-        ));
+        $orderInfo = $orderObj->find()
+            ->where('order_no=:orderNo', ['orderNo' => $orderNo])
+            ->one();
         //订单不存在
         if (empty($orderInfo)) {
             return false;
@@ -153,11 +156,10 @@ class OrderLogic {
 
             //减少库存量
             $orderGoodsObj = new OrderGoods();
-            $orderGoodsList = $orderGoodsObj->findAll(array(
-                'select' => 'id',
-                'condition' => 'order_id=:orderId',
-                'params' => array(':orderId' => $orderInfo['id'])
-            ));
+            $orderGoodsList = $orderGoodsObj->find()
+                ->select(['id'])
+                ->where('order_id=:orderId', [':orderId' => $orderInfo['id']])
+                ->all();
             $orderGoodsListId = array();
             foreach ($orderGoodsList as $info) {
                 $orderGoodsListId[] = $info['id'];
@@ -182,18 +184,17 @@ class OrderLogic {
         $orderGoodsObj = new OrderGoods();
         $goodsObj = new Goods();
         $productObj = new Products();
-        $goodsList = $orderGoodsObj->findAll(array(
-            'select' => array('goods_id', 'product_id', 'goods_nums'),
-            'condition' => 'id in (' . join(",", $orderGoodsId) . ') and is_send = 0',
-        ));
-        foreach ($goodsList as $key => $val) {
+        $goodsList = $orderGoodsObj->find()
+            ->select(['goods_id', 'product_id', 'goods_nums'])
+            ->where('id in (' . join(",", $orderGoodsId) . ') and is_send = 0')
+            ->all();
+        foreach ($goodsList as $val) {
             //货品库存更新
             if ($val['product_id'] != 0) {
-                $productsInfo = $productObj->find(array(
-                    'select' => 'store_nums',
-                    'condition' => 'id=:productId',
-                    'params' => array(':productId' => $val['product_id'])
-                ));
+                $productsInfo = $productObj->find()
+                    ->select(['id', 'store_nums'])
+                    ->where('id=:productId', [':productId' => $val['product_id']])
+                    ->one();
                 if (empty($productsInfo)) {
                     continue;
                 }
@@ -212,11 +213,10 @@ class OrderLogic {
             }
             //商品库存更新
             else {
-                $goodsInfo = $goodsObj->find(array(
-                    'select' => 'store_nums',
-                    'condition' => 'id=:goodsId',
-                    'params' => array(':goodsId' => $val['goods_id'])
-                ));
+                $goodsInfo = $goodsObj->find()
+                    ->select(['id', 'store_nums'])
+                    ->where('id=:goodsId', [':goodsId' => $val['goods_id']])
+                    ->one();
                 if (!$goodsInfo) {
                     continue;
                 }
@@ -224,7 +224,6 @@ class OrderLogic {
 
                 $newStoreNums = ($type == 'add') ? $localStoreNums + $val['goods_nums'] : $localStoreNums - $val['goods_nums'];
                 $newStoreNums = $newStoreNums > 0 ? $newStoreNums : 0;
-
                 $goodsInfo->store_nums = $newStoreNums;
                 $goodsInfo->update();
             }
@@ -235,9 +234,8 @@ class OrderLogic {
             //更新统计goods的库存
             if ($updateGoodsId) {
                 foreach ($updateGoodsId as $val) {
-                    $totalRow = $productObj->getObj('goods_id = ' . $val, 'SUM(store_nums) as store');
-                    $goodsObj->setData(array('store_nums' => $totalRow['store']));
-                    $goodsObj->update('id = ' . $val);
+                    $total = $productObj->find()->where('goods_id = ' . $val)->sum('store_nums');
+                    $goodsObj->updateAll(['store_nums' => $total], 'id=:goodsId', [':goodsId' => $val]);
                 }
             }
         }

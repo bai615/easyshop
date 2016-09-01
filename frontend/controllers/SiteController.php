@@ -5,7 +5,6 @@ namespace frontend\controllers;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
-use common\models\LoginForm;
 use common\models\Goods;
 use common\models\CategoryExtend;
 use common\models\GoodsPhotoRelation;

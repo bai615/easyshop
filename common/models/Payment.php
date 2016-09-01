@@ -18,7 +18,7 @@ class Payment extends ActiveRecord {
      * @return 返回支付插件类对象
      */
     public static function getPaymentById($paymentId, $key = '') {
-        $info = Payment::find()->indexBy('id')->all();
+        $info = Payment::find()->where('id=:paymentId',[':paymentId'=>$paymentId])->one();
         if ($key) {
             return isset($info[$key]) ? $info[$key] : '';
         }

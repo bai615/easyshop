@@ -5,6 +5,7 @@ namespace frontend\logics;
 use Yii;
 use common\utils\GeetestLib;
 use common\models\User;
+use common\models\Member;
 use common\utils\CommonTools;
 
 /**
@@ -119,6 +120,13 @@ class UserLogic {
                 $userModel->salt = $salt;
                 $userModel->created_time = date('Y-m-d H:i:s');
                 $userModel->save();
+                
+                $memberModel = new Member();
+                $memberModel->user_id = $userModel->id;
+                $memberModel->time = date('Y-m-d H:i:s');
+                $memberModel->status = 1;
+                $memberModel->mobile = $data['username'];
+                $memberModel->save();
                 return array('errcode' => 0, 'errmsg' => 'OK');
             }
         }

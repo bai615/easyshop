@@ -4,7 +4,9 @@ namespace frontend\controllers;
 
 use Yii;
 use common\models\Areas;
+use common\models\Order;
 use common\utils\CommonTools;
+use frontend\logics\PayLogic;
 
 /**
  * 公共模块
@@ -43,9 +45,9 @@ class CommonController extends BaseController {
      */
     public function actionDoPay() {
         $this->is_login();
-        $orderId = intval(Yii::$app->request->post('order_id'));
-        $paymentId = intval(Yii::$app->request->post('payment_id'));
-        $recharge = Yii::$app->request->post('recharge');
+        $orderId = intval(Yii::$app->request->get('order_id'));
+        $paymentId = intval(Yii::$app->request->get('payment_id'));
+        $recharge = Yii::$app->request->get('recharge');
         if ($orderId) {
             //获取订单信息
             $orderObj = new Order();
