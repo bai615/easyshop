@@ -10,6 +10,7 @@ use common\models\Member;
 use common\models\Order;
 use common\models\Areas;
 use common\models\Favorite;
+use common\models\Address;
 use frontend\models\AccountLog;
 use frontend\logics\OrderLogic;
 
@@ -36,7 +37,7 @@ class UcenterController extends BaseController {
         ),
         '4' => array(
             'name' => '地址管理',
-            'url' => '/ucenter/order'
+            'url' => '/ucenter/address'
         ),
         '5' => array(
             'name' => '个人资料',
@@ -198,7 +199,7 @@ class UcenterController extends BaseController {
             ->all();
         return $this->render('account', array('pages' => $pages, 'logList' => $logList, 'memberInfo' => $memberInfo));
     }
-    
+
     /**
      * 我的收藏
      */
@@ -217,6 +218,26 @@ class UcenterController extends BaseController {
             ->limit($pages->limit)
             ->all();
         return $this->render('favorite', array('pages' => $pages, 'favoriteList' => $favoriteList));
+    }
+
+    /**
+     * 地址管理
+     */
+    public function actionAddress() {
+        $this->is_login();
+        $this->currentMenu = 4;
+        $userId = $this->data['shopUserInfo']['userId'];
+        $condition = 'user_id =:userId';
+        $params = array(':userId' => $userId);
+        $data = Address::find()->where($condition, $params);
+        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => '10']);
+        $addressList = $data->select(['id', 'user_id', 'accept_name', 'province', 'city', 'area', 'address', 'mobile', 'is_default'])
+            ->where($condition, $params)
+            ->orderBy('id desc')
+            ->offset($pages->offset)
+            ->limit($pages->limit)
+            ->all();
+        return $this->render('address', array('pages' => $pages, 'addressList' => $addressList));
     }
 
 }

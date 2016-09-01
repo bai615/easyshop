@@ -31,5 +31,13 @@ class Goods extends ActiveRecord {
         // 第二个参数指定 通过子表的goods_id，关联主表的id字段
         return $this->hasMany(Products::className(), ['goods_id' => 'id']);
     }
+    
+    /**
+     * 获取一个商品对应的所有收藏
+     * @return type
+     */
+    public function getFavorite() {
+        return $this->hasMany(Favorite::className(), ['rid' => 'id']);
+    }
 
 }

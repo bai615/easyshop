@@ -3,6 +3,7 @@
 namespace common\models;
 
 use yii\db\ActiveRecord;
+
 /**
  * 订单表
  *
@@ -10,6 +11,12 @@ use yii\db\ActiveRecord;
  */
 class Order extends ActiveRecord {
 
+    public function getOrderGoods() {
+        // 第一个参数为要关联的子表模型类名，
+        // 第二个参数指定 通过子表的order_id，关联主表的id字段
+        return $this->hasMany(OrderGoods::className(), ['order_id' => 'id']);
+    }
+    
     /**
      * 获取订单状态
      * @param $orderRow array('status' => '订单状态','pay_type' => '支付方式ID','distribution_status' => '配送状态','pay_status' => '支付状态')
@@ -35,14 +42,13 @@ class Order extends ActiveRecord {
         }
         //2,已经付款
         else if ($orderRow['status'] == 2) {
-            $refundModel = new RefundmentDoc();
-            $refundRow = $refundModel->find(array(
-                'condition' => 'order_no=:orderNo and if_del=0 and pay_status=0',
-                'params' => array('orderNo' => $orderRow['order_no'])
-            ));
-            if ($refundRow) {
-                return 12;
-            }
+//            $refundModel = new RefundmentDoc();
+//            $refundRow = $refundModel->find()
+//                ->where('order_no=:orderNo and if_del=0 and pay_status=0',['orderNo' => $orderRow['order_no']])
+//                ->one();
+//            if ($refundRow) {
+//                return 12;
+//            }
 
             if ($orderRow['distribution_status'] == 0) {
                 return 4;
