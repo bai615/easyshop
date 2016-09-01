@@ -3,18 +3,49 @@
 namespace frontend\controllers;
 
 use Yii;
+use yii\data\Pagination;
 use common\utils\CommonTools;
 use common\models\Payment;
 use common\models\Member;
 use common\models\Order;
+use common\models\Areas;
 use frontend\models\AccountLog;
 use frontend\logics\OrderLogic;
+
 /**
  * 用户中心模块
  *
  * @author baihua <baihua_2011@163.com>
  */
 class UcenterController extends BaseController {
+
+    public $currentMenu = 0;
+    public $menuData = array(
+        '1' => array(
+            'name' => '我的订单',
+            'url' => '/ucenter/order'
+        ),
+        '2' => array(
+            'name' => '账户余额',
+            'url' => '/ucenter/account'
+        ),
+        '3' => array(
+            'name' => '我的收藏',
+            'url' => '/ucenter/favorite'
+        ),
+        '4' => array(
+            'name' => '地址管理',
+            'url' => '/ucenter/order'
+        ),
+        '5' => array(
+            'name' => '个人资料',
+            'url' => '/ucenter/order'
+        ),
+        '6' => array(
+            'name' => '修改密码',
+            'url' => '/ucenter/order'
+        ),
+    );
 
     /**
      * 余额付款
@@ -46,7 +77,7 @@ class UcenterController extends BaseController {
         //获取用户信息
         $memberObj = new Member();
         $memberInfo = $memberObj->find()
-            ->where('user_id=:userId',[':userId' => $userId])
+            ->where('user_id=:userId', [':userId' => $userId])
             ->one();
         if (empty($memberInfo)) {
             CommonTools::showWarning('用户信息不存在');
@@ -54,7 +85,7 @@ class UcenterController extends BaseController {
         //获取订单信息
         $orderObj = new Order();
         $orderInfo = $orderObj->find()
-            ->where('order_no=:orderNo and pay_status = 0 and status = 1 and user_id=:userId',[':orderNo' => $return['order_no'], ':userId' => $userId])
+            ->where('order_no=:orderNo and pay_status = 0 and status = 1 and user_id=:userId', [':orderNo' => $return['order_no'], ':userId' => $userId])
             ->one();
         if (empty($orderInfo)) {
             CommonTools::showWarning('订单号【' . $return['order_no'] . '】已经被处理过，请查看订单状态');
@@ -101,6 +132,45 @@ class UcenterController extends BaseController {
         //拼接进返还的URL中
         $return_url.= 'sign=' . $urlStrMD5;
         header('location:' . $return_url);
+    }
+
+    /**
+     * 我的订单
+     */
+    public function actionOrder() {
+        $this->is_login();
+        $this->currentMenu = 1;
+        $userId = $this->data['shopUserInfo']['userId'];
+        $data = Order::find()->where('user_id =:userId and if_del= 0', [':userId' => $userId]);
+        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => '10']);
+        $model = $data//->select(['id', 'name', 'sell_price', 'market_price', 'store_nums', 'img', 'is_del'])
+            ->where('user_id =:userId and if_del= 0', [':userId' => $userId])
+            ->orderBy('id desc')
+            ->offset($pages->offset)
+            ->limit($pages->limit)
+            ->all();
+        return $this->render('order', [
+                'orderList' => $model,
+                'pages' => $pages,
+        ]);
+    }
+
+    /**
+     * 订单详情
+     */
+    public function actionOrderDetail() {
+        $this->is_login();
+        $this->currentMenu = 1;
+        $userId = $this->data['shopUserInfo']['userId'];
+        $orderId = Yii::$app->request->get('id');
+        //订单信息
+        $orderModel = new Order();
+        $orderInfo = $orderModel->find()
+            ->where('id=:orderId and user_id=:userId', [':orderId' => $orderId, ':userId' => $userId])
+            ->one();
+        //地址信息
+        $areaData = Areas::name($orderInfo['province'], $orderInfo['city'], $orderInfo['area']);
+        return $this->render('orderDetail', array('orderInfo' => $orderInfo, 'areaData' => $areaData));
     }
 
 }

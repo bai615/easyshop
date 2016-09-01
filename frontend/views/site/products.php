@@ -28,6 +28,13 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                                 </li>
                                 <?php
                             endforeach;
+                            foreach ($goodsInfo['photo'] as $info):
+                                ?>
+                                <li>
+                                    <img src="<?php echo Yii::$app->params['upload_url'] . $info['img']; ?>">
+                                </li>
+                                <?php
+                            endforeach;
                         endif;
                         ?>
                     </ul>
