@@ -9,6 +9,7 @@ use common\models\Payment;
 use common\models\Member;
 use common\models\Order;
 use common\models\Areas;
+use common\models\Favorite;
 use frontend\models\AccountLog;
 use frontend\logics\OrderLogic;
 
@@ -171,6 +172,51 @@ class UcenterController extends BaseController {
         //地址信息
         $areaData = Areas::name($orderInfo['province'], $orderInfo['city'], $orderInfo['area']);
         return $this->render('orderDetail', array('orderInfo' => $orderInfo, 'areaData' => $areaData));
+    }
+
+    /**
+     * 账户余额
+     */
+    public function actionAccount() {
+        $this->is_login();
+        $this->currentMenu = 2;
+        $userId = $this->data['shopUserInfo']['userId'];
+        $memberModel = new Member();
+        $memberInfo = $memberModel->find()
+            ->select(['user_id', 'balance'])
+            ->where('user_id=:userId', [':userId' => $userId])
+            ->one();
+        $condition = 'user_id =:userId';
+        $params = array(':userId' => $userId);
+        $data = AccountLog::find()->where($condition, $params);
+        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => '10']);
+        $logList = $data->select(['amount', 'amount_log', 'time', 'note'])
+            ->where($condition, $params)
+            ->orderBy('id desc')
+            ->offset($pages->offset)
+            ->limit($pages->limit)
+            ->all();
+        return $this->render('account', array('pages' => $pages, 'logList' => $logList, 'memberInfo' => $memberInfo));
+    }
+    
+    /**
+     * 我的收藏
+     */
+    public function actionFavorite() {
+        $this->is_login();
+        $this->currentMenu = 3;
+        $userId = $this->data['shopUserInfo']['userId'];
+        $condition = 'user_id =:userId';
+        $params = array(':userId' => $userId);
+        $data = Favorite::find()->where($condition, $params);
+        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => '10']);
+        $favoriteList = $data->select(['id', 'user_id', 'rid', 'time'])
+            ->where($condition, $params)
+            ->orderBy('id desc')
+            ->offset($pages->offset)
+            ->limit($pages->limit)
+            ->all();
+        return $this->render('favorite', array('pages' => $pages, 'favoriteList' => $favoriteList));
     }
 
 }

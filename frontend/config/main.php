@@ -74,7 +74,7 @@ return [
                 //我的订单页
                 'myOrder' => 'ucenter/order',
                 //订单详情页
-                'detail_<id:\d+>' => 'ucenter/orderDetail',
+                'detail_<id:\d+>' => 'ucenter/order-detail',
             ],
         ],
     ],
