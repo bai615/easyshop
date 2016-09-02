@@ -1,6 +1,8 @@
 <?php
 use yii\helpers\Url;
 use yii\widgets\LinkPager;
+
+$themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
 ?>
 <div class="container block_box">
     <div class="breadcrumb"><span>您当前的位置：</span> <a href="/">首页</a> 》我的收藏</div>
@@ -63,7 +65,7 @@ use yii\widgets\LinkPager;
                                 </td>
                                 <td>
                                     <p><a href="">加入购物车</a></p>
-                                    <p><a href="">取消收藏</a></p>
+                                    <p><a href="javascript:;" onclick="favorite_del(this, '<?php echo $favoriteInfo['id']; ?>')">取消收藏</a></p>
                                 </td>
                             </tr>
                             <?php
@@ -86,3 +88,22 @@ use yii\widgets\LinkPager;
 
     </div>
 </div>
+<script type="text/javascript" src="<?php echo $themeUrl; ?>/js/jquery.min.js"></script>
+<script type="text/javascript" src="<?php echo $themeUrl; ?>/libs/layer/layer.js"></script> 
+<script type="text/javascript">
+
+    /*取消收藏*/
+    function favorite_del(obj, id) {
+        layer.confirm('是否取消收藏？', function (index) {
+            $.post("<?php echo Url::to(['/ucenter/favorite-del']); ?>", {ids: id}, function (result) {
+                if (result.errcode === 0) {
+                    layer.msg(result.errmsg, {icon: 1, time: 1000});
+                    setTimeout("location.replace(location.href)", 2000);
+//                    $(obj).parents("tr").remove();
+                }else{
+                    layer.msg(result.errmsg, {icon: 2, time: 1000});
+                }
+            }, 'json');
+        });
+    }
+</script>                    

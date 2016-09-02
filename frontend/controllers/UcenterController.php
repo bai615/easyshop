@@ -363,6 +363,7 @@ class UcenterController extends BaseController {
      * 设置默认的收货地址
      */
     public function actionAddressDefault() {
+        $this->is_login();
         $addressId = intval(Yii::$app->request->get('id'));
         $default = intval(Yii::$app->request->get('is_default'));
         $userId = $this->data['shopUserInfo']['userId'];
@@ -392,6 +393,24 @@ class UcenterController extends BaseController {
             }
         }
         echo json_encode($result);
+    }
+
+    /**
+     * 取消收藏
+     */
+    public function actionFavoriteDel() {
+        $favoriteIds = intval(Yii::$app->request->post('ids'));
+        $userId = $this->data['shopUserInfo']['userId'];
+        if(empty($userId) || empty($favoriteIds)){
+            return json_encode(['errcode' => 1, 'errmsg' => '取消失败']);
+        }
+        $model = new Favorite();
+        $result = $model->deleteAll('id=:favoriteId and user_id=:userId', [':favoriteId' => $favoriteIds, ':userId' => $userId]);
+        if ($result) {
+            return json_encode(['errcode' => 0, 'errmsg' => '成功取消']);
+        } else {
+            return json_encode(['errcode' => 1, 'errmsg' => '取消失败']);
+        }
     }
 
 }
