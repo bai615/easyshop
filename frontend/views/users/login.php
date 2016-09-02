@@ -23,7 +23,7 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                 <tr>
                     <td class="username">
                         <i></i>
-                        <?= $form->field($model, 'username')->textInput(['autofocus' => true, 'id' => 'user_login', 'placeholder' => '手机号', 'class' => '']) ?>
+                        <?= $form->field($model, 'username')->textInput(['id' => 'user_login', 'placeholder' => '手机号', 'class' => '']) ?>
                     </td>
                 </tr>
                 <tr>

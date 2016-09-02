@@ -26,13 +26,12 @@ class LoginForm extends Model {
         return [
             // username and password are required
             ['username', 'required', 'message' => '手机号必填'],
+            ['username', 'mobile', 'message' => '格式不正确'],
             ['password', 'required', 'message' => '密码必填'],
-//            ['username', 'checkUserName'],
             // online must be a boolean value
             ['online', 'boolean'],
             // password is validated by validatePassword()
             ['password', 'validatePassword'],
-//            ['verifyCode', 'captcha'],
         ];
     }
 
@@ -41,13 +40,19 @@ class LoginForm extends Model {
             'username' => '',
             'password' => '',
             'online' => '自动登录',
-//            'captcha' => '验证码',
-//            'verifyCode' => '', //验证码的名称，根据个人喜好设定 
         ];
     }
 
-    public function ckeckUserName($attribute, $params) {
-        
+    /**
+     * 验证登录用户名手机格式
+     * @param type $attribute
+     * @param type $params
+     */
+    public function mobile($attribute, $params) {
+        //验证手机号格式
+        if (preg_match('/^1[3587]\d{9}$/', $this->username) == 0) {
+            $this->addError($attribute, '格式不正确');
+        }
     }
 
     /**
@@ -81,7 +86,7 @@ class LoginForm extends Model {
     }
 
     /**
-     * Finds user by [[adminname]]
+     * Finds user by [[username]]
      *
      * @return User|null
      */
