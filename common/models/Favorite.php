@@ -21,4 +21,26 @@ class Favorite extends ActiveRecord {
         return $this->hasOne(Goods::className(), ['id' => 'rid']);
     }
 
+    /**
+     * 获取我的商品收藏
+     * @param type $userId
+     * @return type
+     */
+    public static function getMyFavorite($userId) {
+        $favoriteArr = array();
+        $condition = 'user_id =:userId';
+        $params = array(':userId' => $userId);
+        $model = new Favorite();
+        $favoriteList = $model->find()
+            ->select([ 'rid'])
+            ->where($condition, $params)
+            ->all();
+        if ($favoriteList) {
+            foreach ($favoriteList as $value) {
+                $favoriteArr[] = $value['rid'];
+            }
+        }
+        return $favoriteArr;
+    }
+
 }
