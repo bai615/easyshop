@@ -2,7 +2,6 @@
 
 namespace frontend\models;
 
-use Yii;
 use yii\base\Model;
 use common\models\User;
 use frontend\logics\UserLogic;
@@ -26,7 +25,7 @@ class LoginForm extends Model {
         return [
             // username and password are required
             ['username', 'required', 'message' => '手机号必填'],
-            ['username', 'mobile', 'message' => '格式不正确'],
+            ['username', 'mobile', 'skipOnEmpty' => false, 'skipOnError' => false, 'message' => '格式不正确'],
             ['password', 'required', 'message' => '密码必填'],
             // online must be a boolean value
             ['online', 'boolean'],
