@@ -83,7 +83,19 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                 </li>
                 <li>
                     库存：现货<span>(<label id="store_nums"><?php echo $goodsInfo['store_nums']; ?></label>)</span>
-                    <a class="favorite" onclick="favorite_add(this);" href="javascript:void(0)"><i class="glyphicon glyphicon-star-empty"></i><span>收藏此商品</span></a>
+                    <a class="favorite" onclick="favorite_add(this, 'item', '<?php echo $goodsInfo['id']; ?>');" href="javascript:void(0)">
+                        <?php 
+                        if(in_array($goodsInfo['id'], $favoriteArr)):
+                            ?>
+                            <i class="glyphicon glyphicon-star"></i><span>已收藏</span>
+                            <?php
+                        else:
+                            ?>
+                            <i class="glyphicon glyphicon-star-empty"></i><span>收藏此商品</span>
+                            <?php
+                        endif;
+                        ?>
+                    </a>
                 </li>
                 <li>顾客评分：<span class="goods_grade"><i style="width:<?php echo CommonTools::gradeWidth($goodsInfo['grade'], $goodsInfo['comments']); ?>px;"></i></span> (已有<?php echo $goodsInfo['comments']; ?>人评价)</li>
                 <li>配送至：</li>
@@ -217,11 +229,11 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                       <?php } ?>
                       <?php } */ ?>
                 </ul>
-<?php if (isset($goodsInfo['content']) && $goodsInfo['content']): ?>
+                <?php if (isset($goodsInfo['content']) && $goodsInfo['content']): ?>
                     <div class="salebox">
                         <p class="saledesc"><?php echo isset($goodsInfo['content']) ? $goodsInfo['content'] : ""; ?></p>
                     </div>
-<?php endif; ?>
+                <?php endif; ?>
             </div>
             <div class="tab-pane fade" id="ios">
                 <p>iOS 是一个由苹果公司开发和发布的手机操作系统。最初是于 2007 年首次发布 iPhone、iPod Touch 和 Apple 

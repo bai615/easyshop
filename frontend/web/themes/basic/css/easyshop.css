@@ -39,6 +39,7 @@ a.orange, .orange {color: #fe6c00;}
 .goods_block .focus i{background-position: 0 -413px; transition: background-position 0.15s ease-in-out 0s;}
 .goods_block .focus i:hover{background-position: 0 -436px; transition: background-position 0.15s ease-in-out 0s;}
 .goods_block .focus:hover i{background-position:0 -436px}
+.goods_block .focus i.focused{background-position:0 -436px}
 .goods_block .goods_title a,.goods_block .contrast,.goods_block .focus,.goods_block .buy{color: #000;}
 .goods_block .goods_title a:hover,.goods_block .contrast:hover,.goods_block .focus:hover,.goods_block .buy:hover{color: #ba0505;}
 .goods_block .goods_price,.goods_block .addcart{color: #ba0505;}

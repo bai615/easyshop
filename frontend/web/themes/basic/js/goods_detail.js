@@ -101,6 +101,8 @@ function checkBuyNums()
 //立即购买按钮
 function buy_now(id) {
     var buy_num = parseInt($.trim($("#buyNums").val()));
+    buy_num = (isNaN(buy_num)) ? 1 : buy_num;
+
     var type = 'goods';
 
     if ($('#product_id').val())
@@ -115,15 +117,17 @@ function buy_now(id) {
 }
 
 //添加收藏
-function favorite_add(obj) {
+function favorite_add(obj, type, goods_id) {
     $.getJSON(favorite_url, {'goods_id': goods_id, 'random': Math.random}, function (content)
     {
-        
-        if (0 === content.errCode) {
+
+        if ('item' === type && 0 === content.errCode) {
             $(".favorite span").html('已收藏');
             $(".favorite i").removeClass('glyphicon-star-empty').addClass('glyphicon-star');
+        }else if ('home' === type && 0 === content.errCode) {
+            $(obj).children('i').addClass('focused');
         }
         alert(content.errMsg);
-        
+
     });
 }

@@ -66,7 +66,13 @@ class SiteController extends BaseController {
      * 前台首页
      */
     public function actionIndex() {
-        return $this->render('index');
+        $userId = $this->data['shopUserInfo']['userId'];
+        //获取我的商品收藏
+        $favoriteArr = array();
+        if ($userId) {
+            $favoriteArr = Favorite::getMyFavorite($userId);
+        }
+        return $this->render('index', ['favoriteArr' => $favoriteArr]);
     }
 
     /**
@@ -114,7 +120,14 @@ class SiteController extends BaseController {
             $goodsInfo['price_area'] = $productList;
         }
 
-        return $this->render('products', ['goodsInfo' => $goodsInfo]);
+        //获取我的商品收藏
+        $userId = $this->data['shopUserInfo']['userId'];
+        $favoriteArr = array();
+        if ($userId) {
+            $favoriteArr = Favorite::getMyFavorite($userId);
+        }
+
+        return $this->render('products', ['goodsInfo' => $goodsInfo, 'favoriteArr' => $favoriteArr]);
     }
 
     /**
@@ -166,7 +179,7 @@ class SiteController extends BaseController {
         } else {
             $favoriteModel = new Favorite();
             $favoriteInfo = $favoriteModel->find()
-                ->where('user_id=:userId and rid=:goodsId',[':userId' => $userId, ':goodsId' => $goodsId])
+                ->where('user_id=:userId and rid=:goodsId', [':userId' => $userId, ':goodsId' => $goodsId])
                 ->one();
             if ($favoriteInfo) {
                 $errCode = 3;
