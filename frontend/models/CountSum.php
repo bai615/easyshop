@@ -94,48 +94,37 @@ class CountSum {
         /* Product 拼装商品数据 */
         if (isset($buyInfo['product']['id']) && $buyInfo['product']['id']) {
             //购物车中的货品数据
-            $product = Products::findOne($buyInfo['product']['id']);
-            $productList = $product->goods;
-            dprint($productList);
-//            $productIdStr = join(',', $buyInfo['product']['id']);
-            /*
-            $productObj = new Products();
-            $criteria = new CDbCriteria;
-            $criteria->addInCondition('pro.id', $buyInfo['product']['id']); //代表where id IN (1,2,3,4,5,);  
-            $criteria->with = 'r_goods';
-            $criteria->alias = 'pro';
-            $productList = $productObj->findAll($criteria);
-             */
+            $productList = Products::findOne($buyInfo['product']['id']);
+            $productGoods = $productList->goods;
+//            pprint($buyInfo);
 //            pprint($productList);
-            //开始优惠情况判断
-            foreach ($productList as $key => $val) {
-                //检查库存
-                if ($buyInfo['product']['data'][$val['id']]['count'] <= 0 || $buyInfo['product']['data'][$val['id']]['count'] > $val['r_goods']['store_nums']) {
+//            dprint($productGoods);
+            //检查库存
+            if ($buyInfo['product']['data'][$productList['id']]['count'] <= 0 || $buyInfo['product']['data'][$productList['id']]['count'] > $productGoods['store_nums']) {
 //                    $productList[$key]['name'] .= "【无库存】";
 //                    $this->error .= "<货品：" . $val['name'] . "> 购买数量超出库存，请重新调整购买数量。";
-                }
-
-
-                $newProductList[$key]['goods_id'] = $val['r_goods']['id'];
-                $newProductList[$key]['product_id'] = $val['id'];
-                $newProductList[$key]['goods_no'] = $val['r_goods']['goods_no'];
-                $newProductList[$key]['name'] = $val['r_goods']['name'];
-                $newProductList[$key]['cost_price'] = $val['r_goods']['cost_price'];
-                $newProductList[$key]['img'] = $val['r_goods']['img'];
-                $newProductList[$key]['sell_price'] = $val['r_goods']['sell_price'];
-                $newProductList[$key]['weight'] = $val['r_goods']['weight'];
-                $newProductList[$key]['store_nums'] = $val['r_goods']['store_nums'];
-                $newProductList[$key]['spec_array'] = $val['spec_array'];
-
-                $newProductList[$key]['count'] = $buyInfo['product']['data'][$val['id']]['count'];
-                $current_sum_all = $newProductList[$key]['sell_price'] * $newProductList[$key]['count'];
-                $newProductList[$key]['sum'] = $current_sum_all;
-
-                //全局统计
-                $this->weight += $val['weight'] * $newProductList[$key]['count'];
-                $this->sum += $current_sum_all;
-                $this->count += $newProductList[$key]['count'];
             }
+
+            $key = 0;
+            $newProductList[$key]['goods_id'] = $productGoods['id'];
+            $newProductList[$key]['product_id'] = $productList['id'];
+            $newProductList[$key]['goods_no'] = $productGoods['goods_no'];
+            $newProductList[$key]['name'] = $productGoods['name'];
+            $newProductList[$key]['cost_price'] = $productGoods['cost_price'];
+            $newProductList[$key]['img'] = $productGoods['img'];
+            $newProductList[$key]['sell_price'] = $productGoods['sell_price'];
+            $newProductList[$key]['weight'] = $productGoods['weight'];
+            $newProductList[$key]['store_nums'] = $productGoods['store_nums'];
+            $newProductList[$key]['spec_array'] = $productList['spec_array'];
+
+            $newProductList[$key]['count'] = $buyInfo['product']['data'][$productList['id']]['count'];
+            $current_sum_all = $newProductList[$key]['sell_price'] * $newProductList[$key]['count'];
+            $newProductList[$key]['sum'] = $current_sum_all;
+
+            //全局统计
+            $this->weight += $productList['weight'] * $newProductList[$key]['count'];
+            $this->sum += $current_sum_all;
+            $this->count += $newProductList[$key]['count'];
         }
 //        pprint($newProductList);
         $this->final_sum = $this->sum;
