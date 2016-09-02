@@ -187,3 +187,5 @@ a.orange, .orange {color: #fe6c00;}
 .ucenter_box .ucenter_main .account_log{font-size: 12px;}
 .ucenter_box .ucenter_main .account_log th{min-width: 100px;text-align: center;}
 .ucenter_box .ucenter_main .account_log .log_time{width: 140px;}
+
+.ucenter_user_info .form-control{display: inline-block;width: 300px;}
