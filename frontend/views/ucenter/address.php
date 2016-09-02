@@ -3,8 +3,6 @@
 use yii\helpers\Url;
 use yii\widgets\LinkPager;
 use common\models\Areas;
-
-$themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
 ?>
 <div class="container block_box">
     <div class="breadcrumb"><span>您当前的位置：</span> <a href="/">首页</a> 》地址管理</div>
@@ -82,18 +80,18 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                                 endforeach;
                             endif;
                             ?>
-                            <?=
-                            LinkPager::widget([
-                                'pagination' => $pages,
-                                'firstPageLabel' => "First",
-                                'prevPageLabel' => 'Prev',
-                                'nextPageLabel' => 'Next',
-                                'lastPageLabel' => 'Last',
-                                'options' => ['class' => 'pagination'],
-                            ]);
-                            ?>
                         </tbody>
                     </table>
+                    <?=
+                    LinkPager::widget([
+                        'pagination' => $pages,
+                        'firstPageLabel' => "First",
+                        'prevPageLabel' => 'Prev',
+                        'nextPageLabel' => 'Next',
+                        'lastPageLabel' => 'Last',
+                        'options' => ['class' => 'pagination'],
+                    ]);
+                    ?>
                 </div>
             </div>
         </div>

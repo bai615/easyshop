@@ -11,6 +11,7 @@ use common\models\Order;
 use common\models\Areas;
 use common\models\Favorite;
 use common\models\Address;
+use common\models\User;
 use frontend\models\AccountLog;
 use frontend\logics\OrderLogic;
 
@@ -41,11 +42,11 @@ class UcenterController extends BaseController {
         ),
         '5' => array(
             'name' => '个人资料',
-            'url' => '/ucenter/order'
+            'url' => '/ucenter/info'
         ),
         '6' => array(
             'name' => '修改密码',
-            'url' => '/ucenter/order'
+            'url' => '/ucenter/password'
         ),
     );
 
@@ -238,6 +239,87 @@ class UcenterController extends BaseController {
             ->limit($pages->limit)
             ->all();
         return $this->render('address', array('pages' => $pages, 'addressList' => $addressList));
+    }
+
+    /**
+     * 个人资料
+     */
+    public function actionInfo() {
+        $this->is_login();
+        $this->currentMenu = 5;
+        $userId = $this->data['shopUserInfo']['userId'];
+        $memberModel = new Member();
+        $resultArr = array();
+        if (Yii::$app->request->post()) {
+            $data['true_name'] = Yii::$app->request->post('true_name');
+            $data['sex'] = Yii::$app->request->post('sex');
+            $data['birthday'] = Yii::$app->request->post('birthday');
+            $province = Yii::$app->request->post('province');
+            $city = Yii::$app->request->post('city');
+            $area = Yii::$app->request->post('area');
+            $data['area'] = ',' . $province . ',' . $city . ',' . $area . ',';
+            $data['contact_addr'] = Yii::$app->request->post('contact_addr');
+            $data['mobile'] = Yii::$app->request->post('mobile');
+            $data['email'] = Yii::$app->request->post('email');
+            $data['qq'] = Yii::$app->request->post('qq');
+            $result = $memberModel->updateAll($data, 'user_id=:userId', [':userId' => $userId]);
+            if ($result) {
+                $resultArr = ['errcode' => 0, 'errmsg' => '编辑成功'];
+            } else {
+                $resultArr = ['errcode' => 1, 'errmsg' => '编辑失败'];
+            }
+        }
+        $userModel = new User();
+        $userInfo = $userModel->find()
+            ->select('username')
+            ->where('id=:userId', [':userId' => $userId])
+            ->one();
+        $memberInfo = $memberModel->find()
+            ->where('user_id=:userId', [':userId' => $userId])
+            ->one();
+        return $this->render('info', array('userInfo' => $userInfo, 'memberInfo' => $memberInfo, 'resultArr' => $resultArr));
+    }
+
+    /**
+     * 修改密码
+     */
+    public function actionPassword() {
+        $this->is_login();
+        $this->currentMenu = 6;
+        $userId = $this->data['shopUserInfo']['userId'];
+        $userModel = new User();
+        $resultArr = array();
+        if (Yii::$app->request->post()) {
+            $oldPwd = Yii::$app->request->post('old_pwd');
+            $password = Yii::$app->request->post('password');
+            $rePassword = Yii::$app->request->post('repassword');
+            if ($password != $rePassword) {
+                $resultArr = ['errcode' => 1, 'errmsg' => '两次输入密码不一致'];
+            } else {
+                //查询用户信息
+                $userInfo = $userModel->find()
+                    ->select(['id', 'password', 'salt'])
+                    ->where('id=:userId', [':userId' => $userId])
+                    ->one();
+                $newPassword = CommonTools::getPwd($oldPwd, $userInfo['salt']);
+                //校验原密码
+                if ($newPassword != $userInfo['password']) {
+                    $resultArr = ['errcode' => 1, 'errmsg' => '原密码错误'];
+                } else {
+                    //生成并保存新密码
+                    $salt = uniqid();
+                    $userInfo->password = CommonTools::getPwd($password, $salt);
+                    $userInfo->salt = $salt;
+                    $result = $userInfo->update();
+                    if ($result) {
+                        $resultArr = ['errcode' => 0, 'errmsg' => '修改成功'];
+                    } else {
+                        $resultArr = ['errcode' => 1, 'errmsg' => '修改失败'];
+                    }
+                }
+            }
+        }
+        return $this->render('password', ['resultArr' => $resultArr]);
     }
 
 }
