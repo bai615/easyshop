@@ -3,6 +3,7 @@
 namespace frontend\controllers;
 
 use Yii;
+use yii\helpers\Url;
 use yii\data\Pagination;
 use common\utils\CommonTools;
 use common\models\Payment;
@@ -146,8 +147,7 @@ class UcenterController extends BaseController {
         $userId = $this->data['shopUserInfo']['userId'];
         $data = Order::find()->where('user_id =:userId and if_del= 0', [':userId' => $userId]);
         $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => '10']);
-        $model = $data//->select(['id', 'name', 'sell_price', 'market_price', 'store_nums', 'img', 'is_del'])
-            ->where('user_id =:userId and if_del= 0', [':userId' => $userId])
+        $model = $data->where('user_id =:userId and if_del= 0', [':userId' => $userId])
             ->orderBy('id desc')
             ->offset($pages->offset)
             ->limit($pages->limit)
@@ -320,6 +320,78 @@ class UcenterController extends BaseController {
             }
         }
         return $this->render('password', ['resultArr' => $resultArr]);
+    }
+
+    /**
+     * 地址编辑
+     */
+    public function actionAddressEdit() {
+        $this->is_login();
+        $addressId = Yii::$app->request->post('id');
+        $data['accept_name'] = Yii::$app->request->post('accept_name');
+        $data['province'] = intval(Yii::$app->request->post('province'));
+        $data['city'] = intval(Yii::$app->request->post('city'));
+        $data ['area'] = intval(Yii::$app->request->post('area'));
+        $data['address'] = Yii::$app->request->post('address');
+        $data['mobile'] = Yii::$app->request->post('mobile');
+        $isDefault = Yii::$app->request->post('is_default');
+        $data['is_default'] = empty($isDefault) ? 0 : 1;
+        $userId = $this->data['shopUserInfo']['userId'];
+        $addressData = array();
+        $addressModel = new Address();
+        if ($isDefault) {
+            $addressModel->updateAll(['is_default' => 0], 'user_id=:userId', [':userId' => $userId]);
+        }
+        foreach ($data as $key => $value) {
+            $addressModel->$key = $value;
+            $addressData[$key] = $value;
+        }
+        if ($userId) {
+            if ($addressId) {
+                $addressModel->updateAll($data, 'id=:addressId and user_id=:userId', array(':addressId' => $addressId, ':userId' => $userId));
+                $addressData['id'] = $addressId;
+            } else {
+                $addressModel->user_id = $userId;
+                $addressModel->save();
+                $addressData['id'] = $addressModel->id;
+            }
+        }
+        $this->redirect(Url::to(['/ucenter/address']));
+    }
+
+    /**
+     * 设置默认的收货地址
+     */
+    public function actionAddressDefault() {
+        $addressId = intval(Yii::$app->request->get('id'));
+        $default = intval(Yii::$app->request->get('is_default'));
+        $userId = $this->data['shopUserInfo']['userId'];
+        $model = new Address();
+        if ($default == 1) {
+            $model->updateAll(['is_default' => 0], 'user_id=:userId', [':userId' => $userId]);
+        }
+        $model->updateAll(['is_default' => $default], 'id=:addressId and user_id=:userId', [':addressId' => $addressId, ':userId' => $userId]);
+        $this->redirect(Url::to(['/ucenter/address']));
+    }
+
+    /**
+     * 收货地址删除处理
+     */
+    public function actionAddressDel() {
+        $addressId = intval(Yii::$app->request->get('id'));
+        $userId = $this->data['shopUserInfo']['userId'];
+        $model = new Address();
+        $result = array('result' => false, 'msg' => '删除失败，请稍后重试');
+        $info = $model->find()
+            ->where('id=:addressId and user_id=:userId', [':addressId' => $addressId, ':userId' => $userId])
+            ->one();
+        if ($info) {
+            $flag = $info->delete();
+            if ($flag) {
+                $result = array('result' => true, 'msg' => '删除成功');
+            }
+        }
+        echo json_encode($result);
     }
 
 }

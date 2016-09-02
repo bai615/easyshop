@@ -6,7 +6,6 @@ use yii\bootstrap\ActiveForm;
 $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
 ?>
 <link href="<?php echo $themeUrl; ?>/libs/autovalidate/style.css" rel="stylesheet">
-<script type="text/javascript" src="<?php echo $themeUrl; ?>/libs/my97date/wdatepicker.js"></script>
 <div class="container block_box">
     <div class="breadcrumb"><span>您当前的位置：</span> <a href="/">首页</a> 》个人资料</div>
     <div class="ucenter_box">
@@ -212,3 +211,4 @@ if (isset($resultArr['errcode'])):
 endif;
 ?>
 </script>    
+<script type="text/javascript" src="<?php echo $themeUrl; ?>/libs/my97date/wdatepicker.js"></script>
