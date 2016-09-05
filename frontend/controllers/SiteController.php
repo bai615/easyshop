@@ -189,6 +189,14 @@ class SiteController extends BaseController {
                 $favoriteModel->rid = $goodsId;
                 $favoriteModel->time = date('Y-m-d H:i:s');
                 $favoriteModel->save();
+                //商品收藏信息更新
+                $goodsModel = new Goods();
+                $goodsInfo = $goodsModel->find()
+                    ->select(['id', 'favorite'])
+                    ->where('id=:goodsId', [':goodsId' => $goodsId])
+                    ->one();
+                $goodsInfo->favorite +=1;
+                $goodsInfo->update();
                 $errCode = 0;
                 $message = '收藏成功';
             }
