@@ -67,7 +67,6 @@ class SiteController extends BaseController {
 
     public function actionLogin() {
         $this->layout = 'login';
-        var_dump(Yii::$app->user->isGuest);
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
