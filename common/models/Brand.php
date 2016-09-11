@@ -10,5 +10,13 @@ use yii\db\ActiveRecord;
  * @author baihua <baihua_2011@163.com>
  */
 class Brand extends ActiveRecord {
-    //put your code here
+
+    /**
+     * 获取品牌数据
+     * @return type
+     */
+    public static function getAllList() {
+        return self::find()->select(['id', 'name'])->all();
+    }
+
 }
