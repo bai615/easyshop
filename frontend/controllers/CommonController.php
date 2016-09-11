@@ -9,7 +9,7 @@ use common\utils\CommonTools;
 use frontend\logics\PayLogic;
 
 /**
- * 公共模块
+ * 前台公共模块
  *
  * @author baihua <baihua_2011@163.com>
  */
