@@ -27,6 +27,10 @@ class ComposerStaticInit19d98e03c7ce51fc9d3742c350d6035a
         array (
             'mdm\\admin\\' => 10,
         ),
+        'k' => 
+        array (
+            'kucha\\ueditor\\' => 14,
+        ),
         'c' => 
         array (
             'cebe\\markdown\\' => 14,
@@ -73,6 +77,10 @@ class ComposerStaticInit19d98e03c7ce51fc9d3742c350d6035a
         'mdm\\admin\\' => 
         array (
             0 => __DIR__ . '/..' . '/mdmsoft/yii2-admin',
+        ),
+        'kucha\\ueditor\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/kucha/ueditor',
         ),
         'cebe\\markdown\\' => 
         array (
