@@ -39,6 +39,17 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
+        'assetManager' => [
+            'bundles' => [
+//                'yii\bootstrap\BootstrapAsset' => [//禁用默认引入的bootstrap.css 文件
+//                    'css' => []
+//                ],
+//                'yii\web\JqueryAsset' => [//禁用默认引入的jquery文件
+//                    'sourcePath' => null,
+//                    'js' => []
+//                ],
+            ],
+        ],
     /*
       'urlManager' => [
       'enablePrettyUrl' => true,
