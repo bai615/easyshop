@@ -4,6 +4,7 @@
  * @link https://github.com/BigKuCha/yii2-ueditor-widget
  * @link http://ueditor.baidu.com/website/index.html
  */
+
 namespace kucha\ueditor;
 
 use Yii;
@@ -14,19 +15,18 @@ use yii\helpers\Url;
 use yii\web\View;
 use yii\widgets\InputWidget;
 
-class UEditor extends InputWidget
-{
+class UEditor extends InputWidget {
+
     //配置选项，参阅Ueditor官网文档(定制菜单等)
     public $clientOptions = [];
-
+    
     //默认配置
     protected $_options;
 
     /**
      * @throws \yii\base\InvalidConfigException
      */
-    public function init()
-    {
+    public function init() {
         $this->id = $this->hasModel() ? Html::getInputId($this->model, $this->attribute) : $this->id;
         $this->_options = [
             'serverUrl' => Url::to(['upload']),
@@ -38,24 +38,23 @@ class UEditor extends InputWidget
         parent::init();
     }
 
-    public function run()
-    {
+    public function run() {
         $this->registerClientScript();
         if ($this->hasModel()) {
-            return Html::activeTextarea($this->model, $this->attribute, ['id' => $this->id]);
+            return Html::activeTextarea($this->model, $this->attribute, ['id' => $this->name, 'name' => $this->name]);
         } else {
-            return Html::textarea($this->id, $this->value, ['id' => $this->id]);
+            return Html::textarea($this->name, $this->value, ['id' => $this->name, 'name' => $this->name]);
         }
     }
 
     /**
      * 注册客户端脚本
      */
-    protected function registerClientScript()
-    {
+    protected function registerClientScript() {
         UEditorAsset::register($this->view);
         $clientOptions = Json::encode($this->clientOptions);
-        $script = "UE.getEditor('" . $this->id . "', " . $clientOptions . ")";
+        $script = "UE.getEditor('" . $this->name . "', " . $clientOptions . ")";
         $this->view->registerJs($script, View::POS_READY);
     }
+
 }
