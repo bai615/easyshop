@@ -18,14 +18,14 @@ use yii\web\Controller;
 class BaseController extends Controller {
 
     public $layoutData = [];
-    
+
     public function init() {
         parent::init();
     }
 
-    public function getBaseData() {
-        $this->layoutData['controller'] = $this->id;
-        $this->layoutData['action'] = $this->id . '-' . $this->action->id;
+    public function getBaseData($controller = '', $action = '') {
+        $this->layoutData['controller'] = ($controller) ? $controller : $this->id;
+        $this->layoutData['action'] = (($controller) && ($action)) ? $controller . '-' . $action : $this->id . '-' . $this->action->id;
     }
 
 }

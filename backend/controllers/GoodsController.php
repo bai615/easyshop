@@ -40,10 +40,10 @@ class GoodsController extends BaseController {
                     'snapscreenUrlPrefix' => 'http://img.yii2shop.com',
                     'snapscreenPathFormat' => '/upload/images/{yyyy}{mm}{dd}/{time}{rand:6}',
                     /* 抓取远程图片配置 */
-                    'catcherUrlPrefix'=>'http://img.yii2shop.com',
+                    'catcherUrlPrefix' => 'http://img.yii2shop.com',
                     'catcherPathFormat' => '/upload/images/{yyyy}{mm}{dd}/{time}{rand:6}',
                     /* 上传视频配置 */
-                    'videoUrlPrefix'=>'http://img.yii2shop.com',
+                    'videoUrlPrefix' => 'http://img.yii2shop.com',
                     'videoPathFormat' => '/upload/video/{yyyy}{mm}{dd}/{time}{rand:6}',
                 ],
             ]
@@ -70,10 +70,27 @@ class GoodsController extends BaseController {
         ]);
     }
 
+    /**
+     * 添加商品
+     * @return type
+     */
     public function actionCreate() {
         $this->getBaseData();
-        return $this->render('create', [
-        ]);
+        return $this->render('create');
+    }
+
+    /**
+     * 编辑商品
+     * @return type
+     */
+    public function actionEdit() {
+        $this->getBaseData('goods', 'list');
+        $goodsId = intval(Yii::$app->request->get('id'));
+        //初始化数据
+        $goodsLogic = new GoodsLogic();
+        //获取所有商品扩展相关数据
+        $data = $goodsLogic->edit($goodsId);
+        return $this->render('create', $data);
     }
 
     /**
@@ -150,6 +167,10 @@ class GoodsController extends BaseController {
         return $this->renderPartial('selectSpec', ['specInfo' => Json::encode($specInfo)]);
     }
 
+    /**
+     * 规格编辑
+     * @return type
+     */
     public function actionSpecEdit() {
         $id = intval(Yii::$app->request->get('id'));
 
@@ -259,16 +280,15 @@ class GoodsController extends BaseController {
      * 保存修改商品信息
      */
     public function actionUpdate() {
-         pprint($_POST);
-        $goodsId       = intval(Yii::$app->request->post('id'));
-        
+        $goodsId = intval(Yii::$app->request->post('id'));
+
         //初始化商品数据
-		unset($_POST['id']);
-		unset($_POST['callback']);
-        
+        unset($_POST['id']);
+        unset($_POST['callback']);
+
         $goodsLogic = new GoodsLogic();
-		$goodsLogic->update($goodsId,$_POST);
-       
+        $goodsLogic->update($goodsId, $_POST);
+
         $this->redirect(Url::to(['/goods/list']));
     }
 

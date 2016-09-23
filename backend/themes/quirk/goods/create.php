@@ -1,10 +1,13 @@
 <?php
 
 use yii\helpers\Url;
+use yii\helpers\Json;
 use yii\bootstrap\ActiveForm;
 use common\models\Goods;
 use common\models\Model;
 use common\models\Brand;
+use common\models\Category;
+use backend\logics\GoodsLogic;
 
 $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
 ?>
@@ -20,6 +23,7 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
 <script type="text/javascript" src="<?php echo $themeUrl; ?>/libs/artTemplate/artTemplate.js"></script>
 <script type="text/javascript" src="<?php echo $themeUrl; ?>/libs/artTemplate/artTemplate-plugin.js"></script>
 <script type="text/javascript" src="<?php echo $themeUrl; ?>/libs/autovalidate/validate.js"></script>
+<script type="text/javascript" src="<?php echo $themeUrl; ?>/js/form.js"></script>
 <link rel="stylesheet" type="text/css" href="<?php echo $themeUrl; ?>/libs/autovalidate/style.css" />
 <style type="text/css">
     #goodsBaseHead th{text-align: center;}
@@ -46,8 +50,8 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
             </div>
             <div class="panel-body">
                 <hr>
-                <?php $form = ActiveForm::begin(['id' => 'basicForm', 'options' => ['class' => 'form-horizontal'], 'action' => Url::to(['/goods/update'])]); ?>
-                <input type="hidden" name="id" value="" />
+                <?php $form = ActiveForm::begin(['id' => 'basicForm', 'options' => ['name' => 'goodsForm', 'class' => 'form-horizontal'], 'action' => Url::to(['/goods/update'])]); ?>
+                <input type="hidden" name="id" value="<?php if (isset($form_info)){echo $form_info['id'];} ?>" />
                 <input type='hidden' name="img" value="" />
                 <input type='hidden' name="_imgList" value="" />
                 <input type='hidden' name="callback" value="" />
@@ -66,6 +70,7 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                         <button class="btn btn-success" type="button" name="_goodsCategoryButton"><span class="add">设置分类</span></button>
                     </div>
                 </div>
+                
                 <!-- -->
                 <script id="categoryButtonTemplate" type="text/html">
                     <ctrlArea>
@@ -84,8 +89,7 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                             $(document).on("click", "[name='_goodsCategoryButton']", selectGoodsCategory);
 
                             //完整分类数据
-                            art.dialog.data('categoryWhole', [{"id": "1", "name": "家用电器", "parent_id": "0", "sort": "0", "visibility": "1", "keywords": null, "descript": null, "title": null, "seller_id": "0"}, {"id": "2", "name": "大家电", "parent_id": "1", "sort": "0", "visibility": "1", "keywords": null, "descript": null, "title": null, "seller_id": "0"}, {"id": "3", "name": "平板电视", "parent_id": "2", "sort": "0", "visibility": "1", "keywords": null, "descript": null, "title": null, "seller_id": "0"}, {"id": "4", "name": "食品饮料", "parent_id": "0", "sort": "0", "visibility": "1", "keywords": null, "descript": null, "title": null, "seller_id": "0"}, {"id": "5", "name": "进口食品", "parent_id": "4", "sort": "0", "visibility": "1", "keywords": null, "descript": null, "title": null, "seller_id": "0"}, {"id": "6", "name": "牛奶", "parent_id": "5", "sort": "0", "visibility": "1", "keywords": null, "descript": null, "title": null, "seller_id": "0"}, {"id": "7", "name": "家具", "parent_id": "0", "sort": "0", "visibility": "1", "keywords": null, "descript": null, "title": null, "seller_id": "0"}, {"id": "8", "name": "家装建材", "parent_id": "7", "sort": "0", "visibility": "1", "keywords": null, "descript": null, "title": null, "seller_id": "0"}, {"id": "9", "name": "灯饰照明", "parent_id": "8", "sort": "0", "visibility": "1", "keywords": null, "descript": null, "title": null, "seller_id": "0"}, {"id": "10", "name": "服装", "parent_id": "0", "sort": "0", "visibility": "1", "keywords": null, "descript": null, "title": null, "seller_id": "0"}, {"id": "11", "name": "男装", "parent_id": "10", "sort": "0", "visibility": "1", "keywords": null, "descript": null, "title": null, "seller_id": "0"}, {"id": "12", "name": "衬衫", "parent_id": "11", "sort": "0", "visibility": "1", "keywords": null, "descript": null, "title": null, "seller_id": "0"}, {"id": "13", "name": "生活电器", "parent_id": "1", "sort": "0", "visibility": "1", "keywords": null, "descript": null, "title": null, "seller_id": "0"}, {"id": "14", "name": "厨房电器", "parent_id": "1", "sort": "0", "visibility": "1", "keywords": null, "descript": null, "title": null, "seller_id": "0"}, {"id": "15", "name": "电风扇", "parent_id": "13", "sort": "0", "visibility": "1", "keywords": null, "descript": null, "title": null, "seller_id": "0"}, {"id": "16", "name": "冷风扇", "parent_id": "13", "sort": "0", "visibility": "1", "keywords": null, "descript": null, "title": null, "seller_id": "0"}, {"id": "17", "name": "扫地机器人", "parent_id": "13", "sort": "0", "visibility": "1", "keywords": null, "descript": null, "title": null, "seller_id": "0"}, {"id": "18", "name": "电饭煲", "parent_id": "14", "sort": "0", "visibility": "1", "keywords": null, "descript": null, "title": null, "seller_id": "0"}, {"id": "19", "name": "微波炉", "parent_id": "14", "sort": "0", "visibility": "1", "keywords": null, "descript": null, "title": null, "seller_id": "0"}, {"id": "20", "name": "女包", "parent_id": "10", "sort": "0", "visibility": "1", "keywords": null, "descript": null, "title": null, "seller_id": "0"}, {"id": "21", "name": "女装", "parent_id": "10", "sort": "0", "visibility": "1", "keywords": null, "descript": null, "title": null, "seller_id": "0"}, {"id": "31", "name": "卧室家具", "parent_id": "7", "sort": "0", "visibility": "1", "keywords": null, "descript": null, "title": null, "seller_id": "0"}, {"id": "32", "name": "实木床", "parent_id": "31", "sort": "0", "visibility": "1", "keywords": null, "descript": null, "title": null, "seller_id": "0"}, {"id": "33", "name": "酒品", "parent_id": "4", "sort": "0", "visibility": "1", "keywords": null, "descript": null, "title": null, "seller_id": "0"}, {"id": "34", "name": "红酒和白酒", "parent_id": "33", "sort": "0", "visibility": "1", "keywords": null, "descript": null, "title": null, "seller_id": "0"}]);
-                            art.dialog.data('categoryParentData', {"0": [{"id": "1", "name": "家用电器", "parent_id": "0", "sort": "0", "visibility": "1", "keywords": null, "descript": null, "title": null, "seller_id": "0"}, {"id": "4", "name": "食品饮料", "parent_id": "0", "sort": "0", "visibility": "1", "keywords": null, "descript": null, "title": null, "seller_id": "0"}, {"id": "7", "name": "家具", "parent_id": "0", "sort": "0", "visibility": "1", "keywords": null, "descript": null, "title": null, "seller_id": "0"}, {"id": "10", "name": "服装", "parent_id": "0", "sort": "0", "visibility": "1", "keywords": null, "descript": null, "title": null, "seller_id": "0"}], "1": [{"id": "2", "name": "大家电", "parent_id": "1", "sort": "0", "visibility": "1", "keywords": null, "descript": null, "title": null, "seller_id": "0"}, {"id": "13", "name": "生活电器", "parent_id": "1", "sort": "0", "visibility": "1", "keywords": null, "descript": null, "title": null, "seller_id": "0"}, {"id": "14", "name": "厨房电器", "parent_id": "1", "sort": "0", "visibility": "1", "keywords": null, "descript": null, "title": null, "seller_id": "0"}], "2": [{"id": "3", "name": "平板电视", "parent_id": "2", "sort": "0", "visibility": "1", "keywords": null, "descript": null, "title": null, "seller_id": "0"}], "4": [{"id": "5", "name": "进口食品", "parent_id": "4", "sort": "0", "visibility": "1", "keywords": null, "descript": null, "title": null, "seller_id": "0"}, {"id": "33", "name": "酒品", "parent_id": "4", "sort": "0", "visibility": "1", "keywords": null, "descript": null, "title": null, "seller_id": "0"}], "5": [{"id": "6", "name": "牛奶", "parent_id": "5", "sort": "0", "visibility": "1", "keywords": null, "descript": null, "title": null, "seller_id": "0"}], "7": [{"id": "8", "name": "家装建材", "parent_id": "7", "sort": "0", "visibility": "1", "keywords": null, "descript": null, "title": null, "seller_id": "0"}, {"id": "31", "name": "卧室家具", "parent_id": "7", "sort": "0", "visibility": "1", "keywords": null, "descript": null, "title": null, "seller_id": "0"}], "8": [{"id": "9", "name": "灯饰照明", "parent_id": "8", "sort": "0", "visibility": "1", "keywords": null, "descript": null, "title": null, "seller_id": "0"}], "10": [{"id": "11", "name": "男装", "parent_id": "10", "sort": "0", "visibility": "1", "keywords": null, "descript": null, "title": null, "seller_id": "0"}, {"id": "20", "name": "女包", "parent_id": "10", "sort": "0", "visibility": "1", "keywords": null, "descript": null, "title": null, "seller_id": "0"}, {"id": "21", "name": "女装", "parent_id": "10", "sort": "0", "visibility": "1", "keywords": null, "descript": null, "title": null, "seller_id": "0"}], "11": [{"id": "12", "name": "衬衫", "parent_id": "11", "sort": "0", "visibility": "1", "keywords": null, "descript": null, "title": null, "seller_id": "0"}], "13": [{"id": "15", "name": "电风扇", "parent_id": "13", "sort": "0", "visibility": "1", "keywords": null, "descript": null, "title": null, "seller_id": "0"}, {"id": "16", "name": "冷风扇", "parent_id": "13", "sort": "0", "visibility": "1", "keywords": null, "descript": null, "title": null, "seller_id": "0"}, {"id": "17", "name": "扫地机器人", "parent_id": "13", "sort": "0", "visibility": "1", "keywords": null, "descript": null, "title": null, "seller_id": "0"}], "14": [{"id": "18", "name": "电饭煲", "parent_id": "14", "sort": "0", "visibility": "1", "keywords": null, "descript": null, "title": null, "seller_id": "0"}, {"id": "19", "name": "微波炉", "parent_id": "14", "sort": "0", "visibility": "1", "keywords": null, "descript": null, "title": null, "seller_id": "0"}], "31": [{"id": "32", "name": "实木床", "parent_id": "31", "sort": "0", "visibility": "1", "keywords": null, "descript": null, "title": null, "seller_id": "0"}], "33": [{"id": "34", "name": "红酒和白酒", "parent_id": "33", "sort": "0", "visibility": "1", "keywords": null, "descript": null, "title": null, "seller_id": "0"}]});
+                            art.dialog.data('categoryParentData', <?php echo Json::encode(GoodsLogic::categoryParentStruct(Category::getAll()));?>);
 
                         });
 
@@ -132,6 +136,12 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                                 }
                             })
                         }
+                        
+                        <?php if(isset($goods_category)):?>
+                        //如果商品分类信息存在，进行初始化信息
+                        var categoryJson = '<?php echo Json::encode($goods_category);?>';
+                        createGoodsCategory(JSON.parse(categoryJson));
+                        <?php endif;?>
 
                         //生成商品分类
                         function createGoodsCategory(categoryObj)
@@ -140,7 +150,7 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                             {
                                 return;
                             }
-
+                            
                             $('#__categoryBox').empty();
                             for (var item in categoryObj)
                             {
@@ -377,7 +387,7 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
 
                                             use kucha\ueditor\UEditor;
 
-                                            echo UEditor::widget([
+echo UEditor::widget([
                                                 'name' => 'content',
                                                 'clientOptions' => [
                                                     //编辑区域大小
@@ -421,7 +431,11 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
 
                         </div><!-- col-md-6 -->
                     </div>
+
                     <script language="javascript">
+                        //创建表单实例
+                        var formObj = new Form('goodsForm');
+
                         //默认货号
                         var defaultProductNo = '<?php echo Goods::createGoodsNo(); ?>';
 
@@ -429,7 +443,54 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                         {
                             initProductTable();
 
-                            $('[name="_goods_no[0]"]').val(defaultProductNo);
+                            //存在商品信息
+                            <?php if (isset($form_info)): ?>
+                                    var goods = <?php echo Json::encode($form_info); ?>
+    
+                                    var goodsRowHtml = template.render('goodsRowTemplate',{'templateData':[goods]});
+                                    $('#goodsBaseBody').html(goodsRowHtml);
+                                
+                                    formObj.init(goods);
+    
+                                    //模型选择
+                                    $('[name="model_id"]').change();
+
+                            <?php else: ?>
+                                $('[name="_goods_no[0]"]').val(defaultProductNo);
+                            <?php endif; ?>
+
+
+                            //存在货品信息,进行数据填充
+                            <?php if (isset($product)): ?>
+                                var spec_array = <?php echo $product[0]['spec_array']; ?>;
+                                var product = <?php echo Json::encode($product); ?>;
+
+                                var goodsHeadHtml = template.render('goodsHeadTemplate', {'templateData': spec_array});
+                                $('#goodsBaseHead').html(goodsHeadHtml);
+
+                                var goodsRowHtml = template.render('goodsRowTemplate', {'templateData': product});
+                                $('#goodsBaseBody').html(goodsRowHtml);
+                            <?php endif; ?>
+
+                            //商品促销回填
+                            <?php if (isset($goods_commend)): ?>
+                                formObj.setValue('_goods_commend[]', "<?php echo join(';', $goods_commend); ?>");
+                            <?php endif; ?>
+                                
+                                //商品图片的回填
+                            <?php if (isset($goods_photo)):?>
+                            var goodsPhoto = <?php echo Json::encode($goods_photo); ?>;
+                            for(var item in goodsPhoto)
+                            {
+                                var picHtml = template.render('picTemplate',{'picRoot':goodsPhoto[item].img});
+                                $('#thumbnails').append(picHtml);
+                            }
+                            <?php endif; ?>
+                                
+                                //商品默认图片
+                            <?php if (isset($form_info['img']) && $form_info['img']):?>
+                            $('#thumbnails img[alt="<?php echo $form_info['img'];?>"]').addClass('current');
+                            <?php endif; ?>
                         });
                         //初始化货品表格
                         function initProductTable()
@@ -454,15 +515,16 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                                     $('#properties').show();
 
                                     //表单回填设置项
-                                    //                {if:isset($goods_attr)}
-                                    //                {set:$attrArray = array();}
-                                    //                {foreach:items = $goods_attr}
-                                    //                {set:$valArray = explode(',',$item);}
-                                    //                {set:$attrArray[] = '"attr_id_'.$key.'[]":"'.join(";",IFilter::act($valArray)).'"'}
-                                    //                {set:$attrArray[] = '"attr_id_'.$key.'":"'.join(";",IFilter::act($valArray)).'"'}
-                                    //                {/foreach}
-                                    //                formObj.init({{echo:join(',',$attrArray)}});
-                                    //                {/if}
+                                    <?php if(isset($goods_attr)):?>
+                                    <?php $attrArray = array();?>
+                                    <?php foreach($goods_attr as $key => $item):?>
+                                    <?php $valArray = explode(',',$item);?>
+                                    <?php $attrArray[] = '"attr_id_'.$key.'[]":"'.join(";",($valArray)).'"'?>
+                                    <?php $attrArray[] = '"attr_id_'.$key.'":"'.join(";",($valArray)).'"'?>
+                                    <?php endforeach;?>
+                                    formObj.init({<?php echo join(',',$attrArray);?>});
+                                    <?php endif;?>
+                                    
                                 } else
                                 {
                                     $('#properties').hide();
@@ -705,28 +767,28 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                             $('#thumbnails img').removeClass('current');
                             $(_self).addClass('current');
                         }
-                        
+
                         //提交表单前的检查
-                        function checkForm(){
+                        function checkForm() {
                             //整理商品图片
                             var goodsPhoto = [];
-                            $('#thumbnails img').each(function(){
+                            $('#thumbnails img').each(function () {
                                 goodsPhoto.push(this.alt);
                             });
-                            if(goodsPhoto.length > 0){
+                            if (goodsPhoto.length > 0) {
                                 $('input[name="_imgList"]').val(goodsPhoto.join(','));
                                 $('input[name="img"]').val($('#thumbnails img[class="current"]').attr('alt'));
                             }
                             return true;
                         }
                     </script>
-<?php
+                    <?php
 
-use backend\utils\Swfupload;
+                    use backend\utils\Swfupload;
 
 $swfloadObject = new Swfupload($themeUrl);
-$swfloadObject->show();
-?>
+                    $swfloadObject->show();
+                    ?>
                     <?php
                     /**
                       <script type="text/javascript" src="<?php echo $themeUrl; ?>/libs/ueditor/ueditor.config.js"></script>

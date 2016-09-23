@@ -9,6 +9,7 @@
 namespace backend\logics;
 
 use yii\helpers\Json;
+use yii\helpers\ArrayHelper;
 use common\models\Goods;
 use common\models\GoodsAttribute;
 use common\models\CategoryExtend;
@@ -183,6 +184,114 @@ class GoodsLogic {
         }
 
         return $goodsId;
+    }
+
+    /**
+     * 获取编辑商品所有数据
+     * @param int $goodsId 商品ID
+     */
+    public function edit($goodsId) {
+        //获取商品
+        $goodsModel = new Goods();
+        $goodsInfo = $goodsModel->find()
+            ->where('id=:goodsId', [':goodsId' => $goodsId])
+            ->one();
+
+        if (empty($goodsInfo)) {
+            return null;
+        }
+
+        //赋值到FORM用于渲染
+        $data = array('form_info' => ArrayHelper::toArray($goodsInfo));
+
+        //获取货品
+        $productModel = new Products();
+        $productInfo = $productModel->find()
+            ->where('goods_id=:goodsId', [':goodsId' => $goodsId])
+            ->all();
+
+
+        if ($productInfo) {
+            $data['product'] = ArrayHelper::toArray($productInfo);
+        }
+
+        //加载推荐类型
+        $commendGoodsModel = new CommendGoods();
+        $commendGoods = $commendGoodsModel->find()
+            ->select(['commend_id'])
+            ->where('goods_id=:goodsId', [':goodsId' => $goodsId])
+            ->all();
+
+        if ($commendGoods) {
+            foreach ($commendGoods as $value) {
+                $data['goods_commend'][] = $value['commend_id'];
+            }
+        }
+
+        //相册
+        $query = new \yii\db\Query;
+        $query->select(['gh.img'])
+            ->from('{{%goods_photo_relation}} as ghr')
+            ->leftJoin('{{%goods_photo}} as gh', 'ghr.photo_id=gh.id')
+            ->where('ghr.goods_id=:goodsId', [':goodsId' => $goodsId])
+            ->orderBy('ghr.id asc');
+        $command = $query->createCommand();
+        $photoInfo = $command->queryAll();
+        if ($photoInfo) {
+            $data['goods_photo'] = $photoInfo;
+        }
+
+        //扩展基本属性
+        $goodsAttrModel = new GoodsAttribute();
+        $attrInfo = $goodsAttrModel->find()
+            ->where('goods_id=:goodsId and attribute_id != ""', [':goodsId' => $goodsId])
+            ->all();
+        if ($attrInfo) {
+            foreach ($attrInfo as $item) {
+                //key：属性名；val：属性值,多个属性值以","分割
+                $data['goods_attr'][$item['attribute_id']] = $item['attribute_value'];
+            }
+        }
+
+        //商品分类
+        $query = new \yii\db\Query;
+        $query->from('{{%category_extend}} as ca')
+            ->leftJoin('{{%category}} as c', 'c.id=ca.category_id')
+            ->where('ca.goods_id=:goodsId', [':goodsId' => $goodsId]);
+        $command = $query->createCommand();
+        $categoryInfo = $command->queryAll();
+        if ($categoryInfo) {
+            $data['goods_category'] = $categoryInfo;
+        }
+
+//        $categoryExtend = new CategoryExtend();
+//        $cateData = $categoryExtend->find()
+////            ->select(['category_id'])
+//            ->where('goods_id=:goodsId', [':goodsId' => $goodsId])
+//            ->all();
+//        if ($cateData) {
+//            foreach ($cateData as $item) {
+//                $data['goods_category'][] = $item['category_id'];
+//            }
+//        }
+        return $data;
+    }
+
+    /**
+     * 根据商品分类的父类ID进行数据归类
+     * @param array $categoryData 商品category表的结构数组
+     * @return array
+     */
+    public static function categoryParentStruct($categoryData) {
+        $result = array();
+        foreach ($categoryData as $key => $val) {
+            if (isset($result[$val['parent_id']]) && is_array($result[$val['parent_id']])) {
+                $result[$val['parent_id']][] = $val;
+            } else {
+                $result[$val['parent_id']] = array($val);
+            }
+        }
+        return $result;
     }
 
 }

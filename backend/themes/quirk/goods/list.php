@@ -6,6 +6,7 @@
 
 <?php
 
+use yii\helpers\Url;
 use yii\widgets\LinkPager;
 ?>
 <div class="panel">
@@ -14,7 +15,9 @@ use yii\widgets\LinkPager;
         <a class="btn btn-danger" href="http://demo.blogtest.com/admin/article/create">删除</a>
         <a class="btn btn-success" href="http://demo.blogtest.com/admin/article/create">上架</a>
         <a class="btn btn-warning" href="http://demo.blogtest.com/admin/article/create">下架</a>
+        <!--
         <a class="btn btn-info" href="http://demo.blogtest.com/admin/article/create">回收站</a>
+        -->
     </div>
     <div class="panel-body">
         <div class="table-responsive">
@@ -59,7 +62,7 @@ use yii\widgets\LinkPager;
                                     </select>
                                 </td>
                                 <td class="text-center" style="width: 134px;">
-                                    <a class="btn btn-success" href="http://demo.blogtest.com/admin/article/create">编辑</a>
+                                    <a class="btn btn-success" href="<?php echo Url::to(['/goods/edit', 'id' => $info['id']]); ?>">编辑</a>
                                     <a class="btn btn-danger" href="javascript:void(0)">删除</a>
                                 </td>
                             </tr>
