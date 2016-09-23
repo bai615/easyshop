@@ -11,10 +11,12 @@ namespace backend\controllers;
 use Yii;
 use yii\data\Pagination;
 use yii\helpers\Json;
+use yii\helpers\Url;
 use common\models\Goods;
 use common\models\Attribute;
 use common\models\Model;
 use common\models\Spec;
+use backend\logics\GoodsLogic;
 
 /**
  * Description of GoodsController
@@ -28,8 +30,21 @@ class GoodsController extends BaseController {
             'upload' => [
                 'class' => 'kucha\ueditor\UEditorAction',
                 'config' => [
+                    /* 上传图片配置项 */
                     "imageUrlPrefix" => "http://img.yii2shop.com", //图片访问路径前缀
-                    "imagePathFormat" => "images/upload/{yyyy}{mm}{dd}/{time}{rand:6}" //上传保存路径
+                    "imagePathFormat" => "/upload/images/{yyyy}{mm}{dd}/{time}{rand:6}", //上传保存路径
+                    /* 涂鸦图片上传配置项 */
+                    'scrawlUrlPrefix' => 'http://img.yii2shop.com',
+                    'scrawlPathFormat' => '/upload/images/{yyyy}{mm}{dd}/{time}{rand:6}',
+                    /* 截图工具上传 */
+                    'snapscreenUrlPrefix' => 'http://img.yii2shop.com',
+                    'snapscreenPathFormat' => '/upload/images/{yyyy}{mm}{dd}/{time}{rand:6}',
+                    /* 抓取远程图片配置 */
+                    'catcherUrlPrefix'=>'http://img.yii2shop.com',
+                    'catcherPathFormat' => '/upload/images/{yyyy}{mm}{dd}/{time}{rand:6}',
+                    /* 上传视频配置 */
+                    'videoUrlPrefix'=>'http://img.yii2shop.com',
+                    'videoPathFormat' => '/upload/video/{yyyy}{mm}{dd}/{time}{rand:6}',
                 ],
             ]
         ];
@@ -240,7 +255,25 @@ class GoodsController extends BaseController {
         }
     }
 
+    /**
+     * 保存修改商品信息
+     */
+    public function actionUpdate() {
+         pprint($_POST);
+        $goodsId       = intval(Yii::$app->request->post('id'));
+        
+        //初始化商品数据
+		unset($_POST['id']);
+		unset($_POST['callback']);
+        
+        $goodsLogic = new GoodsLogic();
+		$goodsLogic->update($goodsId,$_POST);
+       
+        $this->redirect(Url::to(['/goods/list']));
+    }
+
     public function actionTest() {
+        pprint($_POST);
         pprint($_SERVER['DOCUMENT_ROOT']);
         $this->getBaseData('goods', 'create');
         $model = new Goods();

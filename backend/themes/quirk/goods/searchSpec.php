@@ -68,7 +68,7 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
 <% if(item['type']==1){ %>
 <%= valueList[result] %>
 <% }else{ %>
-                                        <img src="{webroot:}<%= valueList[result] %>" width="30px" height="30px"/>
+                                        <img src="<%= valueList[result] %>" width="30px" height="30px"/>
 <% } %>
                                     </a>
                                 </div>
@@ -111,7 +111,7 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                                     <tr class='td_c'>
                                         <td>
                                             <input type="hidden" name="specJson" value='{"id":"<%= id %>","name":"<%= name %>","type":"<%= type %>","value":"<%= value %>"}' />
-                                            <% if(type == 1){ %><%= value %><% }else{ %><img width="30px" height="30px" src="{webroot:<%= value %>}" class="img_border" /><% } %>
+                                            <% if(type == 1){ %><%= value %><% }else{ %><img width="30px" height="30px" src="<%= value %>" class="img_border" /><% } %>
                                         </td>
                                         <td>
                                             <img class="operator" src="<?php echo $themeUrl; ?>/images/icon_asc.gif" onclick="positionUp($(this).parent().parent(), $(this).parent().parent().parent());" alt="向上" />
