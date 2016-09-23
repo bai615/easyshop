@@ -10,6 +10,7 @@ use common\models\CategoryExtend;
 use common\models\GoodsPhotoRelation;
 use common\models\Products;
 use common\models\Favorite;
+use common\models\Brand;
 use frontend\models\ContactForm;
 
 /**
@@ -90,16 +91,14 @@ class SiteController extends BaseController {
 
         //品牌名称
         if ($goodsInfo['brand_id']) {
-            dprint($goodsInfo['brand_id']);
-//            $brandModel = new IModel('brand');
-//            $brandInfo = $brandModel->find(array(
-//                'select' => 'name',
-//                'condition' => 'id=:brindId',
-//                'params' => array('brandId' => $goodsInfo['brand_id'])
-//            ));
-//            if ($brandInfo) {
-//                $goodsInfo['brand_name'] = $brandInfo['name'];
-//            }
+            $brandModel = new Brand();
+            $brandInfo = $brandModel->find()
+                ->select(['name'])
+                ->where('id=:brandId', [':brandId' => $goodsInfo['brand_id']])
+                ->one();
+            if ($brandInfo) {
+                $goodsInfo['brand_name'] = $brandInfo['name'];
+            }
         }
 
         //获取商品分类

@@ -51,6 +51,9 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
             <input type='hidden' id='goods_id' alt='商品ID' value='<?php echo $goodsInfo['id']; ?>' />
             <ul>
                 <li class="goods_no">商品编号：<span id="goods_no"><?php echo $goodsInfo['goods_no'] ? $goodsInfo['goods_no'] : $goodsInfo['id']; ?></span></li>
+                <?php if(($goodsInfo['brand_name'])):?>
+                <li>品牌：<?php echo $goodsInfo['brand_name'];?></li>
+                <?php endif;?>
                 <li>销售价：
                     <b class="goods_price" id="real_price">
                         <?php
@@ -212,7 +215,7 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                     <?php endif; ?>
 
                     <?php if (isset($goodsInfo['weight']) && $goodsInfo['weight']) : ?>
-                        <li title="<?php echo isset($goodsInfo['weight']) ? $goodsInfo['weight'] : ""; ?>g">商品毛重：<label id="weight"><?php echo isset($goodsInfo['weight']) ? $goodsInfo['weight'] : ""; ?>g</label></li>
+                        <li title="<?php echo isset($goodsInfo['weight']) ? $goodsInfo['weight'] : ""; ?>g">商品毛重：<label id="weight"><?php echo isset($goodsInfo['weight']) ? $goodsInfo['weight'] : ""; ?></label></li>
                     <?php endif; ?>
 
                     <?php if (isset($goodsInfo['unit']) && $goodsInfo['unit']) : ?>
