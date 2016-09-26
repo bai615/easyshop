@@ -184,6 +184,7 @@ AppAsset::register($this);
                                             window.alert = function (mess) {
                                                 art.dialog.alert(mess);
                                             }
+                                            window.realConfirm = window.confirm;
                                             window.confirm = function (mess, bnYes, bnNo)
                                             {
                                                 if (bnYes === undefined && bnNo === undefined)
@@ -194,10 +195,10 @@ AppAsset::register($this);
                                                     art.dialog.confirm(
                                                             mess,
                                                             function () {
-                                                                eval(bnYes)
+                                                                eval(bnYes);
                                                             },
                                                             function () {
-                                                                eval(bnNo)
+                                                                eval(bnNo);
                                                             }
                                                     );
                                                 }
