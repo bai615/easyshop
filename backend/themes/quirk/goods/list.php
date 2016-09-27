@@ -11,7 +11,7 @@ use yii\widgets\LinkPager;
 ?>
 <div class="panel">
     <div class="panel-heading">
-        <a class="btn btn-primary" href="http://demo.blogtest.com/admin/article/create">新增</a>
+        <a class="btn btn-primary" href="<?php echo Url::to(['/goods/create']);?>">新增</a>
         <a class="btn btn-danger" href="http://demo.blogtest.com/admin/article/create">删除</a>
         <a class="btn btn-success" href="http://demo.blogtest.com/admin/article/create">上架</a>
         <a class="btn btn-warning" href="http://demo.blogtest.com/admin/article/create">下架</a>

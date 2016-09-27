@@ -294,4 +294,44 @@ class GoodsLogic {
         return $result;
     }
 
+    /**
+     * 无限极分类递归函数
+     * @staticvar array $formatCat
+     * @staticvar int $floor
+     * @param type $catArray
+     * @param type $id
+     * @param type $prefix
+     * @return int
+     */
+    public static function sortdata($catArray, $id = 0, $prefix = '') {
+        static $formatCat = array();
+        static $floor = 0;
+
+        foreach ($catArray as $key => $val) {
+            if ($val['parent_id'] == $id) {
+                $str = self::nstr($prefix, $floor);
+                $val['name'] = $str . $val['name'];
+
+                $val['floor'] = $floor;
+                $formatCat[] = $val;
+
+                unset($catArray[$key]);
+
+                $floor++;
+                self::sortdata($catArray, $val['id'], $prefix);
+                $floor--;
+            }
+        }
+        return $formatCat;
+    }
+
+    //处理商品列表显示缩进
+    public static function nstr($str, $num = 0) {
+        $return = '';
+        for ($i = 0; $i < $num; $i++) {
+            $return .= $str;
+        }
+        return $return;
+    }
+
 }

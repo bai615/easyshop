@@ -34,7 +34,7 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                 <ul class="select">
                     <% for(var item in templateData) { %>
                         <% item = templateData[item] %>
-                    <li onmouseover="showCategory(<%= item['id'] %>,<%= level %>);"><label><input name="categoryVal" type="checkbox" value="<%= item['id'] %>" onchange="selectCategory(this);" <% if (jQuery() . inArray(item['id'], checkedCategory) != -1) { %>checked="checked"<% } %> /><%= item['name'] %></label></li>
+                    <li onmouseover="showCategory(<%= item['id'] %>,<%= level %>);"><label><input name="categoryVal" type="<?= $type?>" value="<%= item['id'] %>" onchange="selectCategory(this);" <% if (jQuery() . inArray(item['id'], checkedCategory) != -1) { %>checked="checked"<% } %> /><%= item['name'] %></label></li>
                     <% } %>
                 </ul>
             </script>
@@ -82,6 +82,12 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
             }
             //更新分类数据值
             art.dialog.data('categoryValue', checkedCategory);
+            <?php if($type == 'checkbox'):?>
+            art.dialog.data('categoryValue',checkedCategory);
+            <?php else:?>
+            var result = checkedCategory.pop();
+            art.dialog.data('categoryValue',Array(result));
+            <?php endif;?>
         }
     </script>
 </html>

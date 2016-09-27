@@ -75,6 +75,10 @@ function Form(form)
                 {
                     if (value)
                     {
+                        if('number'===typeof(value))
+                        {
+                            value = value.toString();
+                        }
                         value = value.replace(/&gt;/g, ">").replace(/&amp;/g, "&").replace(/&lt;/g, "<");
                     }
                     e.value = value;
@@ -88,7 +92,7 @@ function Form(form)
                 {
                     var _value = (';' + value + ';');
                     for (var i = 0; i < len; i++)
-                    {console.log('step3')
+                    {
                         if (e[i] != undefined)
                         {
                             console.log(value);

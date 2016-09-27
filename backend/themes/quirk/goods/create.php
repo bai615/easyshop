@@ -89,6 +89,7 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                         $(document).on("click", "[name='_goodsCategoryButton']", selectGoodsCategory);
 
                         //完整分类数据
+                        art.dialog.data('categoryWhole',<?php echo Json::encode((Category::getAll()));?>);
                         art.dialog.data('categoryParentData', <?php echo Json::encode(GoodsLogic::categoryParentStruct(Category::getAll()));?>);
 
                     });

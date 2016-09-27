@@ -98,7 +98,9 @@ class GoodsController extends BaseController {
      * @return type
      */
     public function actionGoodsCategory() {
-        return $this->renderPartial('goodsCategory');
+        $type = Yii::$app->request->get('type');
+        $data['type'] = empty($type) ? 'radio' : $type;
+        return $this->renderPartial('goodsCategory', $data);
     }
 
     /**
