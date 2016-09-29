@@ -30,7 +30,7 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
     <div class="col-md-12">
         <div class="panel">
             <div class="panel-heading nopaddingbottom">
-                <h4 class="panel-title">商品信息</h4>
+                <h4 class="panel-title">分类信息</h4>
             </div>
             <div class="panel-body">
                 <hr>

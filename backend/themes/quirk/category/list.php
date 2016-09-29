@@ -12,7 +12,7 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
 ?>
 <div class="panel">
     <div class="panel-heading">
-        <a class="btn btn-success" href="<?php echo Url::to(['/category/create']); ?>">添加分类</a>
+        <a class="btn btn-primary" href="<?php echo Url::to(['/category/create']); ?>">添加分类</a>
     </div>
     <div class="panel-body">
         <div class="table-responsive">

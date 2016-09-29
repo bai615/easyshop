@@ -34,6 +34,15 @@ class Category extends ActiveRecord {
         $info = $model->find()->where('id=:categoryId',[':categoryId'=>$categoryId])->one();
         return ArrayHelper::toArray($info);
     }
+    
+    /**
+     * 通过ID获取名字
+     */
+    public static function getNameById($categoryId){
+        $model = new Category();
+        $info = $model->find()->where('id=:categoryId',[':categoryId'=>$categoryId])->one();
+        return empty($info) ? '' : $info['name'];
+    }
 
     /**
      * 对应表名

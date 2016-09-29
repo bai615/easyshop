@@ -181,28 +181,59 @@ AppAsset::register($this);
                         <script type="text/javascript" src="<?php echo $themeUrl; ?>/libs/artdialog/artDialog.js"></script>
                         <script type="text/javascript" src="<?php echo $themeUrl; ?>/libs/artdialog/plugins/iframeTools.js"></script>
                         <script type="text/javascript">
-                                            window.alert = function (mess) {
-                                                art.dialog.alert(mess);
+                            window.alert = function (mess) {
+                                art.dialog.alert(mess);
+                            }
+                            window.realConfirm = window.confirm;
+                            window.confirm = function (mess, bnYes, bnNo)
+                            {
+                                if (bnYes === undefined && bnNo === undefined)
+                                {
+                                    return eval("window.realConfirm(mess)");
+                                } else
+                                {
+                                    art.dialog.confirm(
+                                            mess,
+                                            function () {
+                                                eval(bnYes);
+                                            },
+                                            function () {
+                                                eval(bnNo);
                                             }
-                                            window.realConfirm = window.confirm;
-                                            window.confirm = function (mess, bnYes, bnNo)
-                                            {
-                                                if (bnYes === undefined && bnNo === undefined)
-                                                {
-                                                    return eval("window.realConfirm(mess)");
-                                                } else
-                                                {
-                                                    art.dialog.confirm(
-                                                            mess,
-                                                            function () {
-                                                                eval(bnYes);
-                                                            },
-                                                            function () {
-                                                                eval(bnNo);
-                                                            }
-                                                    );
-                                                }
-                                            }
+                                    );
+                                }
+                            }
+
+                            /**
+                             * 删除操作
+                             * @param object conf
+                             msg :提示信息;
+                             form:要提交的表单名称;
+                             link:要跳转的链接地址;
+                             */
+                            function delModel(conf)
+                            {
+                                var ok = null;            //执行操作
+                                var msg = '确定要删除么？';//提示信息
+
+                                if (conf)
+                                {
+                                    if (conf.form)
+                                        var ok = 'formSubmit("' + conf.form + '")';
+                                    else if (conf.link)
+                                        var ok = 'window.location.href="' + conf.link + '"';
+
+                                    if (conf.msg)
+                                        var msg = conf.msg;
+                                }
+                                if (ok == null && document.forms.length >= 1)
+                                    var ok = 'document.forms[0].submit();';
+
+                                if (ok != null)
+                                    window.confirm(msg, ok);
+                                else
+                                    alert('删除操作缺少参数');
+                            }
                         </script>
                         </body>
                         </html>
