@@ -14,12 +14,19 @@ use yii\db\ActiveRecord;
  * @author baihua <baihua_2011@163.com>
  */
 class Model extends ActiveRecord {
-    
+
+    /**
+     * 模型属性
+     * @var type 
+     */
+    public $model_attr;
+
     /**
      * 获取模型数据
      * @return type
      */
-    public static function getModelList(){
-        return self::find()->select(['id','name'])->all();
+    public static function getModelList() {
+        return self::find()->select(['id', 'name'])->all();
     }
+
 }
