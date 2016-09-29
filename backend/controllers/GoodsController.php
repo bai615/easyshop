@@ -11,6 +11,7 @@ namespace backend\controllers;
 use Yii;
 use yii\data\Pagination;
 use yii\helpers\Json;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use common\models\Goods;
 use common\models\Attribute;
@@ -174,7 +175,7 @@ class GoodsController extends BaseController {
      * @return type
      */
     public function actionSpecEdit() {
-        $id = intval(Yii::$app->request->get('id'));
+        $specId = intval(Yii::$app->request->get('id'));
 
         $data = array(
             'id' => '',
@@ -184,9 +185,12 @@ class GoodsController extends BaseController {
             'note' => '',
         );
 
-        if ($id) {
-//            $obj = new IModel('spec');
-//            $dataRow = $obj->getObj("id = {$id}");
+        if ($specId) {
+            $model = new Spec();
+            $specInfo = $model->find()->where('id=:specId', [':specId' => $specId])->one();
+            if ($specInfo) {
+                $data = ArrayHelper::toArray($specInfo);
+            }
         }
         return $this->renderPartial('specEdit', $data);
     }
@@ -195,11 +199,11 @@ class GoodsController extends BaseController {
      * 增加或者修改规格
      */
     public function actionSpecUpdate() {
-        $id = intval(Yii::$app->request->get('id'));
-        $name = Yii::$app->request->get('name');
-        $specType = Yii::$app->request->get('type');
-        $value = Yii::$app->request->get('value');
-        $note = Yii::$app->request->get('note');
+        $id = intval($this->getParams('id'));
+        $name = $this->getParams('name');
+        $specType = $this->getParams('type');
+        $value = $this->getParams('value');
+        $note = $this->getParams('note');
 
         //要插入的数据
         if (is_array($value) && isset($value[0]) && $value[0]) {
@@ -292,6 +296,42 @@ class GoodsController extends BaseController {
         $goodsLogic->update($goodsId, $_POST);
 
         $this->redirect(Url::to(['/goods/list']));
+    }
+
+    /**
+     * 规格列表
+     */
+    public function actionSpecList() {
+        $this->getBaseData('model', 'spec-list');
+        $data = Spec::find();
+        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => '10']);
+        $model = $data->select(['id', 'name', 'value', 'type', 'note', 'is_del'])
+            ->where('is_del=0')
+            ->offset($pages->offset)
+            ->limit($pages->limit)
+            ->all();
+
+        return $this->render('specList', [
+                'model' => $model,
+                'pages' => $pages,
+        ]);
+    }
+
+    /**
+     * 批量删除规格
+     */
+    public function actionSpecDel() {
+        $specId = intval(Yii::$app->request->get('id'));
+        if ($specId) {
+            $model = new Spec();
+            if (is_array($specId)) {
+                $where = "id in (" . join(',', $specId) . ")";
+            } else {
+                $where = 'id = ' . $specId;
+            }
+            $model->updateAll(['is_del' => 1], $where);
+        }
+        $this->redirect(Url::to(['/goods/spec-list']));
     }
 
     public function actionTest() {

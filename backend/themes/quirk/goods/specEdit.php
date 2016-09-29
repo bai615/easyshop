@@ -1,5 +1,5 @@
 <?php
-
+use yii\helpers\Json;
 use yii\helpers\Url;
 
 $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
@@ -55,7 +55,7 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                                     </tr>
                                 </thead>
                                 <tbody id='spec_box'>
-                                    <?php $specValue = $value ? JSON::decode($value) : array() ?>
+                                    <?php $specValue = $value ? Json::decode($value) : array() ?>
                                     <?php foreach ($specValue as $key => $item) { ?>
                                         <tr class='td_c'>
                                             <td>
@@ -69,9 +69,9 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                                                 <?php } ?>
                                             </td>
                                             <td>
-                                                <img class="operator" src="<?php echo $this->getWebSkinPath() . "images/admin/icon_asc.gif"; ?>" alt="向上" />
-                                                <img class="operator" src="<?php echo $this->getWebSkinPath() . "images/admin/icon_desc.gif"; ?>" alt="向下" />
-                                                <img class="operator" src="<?php echo $this->getWebSkinPath() . "images/admin/icon_del.gif"; ?>" alt="删除" />
+                                                <img class="operator" src="<?php echo $themeUrl . "/images/icon_asc.gif"; ?>" alt="向上" />
+                                                <img class="operator" src="<?php echo $themeUrl . "/images/icon_desc.gif"; ?>" alt="向下" />
+                                                <img class="operator" src="<?php echo $themeUrl . "/images/icon_del.gif"; ?>" alt="删除" />
                                             </td>
                                         </tr>
                                     <?php } ?>
@@ -140,9 +140,9 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
 
                 //数据
                 var specRow = '<tr class="td_c"><td>' + specInputHtml + '</td>'
-                        + '<td><img class="operator" src="<?php // echo $this->getWebSkinPath() . "images/admin/icon_asc.gif";  ?>" alt="向上" />'
-                        + '<img class="operator" src="<?php // echo $this->getWebSkinPath() . "images/admin/icon_desc.gif";  ?>" alt="向下" />'
-                        + '<img class="operator" src="<?php // echo $this->getWebSkinPath() . "images/admin/icon_del.gif";  ?>" alt="删除" />'
+                        + '<td><img class="operator" src="<?php echo $themeUrl . "/images/icon_asc.gif";  ?>" alt="向上" />'
+                        + '<img class="operator" src="<?php echo $themeUrl . "/images/icon_desc.gif";  ?>" alt="向下" />'
+                        + '<img class="operator" src="<?php echo $themeUrl . "/images/icon_del.gif";  ?>" alt="删除" />'
                         + '</td></tr>';
 
                 return specRow;

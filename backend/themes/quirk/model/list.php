@@ -10,7 +10,7 @@ use yii\widgets\LinkPager;
 ?>
 <div class="panel">
     <div class="panel-heading">
-        <a class="btn btn-primary" href="<?php echo Url::to(['/model/create']);?>">新增</a>
+        <a class="btn btn-primary" href="<?php echo Url::to(['/model/create']);?>">添加模型</a>
     </div>
     <div class="panel-body">
         <div class="table-responsive">

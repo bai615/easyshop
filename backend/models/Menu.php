@@ -90,13 +90,13 @@ class Menu {
                 ],
                 '2' => [
                     'name' => '规格列表',
-                    'action'=>'list',
-                    'url' => '/goods/create',
+                    'action'=>'model-spec-list',
+                    'url' => '/goods/spec-list',
                 ],
                 '3' => [
                     'name' => '规格图库',
-                    'action'=>'list',
-                    'url' => '/goods/create',
+                    'action'=>'model-spec-photo',
+                    'url' => '/goods/spec-photo',
                 ]
             ]
         ],
