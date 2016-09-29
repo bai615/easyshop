@@ -5,12 +5,12 @@
 <hr class="darken"> 
 
 <?php
-
+use yii\helpers\Url;
 use yii\widgets\LinkPager;
 ?>
 <div class="panel">
     <div class="panel-heading">
-        <a class="btn btn-primary" href="http://demo.blogtest.com/admin/article/create">新增</a>
+        <a class="btn btn-primary" href="<?php echo Url::to(['/model/create']);?>">新增</a>
     </div>
     <div class="panel-body">
         <div class="table-responsive">
@@ -39,8 +39,8 @@ use yii\widgets\LinkPager;
                                 </td>
                                 <td><?php echo $info['name']; ?></td>
                                 <td class="text-center" style="width: 134px;">
-                                    <a class="btn btn-success" href="http://demo.blogtest.com/admin/article/create">编辑</a>
-                                    <a class="btn btn-danger" href="javascript:void(0)">删除</a>
+                                    <a class="btn btn-success" href="<?php echo Url::to(['/model/edit', 'id' => $info['id']]); ?>">编辑</a>
+                                    <a class="btn btn-danger" href="javascript:void(0)" onclick="delModel({link:'<?php echo Url::to(['/model/remove', 'id' => $info['id']]); ?>'})">删除</a>
                                 </td>
                             </tr>
                             <?php

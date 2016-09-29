@@ -34,8 +34,8 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                 <hr>
                 <?php $form = ActiveForm::begin(['id' => 'basicForm', 'options' => ['name' => 'brandForm', 'class' => 'form-horizontal'], 'action' => Url::to(['/brand/save'])]); ?>
                 <input type="hidden" name="id" value="<?php
-                if (isset($categoryInfo)) {
-                    echo $categoryInfo['id'];
+                if (isset($brandInfo)) {
+                    echo $brandInfo['id'];
                 }
                 ?>" />
                 <input type='hidden' name="callback" value="" />
