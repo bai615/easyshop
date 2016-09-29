@@ -1,5 +1,5 @@
 
-<li class="active">品牌管理</li>
+<li class="active">品牌分类</li>
 <li class="active">编辑分类</li>
 </ol>                
 <hr class="darken"> 

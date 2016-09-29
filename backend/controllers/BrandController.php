@@ -45,7 +45,7 @@ class BrandController extends BaseController {
      * @return type
      */
     public function actionCreateCategory() {
-        $this->getBaseData();
+        $this->getBaseData('brand', 'category');
         return $this->render('editCategory');
     }
 
@@ -129,6 +129,81 @@ class BrandController extends BaseController {
                 'model' => $model,
                 'pages' => $pages,
         ]);
+    }
+
+    /**
+     * 创建品牌
+     * @return type
+     */
+    public function actionCreate() {
+        $this->getBaseData('brand', 'list');
+        return $this->render('edit');
+    }
+
+    /**
+     * 编辑品牌
+     * @return type
+     */
+    public function actionEdit() {
+        $this->getBaseData('brand', 'list');
+        $brandId = intval(Yii::$app->request->get('id'));
+        $brandInfo = array();
+        if ($brandId) {
+            $brandModel = new Brand();
+            $brandInfo = $brandModel->find()->where('id=:brandId', [':brandId' => $brandId])->one();
+        }
+        return $this->render('edit', ['brandInfo' => $brandInfo]);
+    }
+
+    /**
+     * 保存品牌
+     */
+    public function actionSave() {
+        $brandId = intval(Yii::$app->request->post('id'));
+        $name = Yii::$app->request->post('name');
+        $sort = intval(Yii::$app->request->post('sort'));
+        $url = Yii::$app->request->post('url');
+        $category = Yii::$app->request->post('category');
+        $description = Yii::$app->request->post('description');
+
+        $brandModel = new Brand();
+        $brandData = array(
+            'name' => $name,
+            'sort' => $sort,
+            'url' => $url,
+            'description' => $description,
+        );
+
+        if ($category && is_array($category)) {
+            $categorys = join(',', $category);
+            $brandData['category_ids'] = $categorys;
+        } else {
+            $brandData['category_ids'] = '';
+        }
+        if ($brandId) {
+            //保存修改分类信息
+            $brandModel->updateAll($brandData, 'id=:brandId', [':brandId' => $brandId]);
+        } else {
+            //添加新品牌
+            foreach ($brandData as $key => $value) {
+                $brandModel->$key = $value;
+            }
+            $brandModel->save();
+        }
+        $this->redirect(Url::to(['/brand/list']));
+    }
+
+    /**
+     * 删除品牌
+     */
+    public function actionRemove() {
+        $brandId = intval(Yii::$app->request->get('id'));
+        $brandModel = new Brand();
+        $brandInfo = $brandModel->find()->where('id=:brandId', [':brandId' => $brandId])->one();
+        if ($brandInfo) {
+            $brandModel->deleteAll('id=:brandId', [':brandId' => $brandId]);
+        }
+        $this->redirect(Url::to(['/brand/list']));
     }
 
 }

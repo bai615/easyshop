@@ -14,6 +14,15 @@ use yii\db\ActiveRecord;
  * @author baihua <baihua_2011@163.com>
  */
 class BrandCategory extends ActiveRecord {
+
+    /**
+     * 获取品牌数据
+     * @return type
+     */
+    public static function getAllList() {
+        return self::find()->select(['id', 'name'])->all();
+    }
+
     /**
      * 对应表名
      * @return string
@@ -21,5 +30,4 @@ class BrandCategory extends ActiveRecord {
 //    public static function tableName() {
 //        return '{{%brand_category}}';
 //    }
-
 }
