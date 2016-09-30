@@ -61,6 +61,7 @@ class GoodsController extends BaseController {
         $data = Goods::find();
         $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => '10']);
         $model = $data->select(['id', 'name', 'sell_price', 'market_price', 'store_nums', 'img', 'is_del'])
+            ->where('is_del != 1')
             ->orderBy('id desc')
             ->offset($pages->offset)
             ->limit($pages->limit)
@@ -300,6 +301,27 @@ class GoodsController extends BaseController {
     }
 
     /**
+     * 删除商品
+     */
+    public function actionRemove() {
+        $goodsId = (Yii::$app->request->post('ids'));
+        $resultArr = ['errcode' => 1, 'errmsg' => '删除失败'];
+        if ($goodsId) {
+            if (is_array($goodsId)) {
+                $where = "id in (" . join(',', $goodsId) . ")";
+            } else {
+                $where = 'id = ' . $goodsId;
+            }
+            $model = new Goods();
+            $result = $model->updateAll(['is_del' => 1], $where);
+            if ($result) {
+                $resultArr = ['errcode' => 0, 'errmsg' => '删除成功'];
+            }
+        }
+        echo Json::encode($resultArr);
+    }
+
+    /**
      * 规格列表
      */
     public function actionSpecList() {
@@ -369,6 +391,34 @@ class GoodsController extends BaseController {
             }
         }
         echo Json::encode($resultArr);
+    }
+
+    /**
+     * 商品上下架
+     */
+    public function actionGoodsStatus() {
+        //post数据
+        $id = (Yii::$app->request->get('id'));
+        $type = Yii::$app->request->get('type');
+
+        //生成goods对象
+        $goodsModel = new Goods();
+        $time = date('Y-m-d H:i:s', time());
+        if ($type == 'up') {
+            $updateData = array('is_del' => 0, 'up_time' => $time, 'down_time' => null);
+        } else if ($type == 'down') {
+            $updateData = array('is_del' => 2, 'up_time' => null, 'down_time' => $time);
+        }
+        if (!empty($id)) {
+            if (is_array($id)) {
+                $where = "id in (" . join(',', $id) . ")";
+            } else {
+                $where = 'id = ' . $id;
+            }
+            $goodsModel->updateAll($updateData, $where);
+        }
+
+        echo Json::encode(['result' => 'finish']);
     }
 
 }
