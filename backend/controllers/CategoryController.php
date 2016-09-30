@@ -11,6 +11,7 @@ namespace backend\controllers;
 use Yii;
 use yii\helpers\Url;
 use common\models\Category;
+use common\models\CategoryExtend;
 use backend\logics\GoodsLogic;
 
 /**
@@ -85,6 +86,30 @@ class CategoryController extends BaseController {
                 $categoryModel->$key = $value;
             }
             $categoryModel->save();
+        }
+        $this->redirect(Url::to(['/category/list']));
+    }
+
+    /**
+     * 删除分类
+     */
+    public function actionRemove() {
+        $categoryId = intval(Yii::$app->request->get('id'));
+        if ($categoryId) {
+            $categoryModel = new Category();
+            $catInfo = $categoryModel->find()->where('parent_id = :categoryId', [':categoryId' => $categoryId]);
+
+            //要删除的分类下还有子节点
+            if (!empty($catInfo)) {
+                $url = Url::to(['/category/list']);
+                $this->redirect(Url::to(['/common/message', 'message' => '无法删除此分类，此分类下还有子分类', 'url' => $url]));
+            }
+
+            $result = $categoryModel->deleteAll('id=:categoryId', [':categoryId' => $categoryId]);
+            if ($result) {
+                $categoryExtendModel = new CategoryExtend();
+                $categoryExtendModel->deleteAll('category_id=:categoryId', [':categoryId' => $categoryId]);
+            }
         }
         $this->redirect(Url::to(['/category/list']));
     }

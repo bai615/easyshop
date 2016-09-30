@@ -107,7 +107,6 @@ class ModelController extends BaseController {
 
                 //获取商品属性表中的该模型下的数量
                 $attrData = $goodsAttrObj->find()->where("model_id = " . $val)->one();
-                pprint($attrData);
                 if ($attrData) {
                     $url = Url::to(['/model/list']);
                     $this->redirect(Url::to(['/common/message', 'message' => '无法删除此模型，请确认该模型下无商品', 'url' => $url]));

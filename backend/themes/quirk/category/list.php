@@ -39,10 +39,7 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                                 <td><?php if ($info['visibility'] == '1'): ?><span class="green">是</span><?php else: ?><span class="brown">否</span><?php endif; ?></td>
                                 <td>
                                     <a class="btn btn-success" href="<?php echo Url::to(['/category/edit', 'id' => $info['id']]); ?>">编辑</a>
-                                    <a class="btn btn-danger" href="javascript:void(0)">删除</a>
-                                    <!--
-                                    <a href="{url:/goods/category_edit/cid/$item[id]}"><img class="operator" src="{skin:images/admin/icon_edit.gif}" alt="修改" title="修改" /></a>
-                                    <a href="javascript:void(0)" onclick="delModel({link: '{url:/goods/category_del/cid/$item[id]}'})"><img class="operator" src="{skin:images/admin/icon_del.gif}" alt="删除" title="删除" /></a>-->
+                                    <a class="btn btn-danger" href="javascript:void(0)" onclick="delModel({link: '<?php echo Url::to(['/category/remove', 'id' => $info['id']]); ?>'})">删除</a>
                                 </td>
                             </tr>
                             <?php
