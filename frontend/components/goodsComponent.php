@@ -61,7 +61,7 @@ class goodsComponent extends Component {
             ->distinct()
             ->from('{{%goods}} as go')
             ->leftJoin('{{%category_extend}} as ca', 'ca.goods_id = go.id')
-            ->where('ca.category_id in (' . $categroyId . ') and go.is_del = 0')
+            ->where('ca.category_id in (' . $categroyId . ') and go.store_nums > 0 and go.is_del = 0')
             ->orderBy('sale desc')
             ->limit($limit);
         $command = $query->createCommand();
