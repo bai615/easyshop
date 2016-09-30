@@ -56,6 +56,19 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                                     <a title="<?php echo $favoriteInfo->goods['name']; ?>" target="_bank" href="<?php echo Url::to(['site/products', 'id' => $favoriteInfo->goods['id']]); ?>">
                                         <?php echo $favoriteInfo->goods['name']; ?>
                                     </a>
+                                    <p>
+                                        <?php
+                                        if($favoriteInfo->goods['is_del'] !=0 ):
+                                        ?>
+                                            该商品已下架，不能购买！
+                                            <?php
+                                        elseif ($favoriteInfo->goods['store_nums'] <= 0):
+                                            ?>
+                                            该商品已售完，不能购买！
+                                            <?php
+                                        endif;
+                                            ?>
+                                    </p>
                                 </td>
                                 <td>
                                     <?php echo $favoriteInfo['time']; ?>

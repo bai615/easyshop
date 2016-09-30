@@ -86,7 +86,7 @@ class SiteController extends BaseController {
         $goodsModel = new Goods();
         $goodsInfo = $goodsModel->find()
 //            ->select(['id','name'])
-            ->where('id=:goodsId and is_del=0', [':goodsId' => $goodsId])
+            ->where('id=:goodsId', [':goodsId' => $goodsId])
             ->one();
 
         //品牌名称

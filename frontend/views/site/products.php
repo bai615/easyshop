@@ -101,11 +101,17 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                     </a>
                 </li>
                 <li>顾客评分：<span class="goods_grade"><i style="width:<?php echo CommonTools::gradeWidth($goodsInfo['grade'], $goodsInfo['comments']); ?>px;"></i></span> (已有<?php echo $goodsInfo['comments']; ?>人评价)</li>
+                <!--
                 <li>配送至：</li>
+                -->
             </ul>
             <div class="goods_current">
                 <?php
-                if ($goodsInfo['store_nums'] <= 0):
+                if($goodsInfo['is_del'] !=0 ):
+                ?>
+                    该商品已下架，不能购买，您可以看看其它商品！
+                    <?php
+                elseif ($goodsInfo['store_nums'] <= 0):
                     ?>
                     该商品已售完，不能购买，您可以看看其它商品！
                     <?php
@@ -134,25 +140,27 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                             <?php
                         endforeach;
                         ?>
-                        <dl class="">
-                            <dt>已选：</dt><dd><span class="orange bold" id="specSelected"></span>&nbsp;</dd>
-                        </dl>
-                        <?php
-                    endif;
+                            <dl class="">
+                                <dt>已选：</dt><dd><span class="orange bold" id="specSelected"></span>&nbsp;</dd>
+                            </dl>
+                            <?php
+                        endif;
+                        ?>
+                    <dl class="buy_num">
+                        <dt>购买数量：</dt>
+                        <dd>
+                            <input class="" type="text" id="buyNums" onblur="checkBuyNums();" value="1" maxlength="5" />
+                            <div class="resize">
+                                <a class="add" href="javascript:modified(1);"></a>
+                                <a class="reduce" href="javascript:modified(-1);"></a>
+                            </div>
+                        </dd>
+                    </dl>
+                    <button type="button" class="btn btn-lg btn-danger"><i class="glyphicon glyphicon-shopping-cart"></i> 加入购物车</button>
+                    <button type="button" class="btn btn-lg btn-danger" onclick="buy_now('<?php echo $goodsInfo['id']; ?>');"><i>￥</i>立即购买</button>
+                <?php
                 endif;
                 ?>
-                <dl class="buy_num">
-                    <dt>购买数量：</dt>
-                    <dd>
-                        <input class="" type="text" id="buyNums" onblur="checkBuyNums();" value="1" maxlength="5" />
-                        <div class="resize">
-                            <a class="add" href="javascript:modified(1);"></a>
-                            <a class="reduce" href="javascript:modified(-1);"></a>
-                        </div>
-                    </dd>
-                </dl>
-                <button type="button" class="btn btn-lg btn-danger"><i class="glyphicon glyphicon-shopping-cart"></i> 加入购物车</button>
-                <button type="button" class="btn btn-lg btn-danger" onclick="buy_now('<?php echo $goodsInfo['id']; ?>');"><i>￥</i>立即购买</button>
             </div>
 
         </div>
