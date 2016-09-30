@@ -17,6 +17,7 @@ use common\models\Goods;
 use common\models\Attribute;
 use common\models\Model;
 use common\models\Spec;
+use common\models\SpecPhoto;
 use backend\logics\GoodsLogic;
 
 /**
@@ -334,12 +335,40 @@ class GoodsController extends BaseController {
         $this->redirect(Url::to(['/goods/spec-list']));
     }
 
-    public function actionTest() {
-        pprint($_POST);
-        pprint($_SERVER['DOCUMENT_ROOT']);
-        $this->getBaseData('goods', 'create');
-        $model = new Goods();
-        return $this->render('test', ['model' => $model]);
+    /**
+     * 规格图库
+     */
+    public function actionSpecPhoto() {
+        $this->getBaseData('model', 'spec-photo');
+        $data = SpecPhoto::find();
+        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => '10']);
+        $model = $data->select(['id', 'name', 'address', 'create_time'])
+            ->offset($pages->offset)
+            ->limit($pages->limit)
+            ->all();
+
+        return $this->render('specPhoto', [
+                'model' => $model,
+                'pages' => $pages,
+        ]);
+    }
+
+    /**
+     * 规格图片删除
+     */
+    public function actionSpecPhotoDel() {
+        $idArr = Yii::$app->request->post('ids');
+        $resultArr = ['errcode' => 1, 'errmsg' => '删除失败'];
+        if (is_array($idArr)) {
+            $idStr = join(',', $idArr);
+            $where = ' id in (' . $idStr . ')';
+            $model = new SpecPhoto();
+            $result = $model->deleteAll($where);
+            if ($result) {
+                $resultArr = ['errcode' => 0, 'errmsg' => '删除成功'];
+            }
+        }
+        echo Json::encode($resultArr);
     }
 
 }

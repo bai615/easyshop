@@ -64,7 +64,7 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                                                 <?php } ?>
 
                                                 <?php if ($type == 2) { ?>
-                                                    <div class="imgbox"><img class="img_border" src='<?php echo IUrl::creatUrl("") . "" . $item . ""; ?>' width='50px' height='50px' /></div>
+                                                    <div class="imgbox"><img class="img_border" src='<?php echo $item; ?>' width='50px' height='50px' /></div>
                                                     <input type="hidden" name="value[]" value="<?php echo isset($item) ? $item : ""; ?>" /><button type="button" class="btn"><span>选择图片</span></button>
                                                 <?php } ?>
                                             </td>
@@ -114,8 +114,8 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
             function getUploadButtonHtml(obj)
             {
                 var specIndex = obj.parent().parent().index();
-                var tempUrl = '<?php echo Url::to(["/common/pic", 'specIndex' => '@specIndex@']); ?>';
-                tempUrl = tempUrl.replace('@specIndex@', specIndex);
+                var tempUrl = '<?php echo Url::to(["/common/pic", 'specIndex' => 'specIndexValue']); ?>';
+                tempUrl = tempUrl.replace('specIndexValue', specIndex);
                 art.dialog.open(tempUrl,
                         {
                             'id': "uploadIframe",
