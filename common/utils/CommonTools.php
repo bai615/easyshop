@@ -203,4 +203,14 @@ class CommonTools {
         return $code;
     }
 
+    /**
+     * 获取用户状态
+     * @param $status int 状态代码
+     * @return string
+     */
+    public static function userStatusText($status) {
+        $mapping = array('1' => '正常', '2' => '删除', '3' => '锁定');
+        return isset($mapping[$status]) ? $mapping[$status] : '';
+    }
+
 }

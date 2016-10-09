@@ -21,10 +21,14 @@ class Member extends ActiveRecord {
         $memberModel = new Member();
         $memberInfo = $memberModel->find()
             ->select(['user_id', 'balance'])
-            ->where('user_id=:userId',[':userId' => $userId])
+            ->where('user_id=:userId', [':userId' => $userId])
             ->one();
         $memberInfo->balance = $finnalAmount;
         return $memberInfo->update();
+    }
+
+    public function getUsers() {
+        return $this->hasOne(User::className(), ['id' => 'user_id']);
     }
 
 }
