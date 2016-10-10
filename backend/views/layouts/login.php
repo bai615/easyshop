@@ -6,6 +6,8 @@
 use yii\helpers\Html;
 use yii\bootstrap\NavBar;
 
+$this->title = 'EasyShop管理系统';
+
 //AppAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
@@ -25,7 +27,7 @@ use yii\bootstrap\NavBar;
 <div class="wrap">
     <?php
     NavBar::begin([
-        'brandLabel' => 'My Company',
+        'brandLabel' => 'EasyShop',
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',

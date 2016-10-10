@@ -8,6 +8,8 @@ use yii\helpers\Html;
 use yii\bootstrap\NavBar;
 use backend\models\Menu;
 
+$this->title = 'EasyShop管理系统';
+
 $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
 
 AppAsset::register($this);
@@ -66,7 +68,7 @@ AppAsset::register($this);
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-logged" data-toggle="dropdown">
                                         <img src="/themes/quirk/images/avatar/small.jpg" alt="头像">
-                                        test                                <span class="caret"></span>
+                                        <?php echo Yii::$app->user->identity->adminname;?>                                <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu pull-right">
                                         <li><a href="/admin/user/change-password"><i class="fa fa-cog"></i> 修改密码</a></li>
@@ -95,7 +97,7 @@ AppAsset::register($this);
                         </div>
                         <div class="media-body">
                             <h4 class="media-heading">
-                                test
+                                <?php echo Yii::$app->user->identity->adminname;?>
                             </h4>
                             <span>管理员</span>
                         </div>
