@@ -23,7 +23,7 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
     <div class="col-md-12">
         <div class="panel">
             <div class="panel-heading nopaddingbottom">
-                <h4 class="panel-title">用户组信息</h4>
+                <h4 class="panel-title">会员组信息</h4>
             </div>
             <div class="panel-body">
                 <hr>
@@ -31,9 +31,9 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                 <input type="hidden" name="id" value="" />
                 <input type='hidden' name="callback" value="" />
                 <div class="form-group">
-                    <label class="col-sm-2 control-label"><span class="text-danger">*</span> 用户组名称：</label>
+                    <label class="col-sm-2 control-label"><span class="text-danger">*</span> 会员组名称：</label>
                     <div class="col-sm-9">
-                        <input type="text" name="group_name" class="form-control" pattern="required" alt="用户组名称不能为空" />
+                        <input type="text" name="group_name" class="form-control" pattern="required" alt="会员组名称不能为空" />
                     </div>
                 </div>
                 <div class="form-group">

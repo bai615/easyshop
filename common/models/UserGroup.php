@@ -8,12 +8,22 @@
 
 namespace common\models;
 
+use yii\helpers\ArrayHelper;
 use yii\db\ActiveRecord;
+
 /**
  * Description of UserGroup
  *
  * @author baihua <baihua_2011@163.com>
  */
 class UserGroup extends ActiveRecord {
-    //put your code here
+
+    /**
+     * 获取所有用户组
+     * @return type
+     */
+    public static function getAll() {
+        return ArrayHelper::toArray(self::find()->orderBy('id desc')->all());
+    }
+
 }

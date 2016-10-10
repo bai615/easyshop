@@ -54,4 +54,18 @@ class User extends ActiveRecord implements IdentityInterface {
         return ($user['password'] == $newPassword) ? true : false;
     }
 
+    /**
+     * 通过用户编号获取用户名
+     * @param type $userId
+     * @return type
+     */
+    public static function getNameById($userId) {
+        $userInfo = static::findOne(['id' => $userId]);
+        return empty($userInfo) ? '' : $userInfo['username'];
+    }
+
+    public function getMembers() {
+        return $this->hasOne(Member::className(), ['user_id' => 'id']);
+    }
+
 }
