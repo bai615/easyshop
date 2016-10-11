@@ -213,4 +213,14 @@ class CommonTools {
         return isset($mapping[$status]) ? $mapping[$status] : '';
     }
 
+    /**
+     * get php.ini minimum post_max_size and upload_max_filesize
+     */
+    public static function getMaxSize() {
+        $uploadSize = ini_get('upload_max_filesize');
+        $postSize = ini_get('post_max_size');
+        $memory_limit = ini_get('memory_limit');
+        return min(floatval($uploadSize), floatval($postSize), floatval($memory_limit)) . 'M';
+    }
+
 }

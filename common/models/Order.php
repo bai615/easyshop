@@ -16,7 +16,7 @@ class Order extends ActiveRecord {
         // 第二个参数指定 通过子表的order_id，关联主表的id字段
         return $this->hasMany(OrderGoods::className(), ['order_id' => 'id']);
     }
-    
+
     /**
      * 获取订单状态
      * @param $orderRow array('status' => '订单状态','pay_type' => '支付方式ID','distribution_status' => '配送状态','pay_status' => '支付状态')
@@ -102,6 +102,19 @@ class Order extends ActiveRecord {
             return '已付款';
         }
         return '未知';
+    }
+
+    //获取订单配送状态
+    public static function getOrderDistributionStatusText($orderRow) {
+        if ($orderRow['status'] == 5) {
+            return '已收货';
+        } else if ($orderRow['distribution_status'] == 1) {
+            return '已发货';
+        } else if ($orderRow['distribution_status'] == 0) {
+            return '未发货';
+        } else if ($orderRow['distribution_status'] == 2) {
+            return '部分发货';
+        }
     }
 
     /**
