@@ -85,6 +85,18 @@ a.orange, .orange {color: #fe6c00;}
 .goods_info .favorite{display: inline-block;height: 14px;line-height: 14px;margin-left: 35px;padding: 2px 0 2px 22px;color:#000;}
 .goods_info .favorite i{color: #FBA627;}
 
+/* 添加购物车浮出框 */
+.shop_cart{position: relative;z-index: 1;}
+.shop_cart .shopping {left: 0;top: 70px;width: 344px;padding: 5px 5px 10px;border: 1px solid #63b7f9;position: absolute;right: 0;background-color: #fff;}
+.shop_cart dl {display: block;-webkit-margin-before: 1em;-webkit-margin-after: 1em;-webkit-margin-start: 0px;-webkit-margin-end: 0px;}
+.shop_cart dl.cart_stats dt img {margin-right: 8px;vertical-align: text-bottom;}
+.shop_cart dl.cart_stats dt {float: none;width: 329px;margin: 0;padding: 5px 0 5px 15px;border-bottom: 1px solid #63b7f9;text-align: left;}
+.shop_cart .close_2 {display: inline-block;float: right;margin-right: 8px;}
+.shop_cart dl.cart_stats dd {padding: 10px 0 0 25px;}
+.shop_cart dl.cart_stats dd span {margin-left: 20px;}
+.shop_cart span b {color: #a40000;font: bold 14px "宋体";}
+.shop_cart a.btn_blue {display: inline-block;width: 92px;height: 28px;margin: 0 10px 0 0;line-height: 26px;background-position: 0 -405px;font-size: 12px;font-family: "宋体";background-color: #4597E9;border-color: #4597E9;border-radius: 5px;color: #fff;text-align: center;}
+
 /* 热卖商品区 */
 .goods_hots_box{width: 234px;float: left;}
 .goods_hots_box ul,.goods_hots_box .goods_info{margin: 0px;padding: 0px;}

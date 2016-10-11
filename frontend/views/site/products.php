@@ -156,8 +156,21 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                             </div>
                         </dd>
                     </dl>
-                    <button type="button" class="btn btn-lg btn-danger"><i class="glyphicon glyphicon-shopping-cart"></i> 加入购物车</button>
-                    <button type="button" class="btn btn-lg btn-danger" onclick="buy_now('<?php echo $goodsInfo['id']; ?>');"><i>￥</i>立即购买</button>
+                    <div class="shop_cart">
+                        <button type="button" class="btn btn-lg btn-danger" onclick="joinCart();"><i class="glyphicon glyphicon-shopping-cart"></i> 加入购物车</button>
+                        <button type="button" id="shop_cart_btn" class="btn btn-lg btn-danger" onclick="buy_now('<?php echo $goodsInfo['id']; ?>');"><i>￥</i>立即购买</button>
+                    
+                        <div class="shopping" id="product_myCart" style='display:none;'>
+                            <dl class="cart_stats">
+                                <dt class="gray f14 bold">
+                                    <a class="close_2" href="javascript:closeCartDiv();" title="关闭">关闭</a>
+                                    <img src="<?php echo $themeUrl."/images/right_s.gif";?>" width="24" height="24" alt="" />成功加入购物车
+                                </dt>
+                                <dd class="gray">目前选购商品共<b class="orange" name='mycart_count'></b>件<span>合计：<b name='mycart_sum'></b></span></dd>
+                                <dd><a class="btn_blue bold" href="<?php echo Url::to(["/shopping/cart"]);?>">进入购物车</a><a class="btn_blue bold" href="javascript:void(0)" onclick="closeCartDiv();">继续购物>></a></dd>
+                            </dl>
+                        </div>
+                    </div>
                 <?php
                 endif;
                 ?>
@@ -269,3 +282,79 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
 <script src="<?php echo $themeUrl; ?>/js/jquery.min.js" type="text/javascript"></script>
 <script src="<?php echo $themeUrl; ?>/js/jqueryzoom.js" type="text/javascript"></script>
 <script src="<?php echo $themeUrl; ?>/js/goods_detail.js" type="text/javascript"></script>
+<script type="text/javascript">
+//检查购买数量是否合法
+function checkBuyNums()
+{
+	//购买数量小于0
+	var buyNums = parseInt($.trim($('#buyNums').val()));
+	if(isNaN(buyNums) || buyNums <= 0)
+	{
+		$('#buyNums').val(1);
+		return;
+	}
+
+	//购买数量大于库存
+	var storeNums = parseInt($.trim($('#store_nums').text()));
+	if(buyNums >= storeNums)
+	{
+		$('#buyNums').val(storeNums);
+		return;
+	}
+}
+/**
+ * 检查规格选择是否符合标准
+ * @return boolen
+ */
+function checkSpecSelected()
+{
+	if($('[name="specCols"]').length === $('[name="specCols"] .spec_current').length)
+	{
+		return true;
+	}
+	return false;
+}
+
+//商品加入购物车
+function joinCart()
+{
+	if(!checkSpecSelected())
+	{
+		tips('请先选择商品的规格');
+		return;
+	}
+    
+    var buyNums   = parseInt($.trim($('#buyNums').val()));
+	var productId = $('#product_id').val();
+	var type      = productId ? 'product' : 'goods';
+	var goods_id  = (type === 'product') ? productId : <?php echo $goodsInfo['id']; ?>;
+    
+    $.post('<?php echo Url::to(["/shopping/join-cart"]);?>',{"goods_id":goods_id,"type":type,"goods_num":buyNums,"random":Math.random},function(content){
+		if(content.errcode === 0)
+		{
+			//获取购物车信息
+			$.getJSON('<?php echo Url::to(["/shopping/show-cart"]);?>',{"random":Math.random},function(json)
+			{
+				$('[name="mycart_count"]').text(json.count);
+				$('[name="mycart_sum"]').text(json.sum);
+
+				//展示购物车清单
+				$('#product_myCart').show();
+
+				//暂闭加入购物车按钮
+//				$('#joinCarButton').attr('disabled','disabled');
+			});
+		}
+		else
+		{
+			alert(content.errmsg);
+		}
+	},'json');
+}
+//关闭product购物车弹出的div
+function closeCartDiv()
+{
+	$('#product_myCart').hide('slow');
+//	$('.submit_join').removeAttr('disabled','');
+}
+</script>

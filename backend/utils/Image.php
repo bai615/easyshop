@@ -2,6 +2,8 @@
 
 namespace backend\utils;
 
+use common\utils\GD;
+
 /**
  * 图片处理类
  *

@@ -2,6 +2,8 @@
 
 namespace backend\utils;
 
+use Yii;
+
 /**
  * 动态生成缩略图类
  *
@@ -42,7 +44,7 @@ class Thumb {
     /**
      * 获取缩略图物理路径
      */
-    public static function getThumbDir() {
+    public function getThumbDir() {
         return $this->thumbDir;
     }
 
@@ -53,7 +55,7 @@ class Thumb {
      * @param int $height 图片高度
      * @return string WEB图片路径名称
      */
-    public static function get($imgSrc, $width = 100, $height = 100) {
+    public function get($imgSrc, $width = 100, $height = 100) {
         if ($imgSrc == '') {
             return '';
         }
@@ -69,7 +71,7 @@ class Thumb {
         }
         //本地图片
         else {
-            $sourcePath = $this->dir . $imgSrc;
+            $sourcePath = ($this->dir) . $imgSrc;
             if (is_file($sourcePath) == false) {
                 return '';
             }
@@ -86,7 +88,7 @@ class Thumb {
         if (is_file($thumbDir . $thumbFileName) == false) {
             Image::thumb($sourcePath, $width, $height, $preThumb, $thumbDir);
         }
-        return $webThumbDir . $thumbFileName;
+        return Yii::$app->params['upload_url'] . '_thumb/' . trim($dirname, "/") . "/" . $thumbFileName;
     }
 
 }
