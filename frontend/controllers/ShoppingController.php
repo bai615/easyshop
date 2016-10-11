@@ -3,12 +3,14 @@
 namespace frontend\controllers;
 
 use Yii;
+use yii\helpers\Json;
 use common\models\Address;
 use common\models\Payment;
 use common\models\Areas;
 use common\models\Order;
 use frontend\models\CountSum;
 use frontend\logics\OrderLogic;
+use frontend\logics\CartLogic;
 
 /**
  * Description of ShoppingController
@@ -182,6 +184,49 @@ class ShoppingController extends BaseController {
         $data['orderAmount'] = sprintf('%.2f', $orderObj->order_amount);
         $data['paymentInfo'] = $paymentInfo;
         return $this->render('order', $data);
+    }
+
+    /**
+     * 商品加入购物车[ajax]
+     */
+    function actionJoinCart() {
+        $goodsId = intval(Yii::$app->request->post('goods_id'));
+        $goodsNum = Yii::$app->request->post('goods_num');
+        $goodsNum = empty($goodsNum) ? 1 : intval($goodsNum);
+        $type = Yii::$app->request->post('type');
+
+        //加入购物车
+        $cartLogic = new CartLogic();
+        $addResult = $cartLogic->add($goodsId, $goodsNum, $type);
+        if ($addResult === false) {
+            $result = array(
+                'errcode' => 1,
+                'errmsg' => $cartLogic->getError(),
+            );
+        } else {
+            $result = array(
+                'errcode' => 0,
+                'errmsg' => '添加成功',
+            );
+        }
+        echo Json::encode($result);
+    }
+    
+    /**
+     * 购物车div展示
+     */
+    public function actionShowCart(){
+        $cartLogic = new CartLogic();
+    	$cartList = $cartLogic->getMyCart();
+    	$data['data'] = array_merge($cartList['goods']['data'],$cartList['product']['data']);
+    	$data['count']= $cartList['count'];
+    	$data['sum']  = $cartList['sum'];
+    	echo Json::encode($data);
+    }
+    
+    
+    public function actionCart(){
+        
     }
 
 }
