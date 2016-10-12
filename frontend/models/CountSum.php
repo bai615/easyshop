@@ -4,6 +4,7 @@ namespace frontend\models;
 
 use common\models\Goods;
 use common\models\Products;
+use frontend\logics\CartLogic;
 
 /**
  * 计算购物车中的商品价格
@@ -11,6 +12,12 @@ use common\models\Products;
  * @author baihua <baihua_2011@163.com>
  */
 class CountSum {
+
+    /**
+     * 错误信息
+     * @var type 
+     */
+    private $error = '';
 
     //购物车计算
     public function cartCount($id = '', $type = '', $buyNum = 1) {
@@ -20,25 +27,30 @@ class CountSum {
 
             //规格必填
             if ($type == "goods") {
-//                $productsDB = new IModel('products');
-//                if ($productsDB->getObj('goods_id = ' . $id)) {
-//                    $this->error .= '请先选择商品的规格';
-//                    return $this->error;
-//                }
+                $productsModel = new Products();
+                $productsInfo = $productsModel->find()->where('goods_id=:goodsId', [':goodsId' => $gid])->one();
+                if ($productsInfo) {
+                    $this->error = '请先选择商品的规格';
+                    return false;
+                }
             }
 
             $buyInfo = array(
                 $type => array('id' => array($id), 'data' => array($id => array('count' => $buyNum)), 'count' => $buyNum)
             );
-//            pprint($buyInfo);
         } else {
             //获取购物车中的商品和货品信息
-//            $cartObj = new Cart();
-//            $buyInfo = $cartObj->getMyCart();
+            $cartLogic = new CartLogic();
+            $buyInfo = $cartLogic->getMyCart();
         }
         return $this->goodsCount($buyInfo);
     }
 
+    /**
+	 * 计算商品价格
+	 * @param Array $buyInfo ,购物车格式
+	 * @return array or bool
+	 */
     public function goodsCount($buyInfo) {
         $this->sum = 0;       //原始总额(优惠前)
         $this->final_sum = 0;       //应付总额(优惠后)
@@ -89,16 +101,12 @@ class CountSum {
                 $this->count += $newGoodsList[$key]['count'];
             }
         }
-//        pprint($newGoodsList);
 
         /* Product 拼装商品数据 */
         if (isset($buyInfo['product']['id']) && $buyInfo['product']['id']) {
             //购物车中的货品数据
             $productList = Products::findOne($buyInfo['product']['id']);
             $productGoods = $productList->goods;
-//            pprint($buyInfo);
-//            pprint($productList);
-//            dprint($productGoods);
             //检查库存
             if ($buyInfo['product']['data'][$productList['id']]['count'] <= 0 || $buyInfo['product']['data'][$productList['id']]['count'] > $productGoods['store_nums']) {
 //                    $productList[$key]['name'] .= "【无库存】";
@@ -126,10 +134,8 @@ class CountSum {
             $this->sum += $current_sum_all;
             $this->count += $newProductList[$key]['count'];
         }
-//        pprint($newProductList);
         $this->final_sum = $this->sum;
         $resultList = array_merge($newGoodsList, $newProductList);
-//        pprint($resultList);
         if (!$resultList) {
 //            $this->error .= "商品信息不存在";
         }

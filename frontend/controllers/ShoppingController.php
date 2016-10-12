@@ -3,6 +3,7 @@
 namespace frontend\controllers;
 
 use Yii;
+use yii\helpers\Url;
 use yii\helpers\Json;
 use common\models\Address;
 use common\models\Payment;
@@ -211,22 +212,74 @@ class ShoppingController extends BaseController {
         }
         echo Json::encode($result);
     }
-    
+
     /**
      * 购物车div展示
      */
-    public function actionShowCart(){
+    public function actionShowCart() {
         $cartLogic = new CartLogic();
-    	$cartList = $cartLogic->getMyCart();
-    	$data['data'] = array_merge($cartList['goods']['data'],$cartList['product']['data']);
-    	$data['count']= $cartList['count'];
-    	$data['sum']  = $cartList['sum'];
-    	echo Json::encode($data);
+        $cartList = $cartLogic->getMyCart();
+        $data['data'] = array_merge($cartList['goods']['data'], $cartList['product']['data']);
+        $data['count'] = $cartList['count'];
+        $data['sum'] = $cartList['sum'];
+        echo Json::encode($data);
     }
-    
-    
-    public function actionCart(){
-        
+
+    /**
+     * 删除购物车
+     */
+    public function actionRemoveCart() {
+        $goodsId = intval(Yii::$app->request->get('goods_id'));
+        $type = Yii::$app->request->get('type');
+
+        $cartLogic = new CartLogic();
+        $cartInfo = $cartLogic->getMyCart();
+        $delResult = $cartLogic->delGoods($goodsId, $type);
+
+        if ($delResult === false) {
+            $result = array(
+                'errcode' => 1,
+                'errmsg' => $cartLogic->getError(),
+            );
+        } else {
+            $goodsRow = $cartInfo[$type]['data'][$goodsId];
+            $cartInfo['sum'] -= $goodsRow['sell_price'] * $goodsRow['count'];
+            $cartInfo['count'] -= $goodsRow['count'];
+
+            $cartInfo['sum'] = sprintf('%.2f', $cartInfo['sum']);
+            $result = array(
+                'errcode' => 0,
+                'data' => $cartInfo,
+            );
+        }
+
+        echo Json::encode($result);
+    }
+
+    /**
+     * 购物车页面
+     * @return type
+     */
+    public function actionCart() {
+        $this->is_login();
+        //防止页面刷新
+        header("Cache-Control: no-store, no-cache, must-revalidate");
+        header("Cache-Control: post-check=0, pre-check=0", false);
+
+        //开始计算购物车中的商品价格
+        $countSumObj = new CountSum();
+        $cartInfo = $countSumObj->cartCount();
+        $data['cartInfo'] = $cartInfo;
+        return $this->render('cart', $data);
+    }
+
+    /**
+     * 清空购物车
+     */
+    public function actionClearCart() {
+        $cartLogic = new CartLogic();
+        $cartLogic->clear();
+        $this->redirect(Url::to(['/shopping/cart']));
     }
 
 }

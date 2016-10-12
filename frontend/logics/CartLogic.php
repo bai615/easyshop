@@ -22,7 +22,10 @@ use backend\utils\Thumb;
  */
 class CartLogic {
 
-    //购物车中最多容纳的数量
+    /**
+     * 购物车中最多容纳的数量
+     * @var type 
+     */
     private $maxCount = 100;
 
     /* 购物车简单cookie存储结构
@@ -37,7 +40,11 @@ class CartLogic {
      * [sum]  :int    商品总价格;
      */
     private $cartExeStruct = array('goods' => array('id' => array(), 'data' => array()), 'product' => array('id' => array(), 'data' => array()), 'count' => 0, 'sum' => 0);
-    //错误信息
+
+    /**
+     * 错误信息
+     * @var type 
+     */
     private $error = '';
 
     /**
@@ -203,23 +210,34 @@ class CartLogic {
                 $cartModel->create_time = date('Y-m-d H:i:s', time());
                 $result = $cartModel->save();
             }
-        }else{
+        } else {
             $this->error = '请先登录';
         }
         return $result;
     }
 
-    //购物车存储数据编码
+    /**
+     * 购物车存储数据编码
+     * @param type $data
+     * @return type
+     */
     private function encode($data) {
         return str_replace(array('"', ','), array('&', '$'), Json::encode($data));
     }
 
-    //购物车存储数据解码
+    /**
+     * 购物车存储数据解码
+     * @param type $data
+     * @return type
+     */
     private function decode($data) {
         return Json::decode(str_replace(array('&', '$'), array('"', ','), $data));
     }
 
-    //获取错误信息
+    /**
+     * 获取错误信息
+     * @return type
+     */
     public function getError() {
         return $this->error;
     }
@@ -315,6 +333,43 @@ class CartLogic {
             }
         }
         return $result;
+    }
+
+    /**
+     * 删除商品
+     * @param type $gid
+     * @param string $type
+     * @return boolean
+     */
+    public function delGoods($gid, $type = 'goods') {
+        $cartInfo = $this->getMyCartStruct();
+        if ($type != 'goods') {
+            $type = 'product';
+        }
+
+        //删除商品数据
+        if (isset($cartInfo[$type][$gid])) {
+            unset($cartInfo[$type][$gid]);
+            $this->setMyCart($cartInfo);
+        } else {
+            $this->error = '购物车中没有此商品';
+            return false;
+        }
+    }
+
+    /**
+     * 清空购物车
+     */
+    public function clear() {
+        //清空db
+        $userId = Yii::$app->controller->data['shopUserInfo']['userId'];
+        if ($userId) {
+            $cartModel = new Cart();
+            $cartInfo = $cartModel->find()->where('user_id=:userId',[':userId'=>$userId])->one();
+            if ($cartInfo) {
+                $cartInfo->delete();
+            }
+        }
     }
 
 }

@@ -145,9 +145,9 @@ class UcenterController extends BaseController {
         $this->is_login();
         $this->currentMenu = 1;
         $userId = $this->data['shopUserInfo']['userId'];
-        $data = Order::find()->where('user_id =:userId and if_del= 0', [':userId' => $userId]);
+        $data = Order::find()->where('user_id =:userId and is_del= 0', [':userId' => $userId]);
         $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => '10']);
-        $model = $data->where('user_id =:userId and if_del= 0', [':userId' => $userId])
+        $model = $data->where('user_id =:userId and is_del= 0', [':userId' => $userId])
             ->orderBy('id desc')
             ->offset($pages->offset)
             ->limit($pages->limit)

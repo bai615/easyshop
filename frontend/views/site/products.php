@@ -141,7 +141,7 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                         endforeach;
                         ?>
                             <dl class="">
-                                <dt>已选：</dt><dd><span class="orange bold" id="specSelected"></span>&nbsp;</dd>
+                                <dt>已选：</dt><dd><span class="red bold" id="specSelected"></span>&nbsp;</dd>
                             </dl>
                             <?php
                         endif;
@@ -166,7 +166,7 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                                     <a class="close_2" href="javascript:closeCartDiv();" title="关闭">关闭</a>
                                     <img src="<?php echo $themeUrl."/images/right_s.gif";?>" width="24" height="24" alt="" />成功加入购物车
                                 </dt>
-                                <dd class="gray">目前选购商品共<b class="orange" name='mycart_count'></b>件<span>合计：<b name='mycart_sum'></b></span></dd>
+                                <dd class="gray">目前选购商品共<b class="red" name='mycart_count'></b>件<span>合计：<b name='mycart_sum'></b></span></dd>
                                 <dd><a class="btn_blue bold" href="<?php echo Url::to(["/shopping/cart"]);?>">进入购物车</a><a class="btn_blue bold" href="javascript:void(0)" onclick="closeCartDiv();">继续购物>></a></dd>
                             </dl>
                         </div>
@@ -342,7 +342,7 @@ function joinCart()
 				$('#product_myCart').show();
 
 				//暂闭加入购物车按钮
-//				$('#joinCarButton').attr('disabled','disabled');
+				$('#joinCarButton').attr('disabled','disabled');
 			});
 		}
 		else
@@ -355,6 +355,6 @@ function joinCart()
 function closeCartDiv()
 {
 	$('#product_myCart').hide('slow');
-//	$('.submit_join').removeAttr('disabled','');
+	$('.submit_join').removeAttr('disabled','');
 }
 </script>
