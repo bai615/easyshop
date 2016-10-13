@@ -221,9 +221,11 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                     商品介绍
                 </a>
             </li>
+            <!--
             <li><a href="#comment" data-toggle="tab">商品评价</a></li>
             <li><a href="#history" data-toggle="tab">购买记录</a></li>
             <li><a href="#refer" data-toggle="tab">售前咨询</a></li>
+            -->
         </ul>
         <div id="myTabContent" class="tab-content">
             <div class="tab-pane fade in active" id="goods_desc">
