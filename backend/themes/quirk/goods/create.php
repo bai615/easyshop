@@ -551,7 +551,7 @@ echo UEditor::widget([
             {
                 //添加的规格
                 var addSpecObject = $(iframeWin.document).find('[id^="vertical_"]');
-                if (addSpecObject.length == 0)
+                if (addSpecObject.length === 0)
                 {
                     return;
                 }

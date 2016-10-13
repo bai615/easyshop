@@ -116,7 +116,7 @@ function addNewSpec()
 	    		{
 		    		for(var j = 0;j < elementsList.length;j++)
 		    		{
-		    			if(valueName[index] == 'type' && elementsList[j].checked == false)
+		    			if(valueName[index] === 'type' && elementsList[j].checked === false)
 		    			{
 		    				continue;
 		    			}
@@ -126,7 +126,7 @@ function addNewSpec()
 	    	}
 
 			$.getJSON(formObject.action,encodeURI(paramArray.join("&")),function(json){
-				if(json.flag == 'success')
+				if(json.flag === 'success')
 				{
 		    		var specLiHtml = template.render('specLi',{'item':json.data});
 		    		$('#specs').append(specLiHtml);
