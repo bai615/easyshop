@@ -51,7 +51,7 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
             <?php ActiveForm::end(); ?>
         </div>
         <div class="reg_ad">
-            <img src="/upload/reg_ad.jpg"/>
+            <img src="<?php echo Yii::$app->params['upload_url'];?>/upload/reg_ad.jpg"/>
         </div>
     </div>
 </div>

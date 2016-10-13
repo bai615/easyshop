@@ -8,7 +8,7 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
 <div class="container block_box">
     <div class="user_login_box">
         <div class="login_ad">
-            <img src="/upload/login_ad.png" alt="" title="" style="height: 400px;" />
+            <img src="<?php echo Yii::$app->params['upload_url'];?>/upload/login_ad.png" alt="" title="" style="height: 400px;" />
         </div>
         <div class="login_form">
             <h2>欢迎登录</h2>
