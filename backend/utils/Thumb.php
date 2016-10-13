@@ -84,7 +84,6 @@ class Thumb {
 
         //缩略图目录
         $thumbDir = $this->getThumbDir() . trim($dirname, "/") . "/";
-        $webThumbDir = $this->thumbDir . trim($dirname, "/") . "/";
         if (is_file($thumbDir . $thumbFileName) == false) {
             Image::thumb($sourcePath, $width, $height, $preThumb, $thumbDir);
         }
