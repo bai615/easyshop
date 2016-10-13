@@ -80,3 +80,4 @@ use yii\widgets\LinkPager;
 
     </div>
 </div>
+<script type="text/javascript" src="<?php echo $themeUrl; ?>/js/jquery.min.js"></script>

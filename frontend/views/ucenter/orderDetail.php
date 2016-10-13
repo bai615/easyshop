@@ -141,3 +141,4 @@ use common\models\Payment;
 
     </div>
 </div>
+<script type="text/javascript" src="<?php echo $themeUrl; ?>/js/jquery.min.js"></script>
