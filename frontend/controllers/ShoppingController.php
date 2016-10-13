@@ -180,6 +180,11 @@ class ShoppingController extends BaseController {
         $orderInstance = new OrderLogic();
         $orderInstance->insertOrderGoods($orderId, $cartInfo['goodsList']);
 
+        if (empty($gid)) {
+            //购物车购买成功，清除购物车
+            $cartLogic = new CartLogic();
+            $cartLogic->clear();
+        }
         $data['orderId'] = $orderId;
         $data['orderNo'] = $orderObj->order_no;
         $data['orderAmount'] = sprintf('%.2f', $orderObj->order_amount);

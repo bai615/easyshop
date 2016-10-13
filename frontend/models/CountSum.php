@@ -28,7 +28,7 @@ class CountSum {
             //规格必填
             if ($type == "goods") {
                 $productsModel = new Products();
-                $productsInfo = $productsModel->find()->where('goods_id=:goodsId', [':goodsId' => $gid])->one();
+                $productsInfo = $productsModel->find()->where('goods_id=:goodsId', [':goodsId' => $id])->one();
                 if ($productsInfo) {
                     $this->error = '请先选择商品的规格';
                     return false;
