@@ -47,7 +47,7 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                                 <tbody>
                                     <?php
                                     if ($orderInfo->orderGoods):
-                                        foreach ($orderInfo->orderGoods as $orderGoodsInfo):
+                                        foreach ($orderInfo->orderGoods as $key=>$orderGoodsInfo):
                                             ?>
                                             <tr>
                                                 <td class="goods_img">
@@ -71,7 +71,9 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                                                 <td><?php echo $orderGoodsInfo['goods_nums']; ?></td>
                                                 <td>￥<?php echo sprintf('%.2f', $orderGoodsInfo['real_price'] * $orderGoodsInfo['goods_nums']); ?></td>
                                                 <td>
+                                                    <?php if(0==$key):?>
                                                     <a href="<?php echo Url::to(['ucenter/order-detail', 'id' => $orderInfo['id']]); ?>">订单详情</a>
+                                                    <?php endif;?>
                                                 </td>
                                             </tr>
                                             <?php
