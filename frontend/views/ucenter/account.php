@@ -1,6 +1,7 @@
 <?php
 use yii\helpers\Url;
 use yii\widgets\LinkPager;
+$themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
 ?>
 <div class="container block_box">
     <div class="breadcrumb"><span>您当前的位置：</span> <a href="/">首页</a> 》账户余额</div>

@@ -1,5 +1,6 @@
 <?php
 use yii\helpers\Url;
+$themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
 ?>
 <div class="container block_box">
     <div class="message_box">

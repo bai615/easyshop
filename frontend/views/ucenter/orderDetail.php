@@ -2,6 +2,7 @@
 use yii\helpers\Url;
 use common\models\Order;
 use common\models\Payment;
+$themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
 ?>
 <div class="container block_box">
     <div class="breadcrumb"><span>您当前的位置：</span> <a href="/">首页</a> 》我的订单</div>
