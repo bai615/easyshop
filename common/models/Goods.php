@@ -20,6 +20,7 @@ class Goods extends ActiveRecord {
     public $category_id; //分类ID
     public $photo; //商品图片集
     public $price_area; //价格区间
+    public $attribute_info; //扩展属性信息
 
     /**
      * 获取一个商品对应的所有产品

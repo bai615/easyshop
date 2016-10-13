@@ -51,9 +51,9 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
             <input type='hidden' id='goods_id' alt='商品ID' value='<?php echo $goodsInfo['id']; ?>' />
             <ul>
                 <li class="goods_no">商品编号：<span id="goods_no"><?php echo $goodsInfo['goods_no'] ? $goodsInfo['goods_no'] : $goodsInfo['id']; ?></span></li>
-                <?php if(($goodsInfo['brand_name'])):?>
-                <li>品牌：<?php echo $goodsInfo['brand_name'];?></li>
-                <?php endif;?>
+                <?php if (($goodsInfo['brand_name'])): ?>
+                    <li>品牌：<?php echo $goodsInfo['brand_name']; ?></li>
+                <?php endif; ?>
                 <li>销售价：
                     <b class="goods_price" id="real_price">
                         <?php
@@ -87,15 +87,15 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                 <li>
                     库存：现货<span>(<label id="store_nums"><?php echo $goodsInfo['store_nums']; ?></label>)</span>
                     <a class="favorite" onclick="favorite_add(this, 'item', '<?php echo $goodsInfo['id']; ?>');" href="javascript:void(0)">
-                        <?php 
-                        if(in_array($goodsInfo['id'], $favoriteArr)):
+                        <?php
+                        if (in_array($goodsInfo['id'], $favoriteArr)):
                             ?>
                             <i class="glyphicon glyphicon-star"></i><span>已收藏</span>
                             <?php
                         else:
                             ?>
                             <i class="glyphicon glyphicon-star-empty"></i><span>收藏此商品</span>
-                            <?php
+                        <?php
                         endif;
                         ?>
                     </a>
@@ -107,8 +107,8 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
             </ul>
             <div class="goods_current">
                 <?php
-                if($goodsInfo['is_del'] !=0 ):
-                ?>
+                if ($goodsInfo['is_del'] != 0):
+                    ?>
                     该商品已下架，不能购买，您可以看看其它商品！
                     <?php
                 elseif ($goodsInfo['store_nums'] <= 0):
@@ -140,12 +140,12 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                             <?php
                         endforeach;
                         ?>
-                            <dl class="">
-                                <dt>已选：</dt><dd><span class="red bold" id="specSelected"></span>&nbsp;</dd>
-                            </dl>
-                            <?php
-                        endif;
-                        ?>
+                        <dl class="">
+                            <dt>已选：</dt><dd><span class="red bold" id="specSelected"></span>&nbsp;</dd>
+                        </dl>
+                        <?php
+                    endif;
+                    ?>
                     <dl class="buy_num">
                         <dt>购买数量：</dt>
                         <dd>
@@ -157,17 +157,17 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                         </dd>
                     </dl>
                     <div class="shop_cart">
-                        <button type="button" class="btn btn-lg btn-danger" onclick="joinCart();"><i class="glyphicon glyphicon-shopping-cart"></i> 加入购物车</button>
+                        <button type="button" id="joinCarButton" class="btn btn-lg btn-danger" onclick="joinCart();"><i class="glyphicon glyphicon-shopping-cart"></i> 加入购物车</button>
                         <button type="button" id="shop_cart_btn" class="btn btn-lg btn-danger" onclick="buy_now('<?php echo $goodsInfo['id']; ?>');"><i>￥</i>立即购买</button>
-                    
+
                         <div class="shopping" id="product_myCart" style='display:none;'>
                             <dl class="cart_stats">
                                 <dt class="gray f14 bold">
                                     <a class="close_2" href="javascript:closeCartDiv();" title="关闭">关闭</a>
-                                    <img src="<?php echo $themeUrl."/images/right_s.gif";?>" width="24" height="24" alt="" />成功加入购物车
+                                    <img src="<?php echo $themeUrl . "/images/right_s.gif"; ?>" width="24" height="24" alt="" />成功加入购物车
                                 </dt>
                                 <dd class="gray">目前选购商品共<b class="red" name='mycart_count'></b>件<span>合计：<b name='mycart_sum'></b></span></dd>
-                                <dd><a class="btn_blue bold" href="<?php echo Url::to(["/shopping/cart"]);?>">进入购物车</a><a class="btn_blue bold" href="javascript:void(0)" onclick="closeCartDiv();">继续购物>></a></dd>
+                                <dd><a class="btn_blue bold" href="<?php echo Url::to(["/shopping/cart"]); ?>">进入购物车</a><a class="btn_blue bold" href="javascript:void(0)" onclick="closeCartDiv();">继续购物>></a></dd>
                             </dl>
                         </div>
                     </div>
@@ -221,10 +221,9 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                     商品介绍
                 </a>
             </li>
-            <li><a href="#ios" data-toggle="tab">商品评价</a></li>
-            <li><a href="#jmeter" data-toggle="tab">购买记录</a></li>
-            <li><a href="#ejb" data-toggle="tab">售前咨询</a></li>
-            <li><a href="#ios" data-toggle="tab">商品评价</a></li>
+            <li><a href="#comment" data-toggle="tab">商品评价</a></li>
+            <li><a href="#history" data-toggle="tab">购买记录</a></li>
+            <li><a href="#refer" data-toggle="tab">售前咨询</a></li>
         </ul>
         <div id="myTabContent" class="tab-content">
             <div class="tab-pane fade in active" id="goods_desc">
@@ -247,11 +246,11 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                         <li title="<?php echo isset($goodsInfo['up_time']) ? $goodsInfo['up_time'] : ""; ?>">上架时间：<?php echo isset($goodsInfo['up_time']) ? $goodsInfo['up_time'] : ""; ?></li>
                     <?php endif; ?>
 
-                    <?php /** if (($attribute)) { ?>
-                      <?php foreach ($attribute as $key => $item) { ?>
-                      <li><?php echo isset($item['name']) ? $item['name'] : ""; ?>：<?php echo isset($item['attribute_value']) ? $item['attribute_value'] : ""; ?></li>
-                      <?php } ?>
-                      <?php } */ ?>
+                    <?php if ($goodsInfo['attribute_info']) : ?>
+                      <?php foreach ($goodsInfo['attribute_info'] as $key => $attribute) : ?>
+                      <li><?php echo isset($attribute['name']) ? $attribute['name'] : ""; ?>：<?php echo isset($attribute['attribute_value']) ? $attribute['attribute_value'] : ""; ?></li>
+                      <?php endforeach; ?>
+                      <?php endif;  ?>
                 </ul>
                 <?php if (isset($goodsInfo['content']) && $goodsInfo['content']): ?>
                     <div class="salebox">
@@ -259,16 +258,17 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                     </div>
                 <?php endif; ?>
             </div>
-            <div class="tab-pane fade" id="ios">
-                <p>iOS 是一个由苹果公司开发和发布的手机操作系统。最初是于 2007 年首次发布 iPhone、iPod Touch 和 Apple 
-                    TV。iOS 派生自 OS X，它们共享 Darwin 基础。OS X 操作系统是用在苹果电脑上，iOS 是苹果的移动版本。</p>
+            <div class="tab-pane fade" id="comment">
+                <p>评论信息展示区</p>
             </div>
-            <div class="tab-pane fade" id="jmeter">
-                <p>jMeter 是一款开源的测试软件。它是 100% 纯 Java 应用程序，用于负载和性能测试。</p>
+            <div class="tab-pane fade" id="history">
+                <p>购买记录展示区</p>
             </div>
-            <div class="tab-pane fade" id="ejb">
-                <p>Enterprise Java Beans（EJB）是一个创建高度可扩展性和强大企业级应用程序的开发架构，部署在兼容应用程序服务器（比如 JBOSS、Web Logic 等）的 J2EE 上。
-                </p>
+            <div class="tab-pane fade" id="refer">
+                <p>售前咨询展示区</p>
+            </div>
+            <div class="tab-pane fade" id="refer">
+                <p>售前咨询展示区</p>
             </div>
         </div>
     </div>
@@ -284,77 +284,80 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
 <script src="<?php echo $themeUrl; ?>/js/goods_detail.js" type="text/javascript"></script>
 <script type="text/javascript">
 //检查购买数量是否合法
-function checkBuyNums()
-{
-	//购买数量小于0
-	var buyNums = parseInt($.trim($('#buyNums').val()));
-	if(isNaN(buyNums) || buyNums <= 0)
-	{
-		$('#buyNums').val(1);
-		return;
-	}
+    function checkBuyNums()
+    {
+        //购买数量小于0
+        var buyNums = parseInt($.trim($('#buyNums').val()));
+        if (isNaN(buyNums) || buyNums <= 0)
+        {
+            $('#buyNums').val(1);
+            return;
+        }
 
-	//购买数量大于库存
-	var storeNums = parseInt($.trim($('#store_nums').text()));
-	if(buyNums >= storeNums)
-	{
-		$('#buyNums').val(storeNums);
-		return;
-	}
-}
-/**
- * 检查规格选择是否符合标准
- * @return boolen
- */
-function checkSpecSelected()
-{
-	if($('[name="specCols"]').length === $('[name="specCols"] .spec_current').length)
-	{
-		return true;
-	}
-	return false;
-}
+        //购买数量大于库存
+        var storeNums = parseInt($.trim($('#store_nums').text()));
+        if (buyNums >= storeNums)
+        {
+            $('#buyNums').val(storeNums);
+            return;
+        }
+    }
+    /**
+     * 检查规格选择是否符合标准
+     * @return boolen
+     */
+    function checkSpecSelected()
+    {
+        if ($('[name="specCols"]').length === $('[name="specCols"] .spec_current').length)
+        {
+            return true;
+        }
+        return false;
+    }
 
 //商品加入购物车
-function joinCart()
-{
-	if(!checkSpecSelected())
-	{
-		tips('请先选择商品的规格');
-		return;
-	}
-    
-    var buyNums   = parseInt($.trim($('#buyNums').val()));
-	var productId = $('#product_id').val();
-	var type      = productId ? 'product' : 'goods';
-	var goods_id  = (type === 'product') ? productId : <?php echo $goodsInfo['id']; ?>;
-    
-    $.post('<?php echo Url::to(["/shopping/join-cart"]);?>',{"goods_id":goods_id,"type":type,"goods_num":buyNums,"random":Math.random},function(content){
-		if(content.errcode === 0)
-		{
-			//获取购物车信息
-			$.getJSON('<?php echo Url::to(["/shopping/show-cart"]);?>',{"random":Math.random},function(json)
-			{
-				$('[name="mycart_count"]').text(json.count);
-				$('[name="mycart_sum"]').text(json.sum);
+    function joinCart()
+    {
+        if (!checkSpecSelected())
+        {
+            tips('请先选择商品的规格');
+            return;
+        }
 
-				//展示购物车清单
-				$('#product_myCart').show();
+        var buyNums = parseInt($.trim($('#buyNums').val()));
+        var productId = $('#product_id').val();
+        var type = productId ? 'product' : 'goods';
+        var goods_id = (type === 'product') ? productId : <?php echo $goodsInfo['id']; ?>;
 
-				//暂闭加入购物车按钮
-				$('#joinCarButton').attr('disabled','disabled');
-			});
-		}
-		else
-		{
-			alert(content.errmsg);
-		}
-	},'json');
-}
+        $.post('<?php echo Url::to(["/shopping/join-cart"]); ?>', {"goods_id": goods_id, "type": type, "goods_num": buyNums, "random": Math.random}, function (content) {
+            if (content.errcode === 0)
+            {
+                //获取购物车信息
+                $.getJSON('<?php echo Url::to(["/shopping/show-cart"]); ?>', {"random": Math.random}, function (json)
+                {
+                    $('[name="mycart_count"]').text(json.count);
+                    $('[name="mycart_sum"]').text(json.sum);
+
+                    //展示购物车清单
+                    $('#product_myCart').show();
+
+                    //暂闭加入购物车按钮
+                    $('#joinCarButton').attr('disabled', 'disabled');
+
+                    //更新顶部购物车下拉框信息
+                    var cartTemplate = template.render('cartTemplete', {'goodsData': json.data, 'goodsCount': json.count, 'goodsSum': json.sum});
+                    $('#w2').html(cartTemplate);
+                });
+            } else
+            {
+                alert(content.errmsg);
+            }
+        }, 'json');
+    }
 //关闭product购物车弹出的div
-function closeCartDiv()
-{
-	$('#product_myCart').hide('slow');
-	$('.submit_join').removeAttr('disabled','');
-}
+    function closeCartDiv()
+    {
+        $('#product_myCart').hide('slow');
+        $('#joinCarButton').removeAttr('disabled', '');
+    }
 </script>

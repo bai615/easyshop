@@ -119,6 +119,16 @@ class SiteController extends BaseController {
             $goodsInfo['price_area'] = $productList;
         }
 
+        //获得扩展属性
+        $query = new \yii\db\Query;
+        $query->select(['a.name', 'g.attribute_value'])
+            ->distinct()
+            ->from('{{%goods_attribute}} as g')
+            ->leftJoin('{{%attribute}} as a', 'a.id=g.attribute_id')
+            ->where("goods_id=:goodsId and attribute_id!=''", [':goodsId' => $goodsId]);
+        $command = $query->createCommand();
+        $goodsInfo['attribute_info'] = $command->queryAll();
+
         //获取我的商品收藏
         $userId = $this->data['shopUserInfo']['userId'];
         $favoriteArr = array();
