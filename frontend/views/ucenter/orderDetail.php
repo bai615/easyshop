@@ -1,5 +1,6 @@
 <?php
 use yii\helpers\Url;
+use yii\bootstrap\ActiveForm;
 use common\models\Order;
 use common\models\Payment;
 $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
@@ -36,6 +37,19 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                         <td>下单时间：<?php echo $orderInfo['create_time']; ?></td>
                         <td>状态：<?php echo Order::orderStatusText(Order::getOrderStatus($orderInfo)); ?></td>
                     </tr>
+                    <?php
+                    if ('0' == $orderInfo['pay_status']):
+                        ?>
+                    <tr>
+                        <td>
+                        <?php $form = ActiveForm::begin(['id' => 'do-pay-form', 'options' => ['target' => '_blank'], 'action' => Url::to(['/common/do-pay', 'order_id' => $orderInfo['id']])]); ?>
+                    <button class="btn btn-lg btn-danger" style="padding: 3px;font-size: 12px;margin-top:5px;" type="submit" onclick="return dopay();">立即支付</button>
+                        <?php ActiveForm::end(); ?>
+                        </td>
+                    </tr>
+                        <?php
+                    endif;
+                    ?>
                 </tbody>
             </table>
             <div class="panel panel-default accept_info">

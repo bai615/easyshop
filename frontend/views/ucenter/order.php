@@ -2,6 +2,7 @@
 
 use yii\helpers\Url;
 use yii\widgets\LinkPager;
+use yii\bootstrap\ActiveForm;
 use common\models\Order;
 use common\utils\CommonTools;
 
@@ -73,6 +74,15 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                                                 <td>
                                                     <?php if(0==$key):?>
                                                     <a href="<?php echo Url::to(['ucenter/order-detail', 'id' => $orderInfo['id']]); ?>">订单详情</a>
+                                                    <?php
+                                                    if ('0' == $orderInfo['pay_status']):
+                                                        ?>
+                                                        <?php $form = ActiveForm::begin(['id' => 'do-pay-form', 'options' => ['target' => '_blank'], 'action' => Url::to(['/common/do-pay', 'order_id' => $orderInfo['id']])]); ?>
+                                                    <button class="btn btn-lg btn-danger" style="padding: 3px;font-size: 12px;margin-top:5px;" type="submit" onclick="return dopay();">立即支付</button>
+                                                        <?php ActiveForm::end(); ?>
+                                                        <?php
+                                                    endif;
+                                                    ?>
                                                     <?php endif;?>
                                                 </td>
                                             </tr>
@@ -103,3 +113,8 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
     </div>
 </div>
 <script type="text/javascript" src="<?php echo $themeUrl; ?>/js/jquery.min.js"></script>
+<script type="text/javascript">
+    function dopay() {
+        confirm('支付是否成功', "window.location.href='<?php echo Url::to(['ucenter/order']); ?>';");
+    }
+</script>
