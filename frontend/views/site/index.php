@@ -80,7 +80,6 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                 height: 0
             },
             onEnd: function () {
-                //$(".addcar").unbind('click');
                 this.destory();
             }
         });
