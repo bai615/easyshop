@@ -77,7 +77,9 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                                     <?php echo $favoriteInfo->goods['sell_price']; ?>
                                 </td>
                                 <td>
+                                    <!--
                                     <p><a href="">加入购物车</a></p>
+                                    -->
                                     <p><a href="javascript:;" onclick="favorite_del(this, '<?php echo $favoriteInfo['id']; ?>')">取消收藏</a></p>
                                 </td>
                             </tr>

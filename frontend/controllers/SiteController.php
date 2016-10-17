@@ -5,12 +5,16 @@ namespace frontend\controllers;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use yii\helpers\ArrayHelper;
+use yii\data\Pagination;
 use common\models\Goods;
 use common\models\CategoryExtend;
 use common\models\GoodsPhotoRelation;
 use common\models\Products;
 use common\models\Favorite;
 use common\models\Brand;
+use common\models\Category;
+use backend\logics\GoodsLogic;
 use frontend\models\ContactForm;
 
 /**
@@ -74,6 +78,55 @@ class SiteController extends BaseController {
             $favoriteArr = Favorite::getMyFavorite($userId);
         }
         return $this->render('index', ['favoriteArr' => $favoriteArr]);
+    }
+
+    /**
+     * 商品分类
+     */
+    public function actionCategory() {
+        $categoryModel = new Category();
+        $categoryData = $categoryModel->find()
+            ->select(array('id', 'name', 'parent_id'))
+            ->where('visibility = 1')
+            ->orderBy('sort asc')
+            ->all();
+        $categoryList = GoodsLogic::formatData(ArrayHelper::toArray($categoryData));
+        return $this->render('category', ['categoryList' => $categoryList]);
+    }
+
+    /**
+     * 商品列表页
+     */
+    public function actionList() {
+        $userId = $this->data['shopUserInfo']['userId'];
+        $categoryId = intval(Yii::$app->request->get('id'));
+        //查找分类信息
+        $categoryModel = new Category();
+        $categoryInfo = $categoryModel->find()->where('id=:categoryId', [':categoryId' => $categoryId])->one();
+        //获取子分类
+        $categoryIdStr = Category::getChild($categoryId);
+        //获取分类对应的商品ID
+        $goodsIdStr = CategoryExtend::getGoodsId($categoryIdStr);
+        //分页商品信息
+        $data = Goods::find()->where('id in (' . $goodsIdStr . ')');
+        $pages = new Pagination(['totalCount' => $data->count(), 'pageSize' => '12']);
+        $model = $data->select(['id', 'name', 'sell_price', 'market_price', 'store_nums', 'img', 'is_del'])
+            ->where('id in (' . $goodsIdStr . ') and is_del != 1')
+            ->orderBy('id desc')
+            ->offset($pages->offset)
+            ->limit($pages->limit)
+            ->all();
+        //获取我的商品收藏
+        $favoriteArr = array();
+        if ($userId) {
+            $favoriteArr = Favorite::getMyFavorite($userId);
+        }
+        return $this->render('list', [
+                'categoryInfo' => $categoryInfo,
+                'model' => $model,
+                'pages' => $pages,
+                'favoriteArr' => $favoriteArr,
+        ]);
     }
 
     /**

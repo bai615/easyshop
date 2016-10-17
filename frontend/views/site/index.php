@@ -10,12 +10,12 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
         ?>
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title"><?php echo $firstCat['name']; ?></h3>
+                <h3 class="panel-title"><a href="<?php echo Url::to(['/site/list', 'id' => $firstCat['id']]); ?>"><?php echo $firstCat['name']; ?></a></h3>
                 <ul>
                     <?php
                     foreach (YII::$app->goods->getCategoryByParentid($firstCat['id']) as $key => $secondCat) :
                         ?>
-                        <li><?php echo $secondCat['name']; ?></li>
+                        <li><a href="<?php echo Url::to(['/site/list', 'id' => $secondCat['id']]); ?>"><?php echo $secondCat['name']; ?></a></li>
                         <?php
                     endforeach;
                     ?>
@@ -28,7 +28,7 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                     <div class="goods_block">
                         <p class="goods_img">
                             <a title="<?php echo $info['name']; ?>" target="_blank" href="<?php echo Url::to(['/site/products', 'id' => $info['id']]) ?>">
-                                <img class="goods_img" src="<?php echo Yii::$app->params['upload_url'] . $info['img']; ?>" alt="<?php echo $info['name']; ?>" title="<?php echo $info['name']; ?>"/>
+                                <img class="goods_img" src="<?php echo Yii::$app->params['upload_url'] . $info['img']; ?>" alt="<?php echo $info['name']; ?>" title="<?php echo $info['name']; ?>" style="height: 200px;width: 200px;"/>
                             </a>
                         </p>
                         <p class="goods_title"><a title="<?php echo $info['name']; ?>" target="_blank" href="<?php echo Url::to(['/site/products', 'id' => $info['id']]) ?>"><?php echo $info['name']; ?></a></p>
