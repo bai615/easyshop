@@ -8,7 +8,32 @@
 </style>
 <?php
 $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
-
+?>
+<div class="row">
+    <?php
+    foreach (YII::$app->link->getCategoryListTop() as $key => $firstCat) :
+        ?>
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title"><?php echo $firstCat['name']; ?></h3>
+            </div>
+            <div class="panel-body">
+                <?php
+                foreach (YII::$app->link->getCategoryByParentid($firstCat['id']) as $key => $secondCat) :
+                    ?>
+                    <a title="<?= $secondCat['name']; ?>" style="display: inline-block;width: 150px;text-align: left;margin: 2px 0;overflow: hidden;" href="#block_<?= $secondCat['id'] ?>" class="btn btn-default">
+                        <?= $secondCat['name']; ?>
+                    </a>
+                    <?php
+                endforeach;
+                ?>
+            </div>
+        </div>
+        <?php
+    endforeach;
+    ?>
+</div>
+<?php
 foreach (YII::$app->link->getCategoryListTop() as $key => $firstCat) :
     ?>
     <div class="panel panel-primary">
@@ -19,7 +44,7 @@ foreach (YII::$app->link->getCategoryListTop() as $key => $firstCat) :
             <?php
             foreach (YII::$app->link->getCategoryByParentid($firstCat['id']) as $key => $secondCat) :
                 ?>
-                <div class="panel panel-info">
+                <div class="panel panel-info" id="block_<?= $secondCat['id'] ?>">
                     <div class="panel-heading">
                         <h3 class="panel-title"><?php echo $secondCat['name']; ?></h3>
                     </div>

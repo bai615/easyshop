@@ -31,7 +31,7 @@ class linkComponent extends Component {
         $categoryList = $categoryModel->find()
             ->select(array('id', 'name'))
             ->where('parent_id = 0 and visibility = 1')
-            ->orderBy('sort asc')
+            ->orderBy('sort desc')
             ->all();
         return $categoryList;
     }
@@ -49,7 +49,7 @@ class linkComponent extends Component {
             $categoryList = $categoryModel->find()
                 ->select(array('id', 'name'))
                 ->where('parent_id = :parentId and visibility = 1', [':parentId' => $parentId])
-                ->orderBy('sort asc, id asc')
+                ->orderBy('sort desc')
                 ->all();
             if ($categoryList) {
                 //缓存数据
@@ -74,7 +74,7 @@ class linkComponent extends Component {
             $contentList = $contentModel->find()
                 ->select(array('id', 'name', 'ico_path', 'url'))
                 ->where('category_id = :categoryId and visibility = 1', [':categoryId' => $categoryId])
-                ->orderBy('sort asc')
+                ->orderBy('sort desc')
                 ->all();
             if ($contentList) {
                 //缓存数据
