@@ -4,7 +4,6 @@ namespace frontend\logics;
 
 use common\models\Order;
 use common\models\OrderGoods;
-use common\models\CollectionDoc;
 use common\models\Goods;
 use common\models\Products;
 use common\utils\CommonTools;
@@ -142,17 +141,6 @@ class OrderLogic {
             if (!$is_success) {
                 return false;
             }
-            //插入收款单
-            $collectionDocObj = new CollectionDoc();
-            $collectionDocObj->order_id = $orderInfo['id'];
-            $collectionDocObj->user_id = $orderInfo['user_id'];
-            $collectionDocObj->amount = $orderInfo['order_amount'];
-            $collectionDocObj->time = date('Y-m-d H:i:s');
-            $collectionDocObj->payment_id = $orderInfo['pay_type'];
-            $collectionDocObj->pay_status = 1;
-            $collectionDocObj->note = $note;
-            $collectionDocObj->admin_id = $adminId ? $adminId : 0;
-            $collectionDocObj->save();
 
             //减少库存量
             $orderGoodsObj = new OrderGoods();
