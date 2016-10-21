@@ -52,12 +52,12 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                                             ?>
                                             <tr>
                                                 <td class="goods_img">
-                                                    <a title="<?php echo $orderGoodsInfo['goods_name']; ?>" target="_bank" href="<?php echo Url::to(['site/products', 'id' => $orderGoodsInfo['goods_id']]); ?>">
+                                                    <a title="<?php echo $orderGoodsInfo['goods_name']; ?>" target="_blank" href="<?php echo Url::to(['site/products', 'id' => $orderGoodsInfo['goods_id']]); ?>">
                                                         <img class="goods_img" src="<?php echo Yii::$app->params['upload_url'] . $orderGoodsInfo['img']; ?>" width="66px" height="66px" alt="<?php echo $orderGoodsInfo['goods_name']; ?>" title="<?php echo $orderGoodsInfo['goods_name']; ?>" />
                                                     </a>
                                                 </td>
                                                 <td class="goods_name">
-                                                    <a title="<?php echo $orderGoodsInfo['goods_name']; ?>" target="_bank" href="<?php echo Url::to(['site/products', 'id' => $orderGoodsInfo['goods_id']]); ?>">
+                                                    <a title="<?php echo $orderGoodsInfo['goods_name']; ?>" target="_blank" href="<?php echo Url::to(['site/products', 'id' => $orderGoodsInfo['goods_id']]); ?>">
                                                         <?php echo $orderGoodsInfo['goods_name']; ?>
                                                     </a>
                                                     <?php if (!empty($orderGoodsInfo['spec_array'])) : ?>

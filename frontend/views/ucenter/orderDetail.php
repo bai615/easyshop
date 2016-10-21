@@ -132,7 +132,7 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                                     <tr>
                                         <td><img class="goods_img" src="<?php echo Yii::$app->params['upload_url'] . $goodsInfo['img']; ?>" width="66px" height="66px" alt="<?php echo $goodsInfo['goods_name']; ?>" title="<?php echo $goodsInfo['goods_name']; ?>" /></td>
                                         <td class="goods_title">
-                                            <a title="<?php echo $goodsInfo['goods_name']; ?>" target="_bank" href="<?php echo Url::to(['site/products', 'id' => $goodsInfo['goods_id']]); ?>">
+                                            <a title="<?php echo $goodsInfo['goods_name']; ?>" target="_blank" href="<?php echo Url::to(['site/products', 'id' => $goodsInfo['goods_id']]); ?>">
                                                 <?php echo isset($goodsInfo['goods_name']) ? $goodsInfo['goods_name'] : ''; ?>
                                             </a>
                                         </td>
