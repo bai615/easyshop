@@ -255,7 +255,7 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                       <?php endif;  ?>
                 </ul>
                 <?php if (isset($goodsInfo['content']) && $goodsInfo['content']): ?>
-                    <div class="salebox">
+                <div class="salebox">
                         <p class="saledesc"><?php echo isset($goodsInfo['content']) ? $goodsInfo['content'] : ""; ?></p>
                     </div>
                 <?php endif; ?>

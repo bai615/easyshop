@@ -153,6 +153,8 @@ a.orange, .orange {color: #fe6c00;}
 .goods_desc_box #myTab li.active a{color: #ba0505;font-weight: bold;}
 .goods_desc_box ul.sale_infos{overflow: hidden;margin: 0px;padding: 5px;border-bottom: 1px solid #ddd;border-left:1px solid #ddd; border-right:1px solid #ddd;}
 .goods_desc_box ul.sale_infos li{float: left;height: 20px;line-height: 20px;margin: 3px 0;overflow: hidden;padding: 0 2% 0 2%;text-align: left;width: 44%;text-overflow:ellipsis;white-space: nowrap;}
+.goods_desc_box .saledesc{width:750px;}
+.goods_desc_box .saledesc img{width: 100%;}
 
 
 /* 购买进度 */
