@@ -111,11 +111,11 @@ class Menu {
                     'action'=>'order-list',
                     'url' => '/order/list',
                 ],
-                '2' => [
-                    'name' => '添加订单',
-                    'action'=>'order-create',
-                    'url' => '/order/create',
-                ]
+//                '2' => [
+//                    'name' => '添加订单',
+//                    'action'=>'order-create',
+//                    'url' => '/order/create',
+//                ]
             ]
         ],
         '7' => [

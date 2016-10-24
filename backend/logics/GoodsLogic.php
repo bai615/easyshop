@@ -334,4 +334,26 @@ class GoodsLogic {
         return $return;
     }
 
+    /**
+     * 格式化商品分类数据
+     * @param type $catArray
+     * @param type $id
+     * @return type
+     */
+    public static function formatData($catArray, $id = 0) {
+        $formatCat = array();
+
+        foreach ($catArray as $key => $catInfo) {
+
+            if ($id == $catInfo['parent_id']) {
+                $tmpMenu['id'] = $catInfo['id'];
+                $tmpMenu['name'] = $catInfo['name'];
+                unset($catInfo[$key]);
+                $tmpMenu['childs'] = self::formatData($catArray, $catInfo['id']);
+                $formatCat[] = $tmpMenu;
+            }
+        }
+        return $formatCat;
+    }
+
 }
