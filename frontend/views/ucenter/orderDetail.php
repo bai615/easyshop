@@ -108,11 +108,11 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                             </tr>
                             <tr>
                                 <th>物流公司：</th>
-                                <td><?php echo isset($orderInfo['mobile']) ? $orderInfo['mobile'] : ''; ?></td>
+                                <td><?php echo isset($orderInfo['freight_name']) ? $orderInfo['freight_name'] : ''; ?></td>
                             </tr>
                             <tr>
                                 <th>快递单号：</th>
-                                <td><?php echo isset($orderInfo['mobile']) ? $orderInfo['mobile'] : ''; ?></td>
+                                <td><?php echo isset($orderInfo['delivery_code']) ? $orderInfo['delivery_code'] : ''; ?></td>
                             </tr>
                         </tbody>
                     </table>
