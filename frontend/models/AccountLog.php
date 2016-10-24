@@ -15,6 +15,7 @@ use frontend\models\AccountLog;
 class AccountLog extends ActiveRecord {
 
     private $user = null;
+    private $admin = null;
     private $eventType = null;
     private $amountData = 0;
     private $config = null;
@@ -36,6 +37,7 @@ class AccountLog extends ActiveRecord {
                 throw new Exception("用户信息不存在");
             }
             //设置操作类别
+            isset($config['admin_id']) ? $this->setAdmin($config['admin_info']) : "";
             isset($config['event']) ? $this->setEvent($config['event']) : "";
             //设置金额
             if (isset($config['amount'])) {
@@ -93,7 +95,7 @@ class AccountLog extends ActiveRecord {
             ->distinct()
             ->from('{{%user}} as u')
             ->leftJoin('{{%member}} as m', 'u.id=m.user_id')
-            ->where('u.id=:userId',[':userId' => intval($userId)]);
+            ->where('u.id=:userId', [':userId' => intval($userId)]);
         $command = $query->createCommand();
         $userInfo = $command->queryOne();
         if (empty($userInfo)) {
@@ -101,6 +103,16 @@ class AccountLog extends ActiveRecord {
         } else {
             $this->user = $userInfo;
         }
+    }
+
+    /**
+     * 设置管理员信息
+     *
+     * @param array $adminInfo
+     * @return Object
+     */
+    private function setAdmin($adminInfo) {
+        $this->admin = $adminInfo;
     }
 
     /**
@@ -145,6 +157,14 @@ class AccountLog extends ActiveRecord {
             //支付
             case 'pay': {
                     $note .= "用户[{$this->user['id']}]{$this->user['username']}使用余额支付购买，订单[{$this->config['order_no']}]，金额：{$this->amountData}元";
+                }
+                break;
+            //退款
+            case 'drawback': {
+                    if ('' != $this->admin) {
+                        $note .= "管理员[{$this->admin['admin_name']}]操作";
+                    }
+                    $note .= "订单[{$this->config['order_no']}]退款到用户[{$this->user['id']}]{$this->user['username']}余额，金额：{$this->amountData}元";
                 }
                 break;
             default: {

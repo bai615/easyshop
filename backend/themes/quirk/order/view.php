@@ -236,4 +236,19 @@ function actionCallback(msg)
 		};
 	},2500);
 }
+
+//退款
+function refundment(id)
+{
+    var flag = confirm('确认退款到余额账户');
+    if(true===flag){
+        $.post('<?php echo Url::to(["/order/refundment"]);?>',{id:id},function(result){
+            if(0===result.errcode){
+                window.location.reload();
+            }else{
+                alert(result.errmsg);
+            }
+        },'json');
+    }
+}
 </script>

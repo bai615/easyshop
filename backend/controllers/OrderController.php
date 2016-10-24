@@ -13,6 +13,8 @@ use yii\data\Pagination;
 use common\models\Order;
 use common\models\Areas;
 use common\models\FreightCompany;
+use common\models\Member;
+use frontend\models\AccountLog;
 
 /**
  * Description of OrderController
@@ -93,7 +95,7 @@ class OrderController extends BaseController {
         $deliveryCode = Yii::$app->request->post('delivery_code');
 
         $orderModel = new Order();
-        
+
         $model = new FreightCompany();
         $info = $model->find()->select(['freight_name'])->where('id=:freightId', [':freightId' => $freightId])->one();
         $data = [
@@ -102,9 +104,51 @@ class OrderController extends BaseController {
             'freight_name' => empty($info) ? '' : $info['freight_name'],
             'delivery_code' => $deliveryCode
         ];
-        
+
         $orderModel->updateAll($data, 'id=:orderId', [':orderId' => $orderId]);
         die('<script type="text/javascript">parent.actionCallback();</script>');
+    }
+
+    public function actionRefundment() {
+        $orderId = intval(Yii::$app->request->post('id'));
+        //订单信息
+        $orderModel = new Order();
+        $orderInfo = $orderModel->find()
+            ->where('id=:orderId', [':orderId' => $orderId])
+            ->one();
+        if ($orderInfo) {
+            $userId = $orderInfo['user_id'];
+            //获取用户信息
+            $memberObj = new Member();
+            $memberInfo = $memberObj->find()
+                ->where('user_id=:userId', [':userId' => $userId])
+                ->one();
+            if (empty($memberInfo)) {
+                return json_encode(['errcode' => 1, 'errmsg' => '用户信息不存在']);
+            }
+            //退款到余额并且记录日志
+            $logObj = new AccountLog();
+            $config = array(
+                'user_id' => $userId,
+                'admin_info' => ['admin_name'=>Yii::$app->user->identity->adminname],
+                'event' => 'drawback',
+                'amount' => $orderInfo['real_amount'],
+                'order_no' => $orderInfo['order_no'],
+            );
+            $is_success = $logObj->write($config);
+            if (true !== $is_success) {
+                return json_encode(['errcode' => 1, 'errmsg' => '用户余额更新失败']);
+            }
+
+            $orderModel = new Order();
+            $flag = $orderModel->updateAll(['status' => 6], 'id=:orderId and user_id=:userId and status=5', [':orderId' => $orderId, ':userId' => $userId]);
+            if ($flag) {
+                return json_encode(['errcode' => 0, 'errmsg' => '成功']);
+            } else {
+                return json_encode(['errcode' => 1, 'errmsg' => '失败']);
+            }
+        }
+        pprint($orderInfo);
     }
 
 }
