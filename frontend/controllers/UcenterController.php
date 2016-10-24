@@ -401,7 +401,7 @@ class UcenterController extends BaseController {
     public function actionFavoriteDel() {
         $favoriteIds = intval(Yii::$app->request->post('ids'));
         $userId = $this->data['shopUserInfo']['userId'];
-        if(empty($userId) || empty($favoriteIds)){
+        if (empty($userId) || empty($favoriteIds)) {
             return json_encode(['errcode' => 1, 'errmsg' => '取消失败']);
         }
         $model = new Favorite();
@@ -410,6 +410,24 @@ class UcenterController extends BaseController {
             return json_encode(['errcode' => 0, 'errmsg' => '成功取消']);
         } else {
             return json_encode(['errcode' => 1, 'errmsg' => '取消失败']);
+        }
+    }
+
+    /**
+     * 确认收货
+     */
+    public function actionConfirm() {
+        $orderId = intval(Yii::$app->request->post('order_id'));
+        $userId = $this->data['shopUserInfo']['userId'];
+        if (empty($userId) || empty($orderId)) {
+            return json_encode(['errcode' => 1, 'errmsg' => '失败']);
+        }
+        $model = new Order();
+        $flag = $model->updateAll(['status' => 5], 'id=:orderId and user_id=:userId', [':orderId' => $orderId, ':userId' => $userId]);
+        if ($flag) {
+            return json_encode(['errcode' => 0, 'errmsg' => '成功']);
+        } else {
+            return json_encode(['errcode' => 1, 'errmsg' => '失败']);
         }
     }
 

@@ -50,6 +50,15 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                         <?php
                     endif;
                     ?>
+                    <?php
+                    if ('1' == $orderInfo['distribution_status'] && '2' == $orderInfo['status']):
+                        ?>
+                    <p>
+                    <button class="btn btn-lg btn-success" style="padding: 3px;font-size: 12px;margin-top:5px;" type="submit" onclick="return doConfirm(<?=$orderInfo['id']?>);">确认收货</button>
+                    </p>
+                        <?php
+                    endif;
+                    ?>
                 </tbody>
             </table>
             <div class="panel panel-default accept_info">
@@ -157,3 +166,22 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
     </div>
 </div>
 <script type="text/javascript" src="<?php echo $themeUrl; ?>/js/jquery.min.js"></script>
+<script type="text/javascript">
+    /**
+     * 确认收货
+     * @param {type} orderId
+     * @returns {undefined}
+     */
+    function doConfirm(orderId){
+        var flag = confirm('确认已收货');
+        if(true===flag){
+            $.post('<?php echo Url::to(["/ucenter/confirm"]);?>',{order_id:orderId},function(result){
+                if(0===result.errcode){
+                    window.location.reload();
+                }else{
+                    alert(result.errmsg);
+                }
+            },'json');
+        }
+    }
+</script>

@@ -71,7 +71,7 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                                                 </td>
                                                 <td><?php echo $orderGoodsInfo['goods_nums']; ?></td>
                                                 <td>￥<?php echo sprintf('%.2f', $orderGoodsInfo['real_price'] * $orderGoodsInfo['goods_nums']); ?></td>
-                                                <td>
+                                                <td style="width: 85px;">
                                                     <?php if(0==$key):?>
                                                     <a href="<?php echo Url::to(['ucenter/order-detail', 'id' => $orderInfo['id']]); ?>">订单详情</a>
                                                     <?php
@@ -80,6 +80,15 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                                                         <?php $form = ActiveForm::begin(['id' => 'do-pay-form', 'options' => ['target' => '_blank'], 'action' => Url::to(['/common/do-pay', 'order_id' => $orderInfo['id']])]); ?>
                                                     <button class="btn btn-lg btn-danger" style="padding: 3px;font-size: 12px;margin-top:5px;" type="submit" onclick="return dopay();">立即支付</button>
                                                         <?php ActiveForm::end(); ?>
+                                                        <?php
+                                                    endif;
+                                                    ?>
+                                                    <?php
+                                                    if ('1' == $orderInfo['distribution_status'] && '2' == $orderInfo['status']):
+                                                        ?>
+                                                    <p>
+                                                    <button class="btn btn-lg btn-success" style="padding: 3px;font-size: 12px;margin-top:5px;" type="submit" onclick="return doConfirm(<?=$orderInfo['id']?>);">确认收货</button>
+                                                    </p>
                                                         <?php
                                                     endif;
                                                     ?>
@@ -116,5 +125,22 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
 <script type="text/javascript">
     function dopay() {
         confirm('支付是否成功', "window.location.href='<?php echo Url::to(['ucenter/order']); ?>';");
+    }
+    /**
+     * 确认收货
+     * @param {type} orderId
+     * @returns {undefined}
+     */
+    function doConfirm(orderId){
+        var flag = confirm('确认已收货');
+        if(true===flag){
+            $.post('<?php echo Url::to(["/ucenter/confirm"]);?>',{order_id:orderId},function(result){
+                if(0===result.errcode){
+                    window.location.reload();
+                }else{
+                    alert(result.errmsg);
+                }
+            },'json');
+        }
     }
 </script>
