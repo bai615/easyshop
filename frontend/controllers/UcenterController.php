@@ -423,7 +423,7 @@ class UcenterController extends BaseController {
             return json_encode(['errcode' => 1, 'errmsg' => '失败']);
         }
         $model = new Order();
-        $flag = $model->updateAll(['status' => 5], 'id=:orderId and user_id=:userId', [':orderId' => $orderId, ':userId' => $userId]);
+        $flag = $model->updateAll(['status' => 5], 'id=:orderId and user_id=:userId and distribution_status=1', [':orderId' => $orderId, ':userId' => $userId]);
         if ($flag) {
             return json_encode(['errcode' => 0, 'errmsg' => '成功']);
         } else {
