@@ -37,7 +37,6 @@ class AccountLog extends ActiveRecord {
                 throw new Exception("用户信息不存在");
             }
             //设置操作类别
-            isset($config['admin_id']) ? $this->setAdmin($config['admin_info']) : "";
             isset($config['event']) ? $this->setEvent($config['event']) : "";
             //设置金额
             if (isset($config['amount'])) {
@@ -161,9 +160,6 @@ class AccountLog extends ActiveRecord {
                 break;
             //退款
             case 'drawback': {
-                    if ('' != $this->admin) {
-                        $note .= "管理员[{$this->admin['admin_name']}]操作";
-                    }
                     $note .= "订单[{$this->config['order_no']}]退款到用户[{$this->user['id']}]{$this->user['username']}余额，金额：{$this->amountData}元";
                 }
                 break;

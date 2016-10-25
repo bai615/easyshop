@@ -109,6 +109,10 @@ class OrderController extends BaseController {
         die('<script type="text/javascript">parent.actionCallback();</script>');
     }
 
+    /**
+     * 退款
+     * @return type
+     */
     public function actionRefundment() {
         $orderId = intval(Yii::$app->request->post('id'));
         //订单信息
@@ -148,7 +152,6 @@ class OrderController extends BaseController {
                 return json_encode(['errcode' => 1, 'errmsg' => '失败']);
             }
         }
-        pprint($orderInfo);
     }
 
 }
