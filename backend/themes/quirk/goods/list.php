@@ -11,6 +11,7 @@ use yii\widgets\LinkPager;
 
 $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
 ?>
+
 <div class="panel">
     <div class="panel-heading">
         <a class="btn btn-primary" href="<?php echo Url::to(['/goods/create']); ?>">新增</a>
@@ -55,8 +56,16 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                                     <div><a href="<?php echo Yii::$app->params['home_url'] . 'item_' . $info['id'] . '.html'; ?>" target="_blank"><?php echo $info['name']; ?></a></div>
                                 </td>
                                 <td class="text-center"><?php echo YII::$app->goods->getCategoryName($info['id']); ?></td>
-                                <td class="text-center"><?php echo $info['sell_price']; ?></td>
-                                <td class="text-center"><?php echo $info['store_nums']; ?></td>
+                                <td class="text-center">
+                                    <a href="javascript:quickEdit(<?php echo isset($info['id'])?$info['id']:"";?>,'price');" title="点击更新价格" id="priceText<?php echo isset($info['id'])?$info['id']:"";?>">
+                                    <?php echo isset($info['sell_price'])?$info['sell_price']:""; ?>
+                                    </a>
+                                </td>
+                                <td class="text-center">
+                                    <a href="javascript:quickEdit(<?php echo isset($info['id'])?$info['id']:"";?>,'store');" title="点击更新库存" id="storeText<?php echo isset($info['id'])?$info['id']:"";?>">
+                                    <?php echo isset($info['store_nums'])?$info['store_nums']:""; ?>
+                                    </a>
+                                </td>
                                 <td class="text-center">
                                     <select onchange="changeIsDel(<?php echo $info['id']; ?>, this)">
                                         <option value="up" <?php echo $info['is_del'] == 0 ? 'selected' : ''; ?>>上架</option>
@@ -159,4 +168,148 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
             });
         }
     }
+</script>
+
+<link href="<?php echo $themeUrl; ?>/css/table.css" rel="stylesheet">
+<link href="<?php echo $themeUrl; ?>/libs/artdialog/skins/aero.css" rel="stylesheet">
+<!--库存更新模板-->
+<script id="goodsStoreTemplate" type="text/html">
+<form name="quickEditForm">
+<table class="border_table" style="width:100%">
+	<thead>
+		<tr>
+			<th>商品</th>
+			<th>库存量</th>
+		</tr>
+	</thead>
+	<tbody>
+	<%for(var item in templateData){%>
+		<%item=templateData[item]%>
+		<tr>
+			<td>
+				<%=item['name']%>
+				&nbsp;&nbsp;&nbsp;
+				<%if(item['spec_array']){%>
+					<%var specArrayList = parseJSON(item['spec_array'])%>
+					<%for(var result in specArrayList){%>
+						<%result = specArrayList[result]%>
+						<%if(result['type'] == 1){%>
+							<%=result['value']%>
+						<%}else{%>
+							<img class="img_border" width="30px" height="30px" src="<?php echo "<%=result['value']%>";?>">
+						<%}%>
+						&nbsp;&nbsp;&nbsp;
+					<%}%>
+				<%}%>
+			</td>
+			<td>
+				<input type="text" class="small" name="data[<%=item['id']%>]" value="<%=item['store_nums']%>" />
+			</td>
+		</tr>
+	<%}%>
+	</tbody>
+</table>
+<input type='hidden' name='goods_id' value="<%=item['goods_id']%>" />
+</form>
+</script>
+
+<!--价格更新的模板-->
+<script id="goodsPriceTemplate" type="text/html">
+<form name="quickEditForm">
+<table class="border_table" style="width:100%">
+	<thead>
+		<tr>
+			<th>商品</th>
+			<th>市场价</th>
+			<th>销售价</th>
+			<th>成本价</th>
+		</tr>
+	</thead>
+	<tbody>
+	<%for(var item in templateData){%>
+		<%item=templateData[item]%>
+		<tr>
+			<td>
+				<%=item['name']%>
+				&nbsp;&nbsp;&nbsp;
+				<%if(item['spec_array']){%>
+					<%var specArrayList = parseJSON(item['spec_array'])%>
+					<%for(var result in specArrayList){%>
+						<%result = specArrayList[result]%>
+						<%if(result['type'] == 1){%>
+							<%=result['value']%>
+						<%}else{%>
+							<img class="img_border" width="30px" height="30px" src="<?php echo "<%=result['value']%>";?>">
+						<%}%>
+						&nbsp;&nbsp;&nbsp;
+					<%}%>
+				<%}%>
+			</td>
+			<td><input type="text" class="small" name="data[<%=item['id']%>][market_price]" value="<%=item['market_price']%>" /></td>
+			<td><input type="text" class="small" name="data[<%=item['id']%>][sell_price]" value="<%=item['sell_price']%>" /></td>
+			<td><input type="text" class="small" name="data[<%=item['id']%>][cost_price]" value="<%=item['cost_price']%>" /></td>
+		</tr>
+	<%}%>
+	</tbody>
+</table>
+<input type='hidden' name='goods_id' value="<%=item['goods_id']%>" />
+</form>
+</script>
+
+<script type="text/javascript" src="<?php echo $themeUrl; ?>/libs/artdialog/artDialog.js"></script>
+<script type="text/javascript" src="<?php echo $themeUrl; ?>/libs/artdialog/plugins/iframeTools.js"></script>
+<script type="text/javascript" src="<?php echo $themeUrl; ?>/libs/artTemplate/artTemplate.js"></script>
+<script type="text/javascript" src="<?php echo $themeUrl; ?>/libs/artTemplate/artTemplate-plugin.js"></script>
+<script type="text/javascript">
+//展示库存
+function quickEdit(gid,typeVal)
+{
+	var submitUrl    = "";
+	var templateName = "";
+	var freshArea    = "";
+
+	switch(typeVal)
+	{
+		case "store":
+		{
+			submitUrl    = "<?php echo Url::to(['/goods/update-store']); ?>";
+			templateName = "goodsStoreTemplate";
+			freshArea    = "storeText";
+		}
+		break;
+
+		case "price":
+		{
+			submitUrl    = "<?php echo Url::to(['/goods/update-price']); ?>";
+			templateName = "goodsPriceTemplate";
+			freshArea    = "priceText";
+		}
+		break;
+	}
+
+	$.getJSON("<?php echo Url::to(['/goods/get-goods-data']); ?>",{"id":gid},function(json)
+	{
+		var templateHtml = template.render(templateName,{'templateData':json});
+		art.dialog(
+		{
+			okVal:"保存",
+		    content: templateHtml,
+		    ok:function(iframeWin)
+		    {
+		    	var formObj = iframeWin.document.forms['quickEditForm'];
+		    	$.getJSON(submitUrl,$(formObj).serialize(),function(content)
+		    	{
+		    		if(content.errcode === 0)
+		    		{
+		    			$("#"+freshArea+gid).text(content.data);
+		    		}
+		    		else
+		    		{
+		    			alert(content.errmsg);
+		    		}
+		    	});
+		    }
+		});
+	});
+}
 </script>

@@ -18,6 +18,7 @@ use common\models\Attribute;
 use common\models\Model;
 use common\models\Spec;
 use common\models\SpecPhoto;
+use common\models\Products;
 use backend\logics\GoodsLogic;
 
 /**
@@ -419,6 +420,91 @@ class GoodsController extends BaseController {
         }
 
         echo Json::encode(['result' => 'finish']);
+    }
+
+    /**
+     * 获取商品数据
+     */
+    public function actionGetGoodsData() {
+        $goodsId = intval(Yii::$app->request->get('id'));
+
+        $query = new \yii\db\Query;
+        $query->select(['p.*', 'go.name'])
+            ->distinct()
+            ->from('{{%products}} as p')
+            ->leftJoin('{{%goods}} as go', 'go.id = p.goods_id')
+            ->where('go.id = :goodsId', [':goodsId' => $goodsId]);
+        $command = $query->createCommand();
+        $productData = $command->queryAll();
+
+        if (empty($productData)) {
+            $query = new \yii\db\Query;
+            $query->select(['go.id', 'go.name', 'go.sell_price', 'go.market_price', 'go.cost_price', 'go.store_nums'])
+                ->from('{{%goods}} as go')
+                ->where('go.id = :goodsId', [':goodsId' => $goodsId]);
+            $command = $query->createCommand();
+            $productData = $command->queryAll();
+        }
+        echo Json::encode($productData);
+    }
+
+    /**
+     * 更新商品价格
+     */
+    public function actionUpdatePrice() {
+        $data = Yii::$app->request->get('data'); //key => 商品ID或货品ID ; value => 价格
+        $goodsId = intval(Yii::$app->request->get('goods_id')); //存在即为货品
+
+        if (empty($data)) {
+            die(Json::encode(['errcode' => 1, 'errmsg' => '商品数据不存在']));
+        }
+
+        if ($goodsId) {
+            //货品方式
+            $productModel = new Products();
+            $updateData = current($data);
+            foreach ($data as $productId => $editData) {
+                $productModel->updateAll($editData, 'id=:productId', [':productId' => $productId]);
+            }
+        } else {
+            //商品方式
+            $goodsId = key($data);
+            $updateData = current($data);
+        }
+        //更新商品信息
+        $goodsModel = new Goods();
+        $goodsModel->updateAll($updateData, 'id=:goodsId', [':goodsId' => $goodsId]);
+
+        die(Json::encode(['errcode' => 0, 'data' => number_format($updateData['sell_price'], 2)]));
+    }
+
+    /**
+     * 更新库存
+     */
+    public function actionUpdateStore() {
+        $data = Yii::$app->request->get('data'); //key => 商品ID或货品ID ; value => 库存数量
+        $goodsId = intval(Yii::$app->request->get('goods_id')); //存在即为货品
+        $goodsSum = array_sum($data);
+
+        if (empty($data)) {
+            die(Json::encode(['errcode' => 1, 'errmsg' => '商品数据不存在']));
+        }
+
+        if ($goodsId) {
+            //货品方式
+            $productModel = new Products();
+            foreach ($data as $productId => $editNum) {
+                $productModel->updateAll(['store_nums' => $editNum], 'id=:productId', [':productId' => $productId]);
+            }
+        } else {
+            //商品方式
+            $goodsId = key($data);
+        }
+        //更新商品信息
+        $goodsModel = new Goods();
+        $goodsModel->updateAll(['store_nums' => $goodsSum], 'id=:goodsId', [':goodsId' => $goodsId]);
+
+        die(Json::encode(['errcode' => 0, 'data' => $goodsSum]));
     }
 
 }

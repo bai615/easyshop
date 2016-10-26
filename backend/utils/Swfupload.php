@@ -70,8 +70,8 @@ OEF;
 				button_placeholder_id : "uploadButton",
 				button_width: 30,
 				button_height: 18,
-                button_text : '<span class="redText">选择...</span>',  
-                button_text_style : ".redText { color: #ffffff; }", 
+                button_text : '<span class="btnText">选择...</span>',  
+                button_text_style : ".btnText { color: #ffffff; }", 
 				button_window_mode: SWFUpload.WINDOW_MODE.TRANSPARENT,
 				button_cursor: SWFUpload.CURSOR.HAND,
 

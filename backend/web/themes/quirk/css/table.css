@@ -1,0 +1,28 @@
+/* border_table style start */
+.border_table{border-width:1px;margin-top:10px;background:#fff;}
+	.border_table th,.border_table td{border:1px solid #e1e1e1;vertical-align:middle;padding:5px 10px 5px;white-space:nowrap;word-break:keep-all}
+	.border_table th,.border_table td.non{width:auto;}
+	.border_table td.attr{white-space:pre-wrap;}
+	.border_table thead th{color:#333;white-space:nowrap;text-align:center;background:url(../images/admin_bg.gif) repeat-x 0 -191px}
+	.border_table tbody th{padding-right:5px; text-align:right;color:#707070;background-color:#f9f9f9}
+	.border_table label{color:#777}
+.border_table1{border-width:1px;margin:10px 5px;background:#fff;}
+	.border_table1 th,.border_table1 td{border:1px solid #e1e1e1;vertical-align:middle;padding:5px 10px 5px;word-break:keep-all}
+	.border_table1 th,.border_table1 td.non{width:auto;}
+	.border_table1 td.attr{white-space:pre-wrap; text-align:left;}
+	.border_table1 thead th{color:#333;white-space:nowrap;text-align:center;background:url(../images/admin_bg.gif) repeat-x 0 -191px}
+	.border_table1 tbody th{padding-right:5px; text-align:right;color:#707070;background-color:#f9f9f9}
+.border_table_org{border:1px solid #a4c639;margin:10px 5px;background:#fff}
+	.border_table_org th{padding:3px 10px 3px 17px; font-size:14px;vertical-align:middle;white-space:nowrap;word-break:keep-all;border-bottom:1px solid #a4c639;}
+	.border_table_org td{padding:4px 5px;}
+	.border_table_org thead th{color:#fff;white-space:nowrap;text-align:center; text-align:left; padding-left:17px;background:url(../images/admin_bg.gif) repeat-x 0 -561px}
+	table.list_table2 td,table.list_table2 th{color:#7d7d7d;text-align:right; font-size:12px;background-color:#fefaf6; border-top:5px solid #fff; border-bottom:5px solid #fff;}
+	table.list_table2 th{color:#474747; font-size:14px; font-weight:normal;}
+	table.list_table2 a:link,table.list_table2 a:visited{color:#b9b9b9; text-decoration:underline;}
+	table.list_table2 a:hover,table.list_table2 a:active{color:#c30;}
+	table.list_table3 thead th{color:#000; text-align:center;border-top:1px solid #cecece;border-bottom:1px solid #cecece;background-image:none; background-color:#f6f6f6;}
+	table.list_table3 tbody td{padding:5px 0;color:#505050;border-bottom:1px solid #e7e7e7}
+
+.td_c td{text-align:center}
+.th_c th{text-align:center}
+/* border_table style end */
