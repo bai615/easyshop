@@ -15,6 +15,7 @@ abstract class BasePay {
     public $method = "post"; //表单提交模式
     public $callbackUrl = '';    //支付完成后，同步回调地址
     public $serverCallbackUrl = '';    //异步通知地址
+    public $type = '';
 
     /**
      * 构造函数
@@ -51,6 +52,7 @@ abstract class BasePay {
 
         $data['submitUrl'] = $this->getSubmitUrl();
         $data['method'] = $this->method;
+        $data['pay_type'] = $this->type;
         $data['sendData'] = $sendData;
         echo \Yii::$app->controller->renderPartial('pay_view', $data);
 //        echo <<< OEF

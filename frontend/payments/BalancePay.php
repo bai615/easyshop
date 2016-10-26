@@ -14,6 +14,8 @@ use common\models\Payment;
  */
 class BalancePay extends BasePay {
 
+    public $type = 'BalancePay';
+
     /**
      * 获取提交地址
      * @return type
@@ -80,7 +82,7 @@ class BalancePay extends BasePay {
     }
 
     /**
-     * 同步支付回调
+     * 异步支付回调
      * @param type $ExternalData
      * @param type $paymentId
      * @param type $money
