@@ -357,7 +357,7 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                             </div>
                         </div>
                         <div class="col-sm-8" style="margin-top: 12px;">
-                            <label>可以上传多张图片，分辨率3000px以下，大小不得超过{echo:IUpload::getMaxSize()}</label>
+                            <label>可以上传多张图片，分辨率3000px以下，大小不得超过<?php echo \common\utils\CommonTools::getMaxSize(); ?></label>
                         </div>
                     </div>
                 </div>
