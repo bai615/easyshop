@@ -103,12 +103,12 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                                 <tr>
                                     <th class="col-md-1 text-center">物流公司</th>
                                     <td class="col-md-3">
-                                        <?php echo isset($orderInfo['mobile']) ? $orderInfo['mobile'] : ''; ?>
+                                        <?php echo isset($orderInfo['freight_name']) ? $orderInfo['freight_name'] : ''; ?>
                                     </td>
                                 </tr>
                                 <tr>
                                     <th class="col-md-1 text-center">快递单号</th>
-                                    <td class="col-md-3"><?php echo isset($orderInfo['mobile']) ? $orderInfo['mobile'] : ''; ?></td>
+                                    <td class="col-md-3"><?php echo isset($orderInfo['delivery_code']) ? $orderInfo['delivery_code'] : ''; ?></td>
                                 </tr>
                             </thead>
                             <tbody>

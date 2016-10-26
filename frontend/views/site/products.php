@@ -6,7 +6,7 @@ use yii\helpers\Url;
 $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
 ?>
 <div class="container block_box">
-    <div><span>您当前的位置：</span></div>
+    <div><span>您当前的位置：<?php echo isset($goodsInfo['name']) ? $goodsInfo['name'] : ""; ?></span></div>
 
     <div class="goods_detail">
         <div id="preview" class="goods_photo">
