@@ -53,7 +53,7 @@ class CommonController extends BaseController {
             $orderObj = new Order();
             $orderInfo = $orderObj->find()
                 ->select(['pay_type'])
-                ->where('id=:orderId',[':orderId'=>$orderId])
+                ->where('id=:orderId', [':orderId' => $orderId])
                 ->one();
             if (empty($orderInfo)) {
                 CommonTools::showWarning('要支付的订单信息不存在');

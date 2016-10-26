@@ -26,7 +26,7 @@ class PayLogic {
             $className = $paymentInfo['class_name'];
             $classPath = Yii::$app->basePath . DIRECTORY_SEPARATOR . "payments" . DIRECTORY_SEPARATOR . $className . '.php';
             if (file_exists($classPath)) {
-                $payClass = 'frontend\payments\\'.$className;
+                $payClass = 'frontend\payments\\' . $className;
                 return new $payClass($paymentId);
             } else {
                 CommonTools::showWarning('支付接口类' . $className . '没有找到');
@@ -63,7 +63,7 @@ class PayLogic {
             $orderObj = new Order();
             $orderInfo = $orderObj->find()
                 ->select(['id', 'order_no', 'order_amount', 'postscript', 'mobile', 'accept_name', 'address'])
-                ->where('id=:orderId  and status = 1',[':orderId' => $argument])
+                ->where('id=:orderId  and status = 1', [':orderId' => $argument])
                 ->one();
             if (empty($orderInfo)) {
                 CommonTools::showWarning('订单信息不正确，不能进行支付');
@@ -71,14 +71,17 @@ class PayLogic {
             //判断商品库存
             $orderGoodsObj = new OrderGoods();
             $orderGoodsList = $orderGoodsObj->find()
-                ->select(['goods_id', 'product_id', 'goods_nums'])
-                ->where('order_id=:orderId',[':orderId' => $argument])
+                ->select(['goods_id', 'goods_name', 'product_id', 'goods_nums'])
+                ->where('order_id=:orderId', [':orderId' => $argument])
                 ->all();
+            $products = '';
             foreach ($orderGoodsList as $key => $val) {
                 if (!GoodsLogic::checkStore($val['goods_nums'], $val['goods_id'], $val['product_id'])) {
                     CommonTools::showWarning('商品库存不足无法支付，请重新下单');
                 }
+                $products = $products . '@@@' . $val['goods_name'];
             }
+            $payment['products'] = trim($products, '@@@');
             $payment['M_Remark'] = $orderInfo['postscript'];
             $payment['M_OrderId'] = $orderInfo['id'];
             $payment['M_OrderNO'] = $orderInfo['order_no'];

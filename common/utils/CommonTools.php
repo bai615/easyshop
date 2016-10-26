@@ -163,13 +163,18 @@ class CommonTools {
      * @return type
      */
     public static function getSign($data = array(), $skey = '') {
+        //对待签名参数数组排序
         ksort($data);
+        //除去待签名参数数组中的签名参数
         unset($data['sign']);
         $strSign = '';
         foreach ($data as $key => $value) {
             $strSign.=$key . "=" . ($value) . "&";
         }
         $strSign = substr($strSign, 0, -1);
+        file_put_contents("./pay.txt", print_r($data, true) . "\n", FILE_APPEND);
+        file_put_contents("./pay.txt", $strSign . $skey . "\n", FILE_APPEND);
+        file_put_contents("./pay.txt", "\n" . $skey . "\n", FILE_APPEND);
 //        $dataStr = http_build_query($data);
         return md5($strSign . $skey);
     }
@@ -221,6 +226,23 @@ class CommonTools {
         $postSize = ini_get('post_max_size');
         $memory_limit = ini_get('memory_limit');
         return min(floatval($uploadSize), floatval($postSize), floatval($memory_limit)) . 'M';
+    }
+
+    /**
+     *  求随机数字
+     * @param type $length
+     * @return string
+     */
+    public static function getRandChar($length) {
+        $str = null;
+        $strPol = "0123456789";
+        $max = strlen($strPol) - 1;
+
+        for ($i = 0; $i < $length; $i++) {
+            $str.=$strPol[rand(0, $max)]; //rand($min,$max)生成介于min和max两个数之间的一个随机整数
+        }
+
+        return $str;
     }
 
 }

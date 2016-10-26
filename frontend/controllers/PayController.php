@@ -34,13 +34,13 @@ class PayController extends BaseController {
         unset($callbackData['_id']);
         $return = $paymentInstance->callback($callbackData, $paymentId, $money, $message, $orderNo);
         if (true == $return) {
-//            $orderId = OrderLogic::updateOrderStatus($orderNo);
-//            if (false == $orderId) {
-//                CommonTools::showWarning($message);
-//            } else {
+            $orderId = OrderLogic::updateOrderStatus($orderNo);
+            if (false == $orderId) {
+                CommonTools::showWarning($message);
+            } else {
                 //支付成功
                 $this->redirect(Url::to(['common/success', 'message' => '支付成功']));
-//            }
+            }
         } else {
             //支付失败
             $message = $message ? $message : '支付失败';
