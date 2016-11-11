@@ -7,6 +7,8 @@ use common\utils\CommonTools;
 use common\models\Payment;
 use common\models\Order;
 use common\models\OrderGoods;
+use common\models\OnlineRecharge;
+use frontend\models\AccountLog;
 
 /**
  * 支付方式 操作类
@@ -91,12 +93,61 @@ class PayLogic {
             $payment['P_Mobile'] = $orderInfo['mobile'];
             $payment['P_Name'] = $orderInfo['accept_name'];
             $payment['P_Address'] = $orderInfo['address'];
+        } else if ('recharge' == $type) {
+            if (!isset($argument['account']) || $argument['account'] <= 0) {
+                CommonTools::showWarning('请填入正确的充值金额');
+            }
+            $rechargeNo = OrderLogic::createOrderNo();
+            $rechargeModel = new OnlineRecharge();
+            $rechargeModel->user_id = Yii::$app->controller->data['shopUserInfo']['userId'];
+            $rechargeModel->recharge_no = $rechargeNo;
+            $rechargeModel->account = $argument['account'];
+            $rechargeModel->time = date('Y-m-d H:i:s');
+            $rechargeModel->payment_name = $argument['paymentName'];
+            $rechargeModel->save();
+            $rechargeId = $rechargeModel->id;
+            //充值数据
+            $payment['products'] = '在线充值';
+            $payment['M_OrderNO'] = 'recharge' . $rechargeNo;
+            $payment['M_OrderId'] = $rechargeId;
+            $payment['M_Amount'] = $argument['account'];
         }
 
         //交易信息
         $payment['M_Time'] = time();
         $payment['M_Paymentid'] = $paymentId;
         return $payment;
+    }
+
+    /**
+     * 更新在线充值
+     * @param type $rechargeNo
+     */
+    public static function updateRecharge($rechargeNo) {
+        $rechargeModel = new OnlineRecharge();
+        $rechargeInfo = $rechargeModel->find()->where('recharge_no = :rechargeNo', [':rechargeNo' => $rechargeNo])->one();
+        //充值信息不存在
+        if (empty($rechargeInfo)) {
+            return false;
+        }
+        //已充值成功
+        if ($rechargeInfo['status'] == 1) {
+            return true;
+        }
+
+        $result = $rechargeModel->updateAll(['status' => 1], 'recharge_no = :rechargeNo', [':rechargeNo' => $rechargeNo]);
+        if ($result) {
+            $log = new AccountLog();
+            $config = array(
+                'user_id' => $rechargeInfo['user_id'],
+                'event' => 'recharge',
+                'note' => '用户在线充值',
+                'amount' => $rechargeInfo['account'],
+            );
+            return $log->write($config);
+        }else{
+            return false;
+        }
     }
 
 }

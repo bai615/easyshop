@@ -3,6 +3,7 @@
 namespace common\utils;
 
 use Yii;
+use yii\helpers\Url;
 
 /**
  * 公共方法集合
@@ -187,6 +188,17 @@ class CommonTools {
         $data['message'] = $message;
         $result = Yii::$app->controller->render('/common/warning', $data, 1);
         die($result);
+    }
+    
+    /**
+     * 显示成功信息
+     * @param type $message
+     */
+    public static function showSuccess($message = '') {
+        header('Location:'.Url::to(['common/success', 'message' => $message]));
+//        $data['message'] = $message;
+//        $result = Yii::$app->controller->render('/common/success', $data, 1);
+//        die($result);
     }
 
     //生成随机验证码
