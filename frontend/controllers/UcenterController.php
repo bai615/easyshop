@@ -431,4 +431,15 @@ class UcenterController extends BaseController {
         }
     }
 
+    /**
+     * 在线充值
+     */
+    public function actionOnlineRecharge() {
+        $this->is_login();
+        $this->currentMenu = 2;
+        $paymentList = Payment::find()->where("status = 0 and class_name not in('BalancePay')")->orderBy('`order` asc')->all();
+        $data['paymentList'] = $paymentList;
+        return $this->render('onlineRecharge', $data);
+    }
+
 }

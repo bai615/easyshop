@@ -7,6 +7,7 @@ use common\models\Areas;
 use common\models\Order;
 use common\utils\CommonTools;
 use frontend\logics\PayLogic;
+use common\models\Payment;
 
 /**
  * 前台公共模块
@@ -46,8 +47,8 @@ class CommonController extends BaseController {
     public function actionDoPay() {
         $this->is_login();
         $orderId = intval(Yii::$app->request->get('order_id'));
-        $paymentId = intval(Yii::$app->request->get('payment_id'));
-        $recharge = Yii::$app->request->get('recharge');
+        $paymentId = intval(Yii::$app->request->post('payment_id'));
+        $recharge = Yii::$app->request->post('recharge');
         if ($orderId) {
             //获取订单信息
             $orderObj = new Order();
@@ -64,7 +65,9 @@ class CommonController extends BaseController {
         $paymentInstance = PayLogic::createPaymentInstance($paymentId);
         //在线充值
         if ($recharge) {
-            
+            $paymentInfo = Payment::getPaymentById($paymentId);
+            $reData = ['account' => $recharge, 'paymentName' => $paymentInfo['name']];
+            $sendData = $paymentInstance->getSendData(PayLogic::getPaymentInfo($paymentId, 'recharge', $reData));
         }
         //订单支付
         else if ($orderId) {

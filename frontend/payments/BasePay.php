@@ -21,7 +21,6 @@ abstract class BasePay {
      * 构造函数
      * @param $paymentId 支付方式ID
      */
-
     public function __construct($paymentId) {
         //回调函数地址
         $this->callbackUrl = Url::toRoute(['/pay/callback', '_id' => $paymentId], true);
@@ -36,6 +35,10 @@ abstract class BasePay {
      * @return boolean
      */
     protected function recordTradeNo($orderNo, $tradeNo) {
+        if (stripos($orderNo, 'recharge') !== false) {
+            //余额充值
+            return true;
+        }
         $orderModel = new Order();
         $orderInfo = $orderModel->find()
             ->select(['id', 'trade_no'])

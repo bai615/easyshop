@@ -32,8 +32,26 @@ class PayController extends BaseController {
         //执行接口回调函数
         $callbackData = array_merge($_POST, $_GET);
         unset($callbackData['_id']);
+//        //充值方式
+//        if (isset($callbackData['orderNo']) && stripos($callbackData['orderNo'], 'recharge') !== false) {
+//            $tradenoArray = explode('recharge', $orderNo);
+//            $orderNo = isset($tradenoArray[1]) ? $tradenoArray[1] : 0;
+//            $payType = 'recharge';
+//        }
         $return = $paymentInstance->callback($callbackData, $paymentId, $money, $message, $orderNo);
         if (true == $return) {
+            //充值方式
+            if (stripos($callbackData['orderNo'], 'recharge') !== false) {
+                $tradenoArray = explode('recharge', $callbackData['orderNo']);
+                $rechargeNo = isset($tradenoArray[1]) ? substr($tradenoArray[1], 0, 20) : 0;
+                if(true==PayLogic::updateRecharge($rechargeNo)){
+//                    $this->redirect(Url::to(['common/success', 'message' => '充值成功']));
+                    CommonTools::showSuccess('充值成功');
+                    exit();
+                }
+                CommonTools::showWarning('充值失败');
+            }
+            dprint($callbackData);
             $orderId = OrderLogic::updateOrderStatus($orderNo);
             if (false == $orderId) {
                 CommonTools::showWarning($message);

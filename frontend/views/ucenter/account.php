@@ -34,7 +34,7 @@ $themeUrl = Yii::$app->request->getHostInfo() . $this->theme->baseUrl;
                 <tbody>
                     <tr>
                         <td class="col-xs-4">账户余额：<?php echo $memberInfo['balance']; ?></td>
-                        <td class="col-xs-4">在线充值</td>
+                        <td class="col-xs-4"><a href="<?php echo Url::to(['/ucenter/online-recharge']);?>">在线充值</a></td>
                         <td class="col-xs-4">&nbsp;</td>
                     </tr>
                 </tbody>
